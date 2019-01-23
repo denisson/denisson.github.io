@@ -1,0 +1,47 @@
+<ion-modal-view ng-controller="buscaPorTimesController">
+    <ion-header-bar class="bar bar-header bar-positive">
+        <button class="button button-clear button-primary" ng-click="modalTime.hide()">Cancelar</button>
+        <h1 class="title">Selecionar adversário</h1>
+        
+          <button class="button" id="botao-escolher-regiao" mostrar-br="false" tem-time="true"  regiao="{{regiao}}" jog-escolher-regiao>
+            Região:
+            <b class="padding-left">{{regiao}}</b>
+            <i class="icon ion-android-arrow-dropdown" style="color:#FFF"></i>
+          </button>
+        
+    </ion-header-bar>
+    <ion-content class="padding scroll-with-keyboard">
+        <form class="list">
+            <label class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input ng-model="search.query" ng-change="buscarTime(search.query)" type="search" placeholder="Digite o nome do time adversário">
+            </label>
+        </form>
+        <div class="spacer" style="width: 300px; height: 1px;"></div>
+        <div ng-show="search.query">
+            <ion-list class="lista-times">
+                <ion-item class="item-avatar item" ng-click="timeSelecionado(time)" ng-if="time._id != jogo.mandante._id" ng-repeat="time in times track by time._id">
+                    <img jog-escudo="time.escudo" jog-size="small">
+                    <h2>{{time.nome}}</h2>
+                    <p>{{time.cidade.nomeCompleto || 'Cidade não informada'}}</p>
+                </ion-item>
+                <ion-item class="item-avatar item" ng-click="cadastrarTime(search.query)">
+                    <img ng-src="img/escudo.svg" style="border-radius: 0">
+                    <h2>'{{search.query}}' Cadastrar</h2>
+                    <p>Selecione para cadastrar</p>
+                </ion-item>
+            </ion-list>
+            <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarResultados()" distance="10%"></ion-infinite-scroll>
+            <ion-list ng-if="!temMaisResultados && timesSemCidade.length" class="lista-times">
+                <ion-item class="item-divider" style="border: 0;">Times sem cidade informada</ion-item>
+                <!-- <ion-item class="item-avatar item" ui-sref="abasInicio.paginaDoTime-aba-busca({id: time._id})" ng-repeat="time in times | latinize | fuzzyBy:'nome':search"> -->
+                <ion-item class="item-avatar item" ng-click="timeSelecionado(time)" ng-if="time._id != jogo.mandante._id" ng-repeat="time in timesSemCidade track by time._id">
+                    <img jog-escudo="time.escudo" jog-size="small" style="border-radius: 5px">
+                    <h2>{{time.nome}}</h2>
+                    <p>{{time.cidade.nomeCompleto || 'Cidade não informada'}}</p>
+                </ion-item>
+            </ion-list>
+            <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultadosSemCidade" on-infinite="carregarResultadosSemCidade()" distance="10%"></ion-infinite-scroll>
+        </div>
+    </ion-content>
+</ion-modal-view>

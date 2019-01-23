@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chrome DevTools</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+
+	code{
+		padding: 2px 4px;
+		color: #d14;
+		background-color: #f7f7f9;
+		border: 1px solid #e1e1e8;
+	}
+	
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
+    </style>
+  </head>
+  <body>
+<textarea id="source">
+class: center, middle, inverse
+#Chrome DevTools
+
+---
+
+##Dicas Gerais
+- Usar Canary (tem a versão mais atual do DevTools)
+- `Ctrl + shift + I`
+- `Ctrl + shift + J`
+- `Ctrl + shift + C`
+- Mudar DevTools de posição
+
+---
+
+##Elements Panel
+### DOM
+- Arrastar
+- Navegar com o teclado ( `F2, Ctrl + Enter, Enter, Tab, Down, Up, Left, Right` )
+- Remover (`del`)
+- Scroll into view
+- Pesquisar (`Ctrl + F`)
+- Break on
+- Event Listeners
+
+---
+##Elements Panel
+###Styles
+- Ir para o fonte do CSS (Ctrl + click)
+- Adicionar nova regra
+- Simular estado do elemento (:active, :hover ...)
+- Find in Styles - pesquisar dentro das regras
+- Colar CSS funciona (será formatado corretamente)
+- Computed
+    - Editar valores nas caixas
+    - Show inherited properties
+
+---
+
+##Network Panel
+Detectar problemas de performance relacionados ao download dos recursos da página
+
+Curiosidade: As informações de performance utilizadas por esse painel, podem ser acessadas por `window.performance.getEntries()`
+    
+- Filtrar resultados
+- Ordenar resultados (Coluna timeline é diferente)
+- Ocultar ou mostrar colunas
+- Informações nas barras (Waiting e Receiving)
+- Linhas Verticais (DOMContentLoaded e Load)
+- Detalhes da requisição (Headers, Response, Cookies, Timing)
+- Salvar resultados para analisar depois
+    - Copy all as HAR
+    - Save as HAR with content
+    - http://ericduran.github.io/chromeHAR/
+    - Pode ser uma prática para evitar regressão de performance
+- Referências:
+	- <https://developer.chrome.com/devtools/docs/network>
+	- <https://www.igvita.com/2012/08/28/web-performance-power-tool-http-archive-har/>
+
+---
+
+##Source Panel
+###Text Editor
+
+Usa o http://codemirror.net/
+
+- Find (`Ctrl + F`)
+    - Find & Replace
+- Find in all files (`Ctrl + Shift + F`)
+    - Regular Expression
+- Open a file (`Ctrl + O` ou `Ctrl + P`)
+- Go to declaration (`Ctrl + Shift + O`)
+- Go to line (`Ctrl + G`)     
+- Save file
+- Local Modifications (History)
+- Close file (`Alt + W`)     
+- Pretty print (desminificar)
+
+---
+
+##Source Panel
+###Snippets     
+- Run (`Ctrl + Enter`)    
+- <https://github.com/paulirish/devtools-addons/wiki/Snippets>   
+- <http://bgrins.github.io/devtools-snippets/>
+     
+---
+##Source Panel
+###Workspaces     
+- Como criar     
+- Como vincular     
+- <https://developer.chrome.com/devtools/docs/workspaces>
+
+---
+##Source Panel
+###Debug
+- Breakpoints
+- Condicionais
+- DOM breakpoints
+- Event Listeners
+    - Geral
+    - Filtro (Elements Panel)
+- XHR Breakpoints
+- Pause on exceptions
+- Source Maps
+
+---
+
+##Resource Panel
+- Local Storage
+- Cookies             
+
+---
+
+##Console Panel
+- `console.log()`
+- `$()` - primeiro
+- `$$()` - vários
+- `$x()` - xpath
+- `debug(function)` - depura uma a função passada
+- `monitor(function)` - sempre que a função for chamada, registra no log a chamada e seus argumentos
+- `debugger`
+- Preserve Log (Right click)
+- Ver mais:
+    - <https://developer.chrome.com/devtools/docs/commandline-api>
+    - <https://developer.chrome.com/devtools/docs/console-api>
+
+---
+
+##Outros Painéis
+
+###Timeline Panel
+Descobrir problemas de performance relacionados a renderização (Renderização inicial da tela, Resize, Scroll e Animações)
+     
+###Profiles Panel
+Descobrir problemas de performance relacionados a memória e processamento (Javascript com processamento pesado)
+
+###Audits
+Tipo um PageSpeed simplificado. 
+Interessante que mostra CSS não utilizado na página
+
+---
+
+##Emulation
+- Tamanho da tela
+- CSS media
+- User Agent
+- Touch
+- Geolocation
+- Acelerômetro
+- Canary
+    - Breakpoints (media queries)
+    - Velocidade internet
+
+---
+##Experiments
+
+Além de todas as funcionalidades que estão ativas no Chrome Canary, ainda é possível habilitar funcionalidades experimentais
+
+- <chrome://flags/#enable-devtools-experiments>
+
+---
+	
+##Outras Dicas
+
+###Shortcuts
+- <https://developer.chrome.com/devtools/docs/shortcuts>
+
+    
+###Options (`F1`)
+- Show Rules
+- Ativar shortcuts (1-9)
+
+
+###Remote Debugging
+- Mostrar funcionando
+- <chrome://inspect/#devices>
+- <https://developer.chrome.com/devtools/docs/remote-debugging>
+
+---
+
+##Additional Resources
+###Documentação completa:
+- https://developer.chrome.com/devtools
+- https://github.com/GoogleChrome/devtools-docs (Código fonte da documentação no github)
+
+###Fórum:
+- https://groups.google.com/forum/#!forum/google-chrome-developer-tools
+
+###Vídeos:
+- https://developer.chrome.com/devtools/docs/videos
+- http://www.youtube.com/playlist?list=PLNYkxOF6rcIBQ8j3J_PyM8JLAGKqZRByw
+- http://discover-devtools.codeschool.com/
+
+---
+
+##Quem seguir:
+- @umaar
+- @paul_irish
+- @addyosmani
+
+    </textarea>
+    <script src="remark-latest.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+<ion-modal-view class="modal-minimo">
+    <ion-header-bar class="bar bar-header bar-positive">
+        <h1 class="title">Selecionar região</h1>
+        <button ng-if="!ocultarCancelar" class="button button-clear button-primary" ng-click="modalRegiao.hide()">
+            <i class="icon ion-android-close"></i>
+        </button>
+    </ion-header-bar>
+    <!-- <ion-content class="padding"> -->
+    <ion-scroll direction="y" style="right: 0;bottom: 0;left: 0;position: absolute;" class="has-header padding">
+        <form class="list">
+            <label class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input ng-model="query"  ng-change="buscarEstado(query)" type="search" placeholder="Digite o nome do estado" />
+            </label>
+        </form>
+        <div class="spacer" style="width: 300px; height: 1px;"></div>
+        <ion-list>
+            <ion-item ng-if="mostrarBr" class="item" ng-click="regiaoSelecionada('BR')">
+                <h2>Todo o Brasil</h2>
+            </ion-item>
+            <ion-item ng-if="mostrarEstado(estado)" class="item" ng-click="regiaoSelecionada(estado.uf)" ng-repeat="estado in estados">
+                <h2>{{estado.nome}}</h2>
+            </ion-item>
+        </ion-list>
+        <br/>
+    </ion-scroll>
+</ion-modal-view>

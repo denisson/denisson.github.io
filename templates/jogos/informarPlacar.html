@@ -1,0 +1,34 @@
+<ion-view title="Informar placar" ng-controller="placarController">
+    <ion-content padding="true" >
+        <form ng-if="jogo" id="informarPlacar-form">
+
+            <h5>Gols do {{jogo.mandante.nome}}</h5>
+            <ion-item class="item-avatar item">
+                <img jog-escudo="jogo.mandante.escudo" jog-size="mid">
+
+                <!-- <jog-stepper valor="jogo.mandante.gols"></jog-stepper> -->
+                <div class="col-input">
+                    <button class="button button-outline button-positive ion-minus" ng-disabled="jogo.placar.mandante <= 0" type="button" ng-click="decrement('mandante')"></button>
+                    <div style="margin: 0 48px; width: 100px">
+                        <input type="number" min="0" step="1" ng-model="jogo.placar.mandante">
+                    </div>
+                    <button class="button ion-plus button-positive button-outline" type="button" ng-click="increment('mandante')"></button>
+                </div>
+            </ion-item>
+            <h5>Gols do {{jogo.visitante.nome}}</h5>
+            <ion-item class="item-avatar item" id="buscaPorTimes-list-item29">
+                <img jog-escudo="jogo.visitante.escudo" jog-size="mid">
+                <!-- <jog-stepper valor="jogo.visitante.gols"></jog-stepper> -->
+                <div class="col-input">
+                    <button class="button button-outline button-positive ion-minus" ng-disabled="jogo.placar.visitante <= 0" type="button" ng-click="decrement('visitante')"></button>
+                    <div style="margin: 0 48px; width: 100px">
+                        <input type="number" min="0" step="1" ng-model="jogo.placar.visitante">
+                    </div>
+                    <button class="button ion-plus button-positive button-outline" type="button" ng-click="increment('visitante')"></button>
+                </div>
+            </ion-item>
+            <button ng-click="salvarPlacar()" class="button button-positive button-block">Salvar</button>
+            <button ng-click="informarDepois()" class="button button-block">Informar Depois</button>
+        </form>
+    </ion-content>
+</ion-view>

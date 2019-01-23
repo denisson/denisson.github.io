@@ -1,0 +1,202 @@
+<ion-view ng-controller="timeController">
+  <ion-nav-title>{{time.nome}}</ion-nav-title>
+  <ion-nav-buttons side="right">
+      <button ng-if="editavel()" class="button" ng-click="exibirMenuTime()">
+        <i class="icon ion-android-more-vertical"></i>
+      </button>
+  </ion-nav-buttons>
+<ion-content padding="true">
+<!--     <ion-refresher
+      pulling-text="Atualizar..."
+      on-refresh="atualizar()">
+    </ion-refresher> -->
+
+    <div ng-if="time">
+      <div ng-if="mostrarTemporadas()" class="tabs tabs-striped tabs-top tabs-stable tab-temporadas">
+        <a class="tab-item" ng-click="setTemporada('todas')" style="color: #222222;">
+          Temporadas:
+        </a>
+        <a class="tab-item" ng-class="{active: temporadaAtiva(temporada.ano)}" ng-click="setTemporada(temporada.ano)" ng-repeat="temporada in time.temporadas">
+          {{temporada.ano}}
+        </a>
+        <a class="tab-item" ng-class="{active: temporadaAtiva('todas')}" ng-click="setTemporada('todas')">
+          Todas
+        </a>
+      </div>
+
+      <div ng-if="mostrarTemporadas()" style="padding-top: 50px;"></div>
+
+
+
+    <ion-list>
+        <ion-item class="item-thumbnail-left resumo-time">
+            <img ng-click="editarTime()" jog-escudo="time.escudo" jog-size="mid">
+
+            <div class="row resumo-jogos">
+                <div class="col"><b>{{time.numeros.vitorias}}</b><p style="color: #999">vitórias</p></div>
+                <div class="col"><b>{{time.numeros.empates}}</b><p style="color: #999">empates</p></div>
+                <div class="col"><b>{{time.numeros.derrotas}}</b><p style="color: #999">derrotas</p></div>
+            </div>
+<!--             <div class="list">
+            <label class="item item-input item-select">
+              <div class="input-label">
+                Temporada
+              </div>
+              <select class="" >
+                  <option value="ARTILHARIA" selected="selected">2017</option>
+                  <option value="POSICAO">2016</option>
+              </select>
+            </label>
+          </div> -->
+<!--             <button ng-if="!editavel()" class="button button-outline button-positive button-block button-small" style="margin: 0;">
+              Seguir
+            </button> -->
+<!--             <div ng-if="time.numeros.jogos" style="
+                height: 3px;
+                width: 88%;
+                margin: auto;
+            ">
+              <div ng-style="{width: time.numeros.percentual.vitorias + '%'}" class="vitorias" style="
+                  height: 100%;
+                  background-color: #9DD374;
+                  float: left;
+              "></div>
+              <div ng-style="{width: time.numeros.percentual.empates + '%'}" class="empates" style="
+                  height: 100%;
+                  background-color: #FAB26A;
+                  background-color: #939393;
+                  float: left;
+              "></div>
+              <div  ng-style="{width: time.numeros.percentual.derrotas + '%'}" class="derrotas" style="
+                  height: 100%;
+                  background-color: #F27077;
+                  float: left;
+              "></div>
+            </div> -->
+<!--             <div style="height: 50px; padding: 5px">
+              <canvas id="myChart"></canvas>
+            </div> -->
+            <div ng-if="editavel()" class="row">
+              <div class="col col-75">
+                <button ng-click="editarTime()"  class="button button-outline button-positive button-block button-small" style="margin: 0" >Editar perfil</button>
+              </div>
+              <div class="col col-25">
+                <button ng-click="irParaSite(time._id); $event.stopPropagation()" class="button button-outline button-positive button-block button-small icon ion-android-share-alt" style="margin: 0"></button>
+              </div>
+            </div>
+            <div ng-if="!editavel()">
+              <a ng-if="!editavel() && time.telefone.numero && time.telefone.whatsapp === true" ng-click="irParaWhatsapp(time.telefone); $event.stopPropagation()" class="button button-outline button-positive button-block button-small" style="margin: 0" >Whatsapp</a>
+              <a ng-if="!editavel() && time.telefone.numero && (time.telefone.whatsapp === false)" href="tel:+{{time.telefone.ddi}}{{time.telefone.numero}}"  class="button button-outline button-positive button-block button-small" style="margin: 0" >Telefone</a>
+            </div>
+
+        </ion-item>
+    </ion-list>
+
+    <div class="padding-horizontal padding-bottom">
+      <b>{{time.nome}}</b><br/>
+      <div ng-if="time.biografia" style="white-space: pre-wrap;">{{time.biografia}}</div>
+      <!-- <p ng-if="time.telefone.numero">{{formatarTelefone(time.telefone.numero)}}</p> -->
+      <a ng-if="time.site" class="text-overflow" href="#" ng-click="irParaUrl(time.site); $event.stopPropagation();" style="text-decoration: none">{{time.site}}</a>
+      <a ng-if="time.instagram" class="text-overflow" href="#" ng-click="irParaUrl('https://www.instagram.com/{{time.instagram}}'); $event.stopPropagation()" style="text-decoration: none">@{{time.instagram}}</a>
+      <div ng-if="time.cidade.nomeCompleto">
+        {{time.cidade.nomeCompleto}}
+      </div>
+      <div ng-if="time.telefone.numero || editavel()">
+        <a ng-if="time.telefone.numero && time.telefone.whatsapp === true" ng-click="irParaWhatsapp(time.telefone); $event.stopPropagation()" style="text-decoration: none">{{formatarTelefone(time.telefone.numero)}}</a>
+        <a ng-if="time.telefone.numero && (time.telefone.whatsapp === false)" href="tel:+{{time.telefone.ddi}}{{time.telefone.numero}}" style="text-decoration: none">{{formatarTelefone(time.telefone.numero)}}</a>
+        <a ng-if="!time.telefone.numero && editavel()" ng-click="editarTime()" style="text-decoration: none">Cadastrar telefone</a>
+      </div>
+    </div>
+
+    <div ng-if="editavel() && !time.ativo" class="confirmacao-jogo" style="margin-bottom: 16px;">
+      <p class="dark">O perfil do seu time foi desativado por que não está sendo utilizado. Deseja reativar este perfil ou excluí-lo definitivamente?</p>
+      <p>
+        <button ng-click="reativarTime()" class="button button-positive">Reativar</button>
+        <button ng-click="excluirTime()" class="button button-stable button-outline" href="#">Excluir</button>
+      </p>
+    </div>
+
+<!--     <div class="confirmacao-jogo" style="margin-bottom: 16px;">
+      <p class="dark">Informe o telefone de contato</p>
+      <label class="item item-input">
+          <span class="input-label">Telefone</span>
+          <input ng-model="time.telefone.countryCode" type="text" placeholder="+55" value="+55" required>
+          <input ng-model="time.telefone.ddd" type="text" placeholder="ddd" required>
+          <input ng-model="time.telefone.numero" type="text" placeholder="numero" required>
+      </label>
+      <p>
+        <button ng-click="reativarTime()" class="button button-positive">Salvar</button>
+        <button ng-click="excluirTime()" class="button button-stable button-outline" href="#">Informar depois</button>
+      </p>
+    </div> -->
+
+    <ion-list ng-controller="jogadoresController">
+      <ion-item ng-if="editavel() && time.jogos.confirmarJogo.length" class="item-divider">Confirmar Jogos</ion-item>
+      <jog-partidas ng-if="editavel()" partidas="time.jogos.confirmarJogo"></jog-partidas>
+      <ion-item ng-if="editavel() && time.jogos.aguardandoPlacar.length" class="item-divider">Jogos sem placar</ion-item>
+      <jog-partidas ng-if="editavel()" partidas="time.jogos.aguardandoPlacar"></jog-partidas>
+      <ion-item ng-if="editavel() && time.jogos.confirmarPlacar.length" class="item-divider">Confirmar Placar</ion-item>
+      <jog-partidas ng-if="editavel()" partidas="time.jogos.confirmarPlacar"></jog-partidas>
+
+      <ion-item ng-if="editavel() || time.jogos.proximos.length" class="item-divider">Próximos Jogos</ion-item>
+      <ion-item ng-if="!time.jogos.proximos.length && editavel()">
+        <button ui-sref="novoJogo" class="button button-outline button-block button-positive icon ion-plus-circled" href="#"> Cadastrar Jogo </button>
+      </ion-item>
+      <jog-partidas partidas="time.jogos.proximos"></jog-partidas>
+
+      <ion-item ng-if="editavel() || time.jogos.encerrados.length" class="item-divider">Últimos jogos</ion-item>
+      <ion-item ng-if="!time.jogos.encerrados.length && editavel()">
+        <button ui-sref="novoJogo" class="button button-outline button-block button-positive icon ion-plus-circled" href="#"> Cadastrar Jogo </button>
+      </ion-item>
+      <jog-partidas partidas="time.jogos.encerrados"></jog-partidas>
+
+      <ion-item ng-if="temMaisJogosEncerrados()" ><button ng-click="verJogosAnteriores()" class="button button-positive button-outline button-block" href="#"> Ver jogos anteriores </button></ion-item>
+      <ion-item ng-if="time.jogadores.length || editavel()" class="item-divider item-select">Jogadores 
+              <select ng-model="jogadoresOrdem" ng-change="ordenarPor(jogadoresOrdem)" style="background: transparent;">
+                  <option value="ARTILHARIA">Artilharia</option>
+                  <option value="ASSISTENCIAS">Assistências</option>
+                  <option value="JOGOS">Jogos</option>
+                  <option value="POSICAO">Posição</option>
+                  <option value="NOME">Nome</option>
+              </select>
+      </ion-item>
+      <ion-item ng-click="verJogador(jogador, temporada)" class="item-avatar avatar-jogador" ng-repeat="jogador in time.jogadores">
+          <img jog-jogador="jogador.foto" jog-size="small">
+          <h2>{{jogador.nome}}</h2>
+          <p>
+            {{jogador.posicao}}
+            <span ng-if="jogador.posicao && jogador.camisa"> • </span>
+            <span ng-if="jogador.camisa">Camisa {{jogador.camisa}}</span>
+          </p>
+          <div class="item-col-jogos">
+            <p>Jogos</p>
+            <h2 class="qtd-gols">{{jogosJogadorNaTemporada(jogador)}}</h2>
+          </div>
+          <div class="item-col-assist">
+            <p>Assist</p>
+            <h2 class="qtd-gols">{{assistJogadorNaTemporada(jogador)}}</h2>
+          </div>
+          <div class="item-col-gols">
+            <p>Gols</p>
+            <h2 class="qtd-gols">{{golsJogadorNaTemporada(jogador)}}</h2>
+          </div>
+      </ion-item>
+      <ion-item ng-if="time && editavel()" >
+        <button ng-click="adicionarJogador(time.id)" class="button button-positive button-outline button-block icon ion-person-add" href="#"> Adicionar Jogador </button>
+      </ion-item>
+    </ion-list>
+    <br/>
+    <p style="text-align: center">
+      Dúvidas ou sugestões?
+      <br/>
+      <a href="#" ng-click="irParaUrl('mailto:jogueirosfc.inc@gmail.com'); $event.stopPropagation();">jogueirosfc.inc@gmail.com</a>
+    </p>
+  </div>
+  </ion-content>
+<!--                 </ion-nav-view>
+            </ion-tab>
+        </ion-tabs>
+
+    </ion-pane> -->
+  
+</ion-view>

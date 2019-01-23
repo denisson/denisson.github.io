@@ -1,0 +1,21 @@
+<ion-modal-view>
+    <ion-header-bar class="bar bar-header bar-positive">
+        <button class="button button-clear button-primary" ng-click="modalEstado.hide()">Cancelar</button>
+        <h1 class="title">Selecionar estado</h1>
+    </ion-header-bar>
+    <ion-content class="padding">
+        <form class="list">
+            <label class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input ng-model="search" type="search" placeholder="Digite o nome do estado" />
+            </label>
+        </form>
+        <div class="spacer" style="width: 300px; height: 1px;"></div>
+        <ion-list>
+            <ion-item class="item" ng-click="estadoSelecionado(estado)" ng-repeat="estado in estados | fuzzyBy:'nomeSemAcento':search" >
+                <h2>{{estado.nome}}</h2>
+            </ion-item>
+        </ion-list>
+        <br/>
+    </ion-content>
+</ion-modal-view>

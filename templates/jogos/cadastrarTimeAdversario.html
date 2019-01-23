@@ -1,0 +1,21 @@
+<ion-modal-view>
+    <ion-header-bar class="bar bar-header bar-positive">
+        <button class="button button-clear button-primary" ng-click="modalCadastrarTime.hide()">Cancelar</button>
+        <h1 class="title">Cadastrar adversário</h1>
+    </ion-header-bar>
+    <ion-content padding="true" class="has-header">
+        <form class="list" ng-submit="enviar()">
+        <div class="captura-foto">
+            <!-- <input type="file" id="input-file-foto" class="hidden" accept="image/*" /> -->
+            <img class="captura-foto-img" ng-click="capturarFoto()" id="logotipo" jog-escudo="jogo.timeAdversario.escudo" ></img>
+            <i ng-click="capturarFoto()" class="icon ion-image captura-foto-icon"></i>
+        </div>
+            <label class="item item-input" id="cadastrarTime-input6">
+                <span class="input-label">Nome</span>
+                <input ng-model="jogo.timeAdversario.nome" type="text" placeholder="Nome do time" required>
+            </label>
+            <button type="submit" class="button button-positive button-block">Cadastrar</button>
+
+        </form>
+    </ion-content>
+</ion-modal-view>

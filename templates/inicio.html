@@ -1,0 +1,56 @@
+<ion-view class="has-tabs-top" ng-controller="inicioTopoController">
+  <ion-nav-title>Jogueiros FC</ion-nav-title>
+  <ion-nav-buttons side="right" class="item-select" >
+      <button class="button" mostrar-br="true" tem-jogos="true" regiao="{{regiao}}" jog-escolher-regiao>
+        Região:
+        <b class="padding-left">{{regiao}}</b>
+        <i class="icon ion-android-arrow-dropdown" style="color:#999"></i>
+      </button>
+  </ion-nav-buttons>
+    <ion-pane>
+        <ion-tabs class="tabs-striped tabs-top tabs-stable">
+
+            <!-- Tab 1 -->
+            <ion-tab title="Últimos Jogos">
+                <ion-nav-view name="tab-tab1">
+                    <ion-content class="has-header has-tabs image-background img-rodada" overflow-scroll="true" ng-controller="inicioController">
+                      <ion-refresher
+                        pulling-text="Atualizar..."
+                        on-refresh="atualizar()">
+                      </ion-refresher>
+                         <ion-list> 
+                            <jog-partidas partidas="jogos"></jog-partidas>
+                        </ion-list>
+                        <div ng-show="!jogos.length && dadosCarregados" class="padding mensagem-destacada">
+                            <h3 class="dark">A bola ainda não rolou por aqui :(</h2>
+                            <p class="dark">Seja o primeiro da sua região! Você pode cadastrar os seus jogos, mesmo que o adversário ainda não esteja no Jogueiros, e convidar outros times para ficar ainda melhor.</p>
+                        </div>
+                        <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarJogos()" distance="10%"></ion-infinite-scroll>
+                    </ion-content>
+                </ion-nav-view>
+            </ion-tab>
+
+
+            <!-- Tab 2 -->
+            <ion-tab title="Próximos Jogos">
+                <ion-nav-view name="tab-tab2">
+                    <ion-content class="has-header has-tabs image-background img-rodada" overflow-scroll="true" ng-controller="inicioController" proximos-jogos="true">
+                      <ion-refresher
+                        pulling-text="Atualizar..."
+                        on-refresh="atualizar()">
+                      </ion-refresher>
+                         <ion-list> 
+                            <jog-partidas partidas="jogos"></jog-partidas>
+                        </ion-list>
+                        <div ng-show="!jogos.length && dadosCarregados" class="padding mensagem-destacada">
+                            <h3 class="dark">Sem previsão de novos jogos</h2>
+                            <!-- <p class="dark">Parece que os jogueiros estão se poupando pra próxima rodada.</p> -->
+                        </div>
+                        <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarJogos()" distance="10%"></ion-infinite-scroll>
+                    </ion-content>
+                </ion-nav-view>
+            </ion-tab>
+        </ion-tabs>
+
+    </ion-pane>
+</ion-view>

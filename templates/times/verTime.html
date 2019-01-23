@@ -1,0 +1,14 @@
+<ion-modal-view class="modal-minimo" ng-class="!time._id ? 'tem-rodape': ''">
+    <ion-header-bar class="bar bar-header">
+        <h1 class="title">{{timeDoModal.nome}}</h1>
+        <button class="button button-clear button-primary" ng-click="modalTime.hide()">
+            <i class="icon ion-android-close"></i>
+        </button>
+    </ion-header-bar>
+    <ion-content scroll="false" >
+      <img class="foto-escudo-modal" jog-escudo="timeDoModal.escudo" jog-size="large"></img>
+    </ion-content>
+    <ion-footer-bar ng-if="!time._id" class="bar">
+      <p class="title" style="font-size: 0.9em; color: #999;">Time não cadastrado no Jogueiros FC</p>
+    </ion-footer-bar>
+</ion-modal-view>

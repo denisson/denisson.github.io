@@ -1,0 +1,65 @@
+<ion-modal-view>
+    <ion-header-bar class="bar bar-header">
+        <button class="button button-clear button-primary" ng-click="modalJogador.hide()">
+            <i class="icon ion-ios-arrow-back"></i>
+        </button>
+        <h1 class="title">{{jogadorModal.nome}}</h1>
+        <button ng-if="editavel()" class="button" ng-click="exibirMenuJogador(jogadorModal)">
+            <i class="icon ion-android-more-vertical"></i>
+        </button>
+    </ion-header-bar>
+    <ion-content class="image-background img-jogador perfil-jogador">
+
+        <div class="captura-foto-redonda">
+            <img class="captura-foto-img" jog-jogador="jogadorModal.foto" jog-size="large"></img>
+        </div>
+        <h1 class="nome">{{jogadorModal.nome}}</h1>
+        <p class="posicao">
+            {{jogadorModal.posicao}} {{jogadorModal.camisa && jogadorModal.posicao ? ' • ' : ''}} {{jogadorModal.camisa ? ('Camisa ' + jogadorModal.camisa ) : '' }}
+        </p>
+
+        <ion-item class="row numeros">
+            <div class="col col-33">
+                <h5 class="valor">{{jogadorModal.numerosTemporada.jogos || 0}}</h5>
+                <p class="campo">Jogos</p>
+            </div>
+            <div class="col col-33">
+                <h5 class="valor">{{jogadorModal.numerosTemporada.assistencias || 0}}</h5>
+                <p class="campo">Assistências</p>
+            </div>
+            <div class="col col-33">
+                <h5 class="valor">{{jogadorModal.numerosTemporada.gols || 0}}</h5>
+                <p class="campo">Gols</p>
+            </div>
+        </ion-item>
+
+
+        <div class="jogos-temporada">
+            <h4 class="titulo">{{ temporadaModal != "todas" ? ('Jogos na temporada ' + temporadaModal) : 'Jogos em todas as temporadas' }}</h4>
+            <div class="mapa-jogador-ano">
+                <div    class="mapa-jogador-mes" 
+                        ng-click="verDetalhesMes(jogosMes.mes, jogosMes.jogos)" 
+                        ng-if="jogadorModal.jogosPorMes" 
+                        ng-repeat="jogosMes in jogadorModal.jogosPorMes">
+
+                    <h3 class="mes" ng-class="{mesFuturo: jogosMes.mesFuturo}">{{jogosMes.mes}}</h3>
+
+                    <a  class="mapa-jogador-ano-jogo"
+                        ng-click="verDetalhesJogo(dadosJogo, jogosMes.mes, jogosMes.jogos)"
+                        ng-if="jogadorModal.jogosPorMes"
+                        ng-repeat="dadosJogo in jogosMes.jogos"
+                        ng-class="{
+                                    presente: dadosJogo.numeros,
+                                    gols: dadosJogo.numeros.gols > 0,
+                                    assistencias: dadosJogo.numeros.assistencias > 0, 
+                                    clicado:jogoClicadoMapa.jogo.id == dadosJogo.jogo.id
+                                }"
+                        ion-stop-event="click">
+                    </a>
+                </div>
+                <p ng-if="!jogadorModal.jogosPorMes" style="color: #666">Nenhum jogo cadastrado</p>
+            </div>
+        </div>
+
+    </ion-content>
+</ion-modal-view>

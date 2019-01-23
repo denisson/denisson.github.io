@@ -1,0 +1,29 @@
+<ion-view title="{{titulo}}" hide-nav-bar="true">
+    <ion-content padding="true" class="image-background img-login">
+        <div class="mensagem-destacada" style="padding: 15px 30px;">
+            <h2 class="dark" style="margin-left:-15px; margin-right: -15px">Bem-vindo, Jogueiro!</h2>
+            <p class="dark">Manda o escudo do seu time pra gente, depois informa o nome, a cidade e pronto!</p>
+        </div>
+        <form class="list" ng-submit="enviar()">
+        <div class="captura-foto">
+            <!-- <input type="file" id="input-file-foto" class="hidden" accept="image/*" /> -->
+            <img class="captura-foto-img" ng-click="capturarFoto()" id="logotipo" jog-escudo="time.escudo"></img>
+            <i ng-click="capturarFoto()" class="icon ion-image captura-foto-icon"></i>
+        </div>
+            <label class="item item-input" id="cadastrarTime-input6">
+                <span class="input-label">Nome</span>
+                <input ng-model="time.nome" type="text" placeholder="Nome do seu time" required>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Cidade</span>
+                <input ng-model="time.cidade.nomeCompleto" ng-click="modalEstado.show()" type="text" placeholder="Cidade do seu time" />
+            </label>
+            
+            <button ng-disabled="!time.nome || !time.cidade.nomeCompleto" type="submit" class="button button-positive button-block">{{labelBotao}}</button>
+            <p style="text-align: center">
+                ou <br/>
+                <a href="#" ng-click="sair()">Utilizar outra conta</a>
+            </p>
+        </form>
+    </ion-content>
+</ion-view>
