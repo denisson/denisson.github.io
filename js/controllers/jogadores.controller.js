@@ -62,26 +62,27 @@ angular
 
       DataService.timeJogos(jogador.time, temporada).then(function(time){
         let jogos = time.jogos.encerrados;
-        let jogosPorMes = {};
-        let ultimoMes = ( temporada == moment().year() ) ? ( moment().month() ) : 11; 
-        for (var i = 11; i >= 0; i--) {
-          jogosPorMes[i] = {jogos: [], mes: moment().month(i).format('MMM'), mesFuturo: (i > ultimoMes)};
-        }
-        
-        for (var i = jogos.length - 1; i >= 0; i--) {
-          let jogo = jogos[i];
-          let numerosJogador = _.find(jogo.jogadores.mandante, {jogador: jogador._id}) || _.find(jogo.jogadores.visitante, {jogador: jogador._id});
-          let mes = moment(jogo.dataHora).month();
-
-          jogosPorMes[mes].jogos.push({
-            jogo: jogo,
-            numeros: numerosJogador
-          });
+        if(jogos) {
+          let jogosPorMes = {};
+          let ultimoMes = ( temporada == moment().year() ) ? ( moment().month() ) : 11; 
+          for (var i = 11; i >= 0; i--) {
+            jogosPorMes[i] = {jogos: [], mes: moment().month(i).format('MMM'), mesFuturo: (i > ultimoMes)};
+          }
           
+          for (var i = jogos.length - 1; i >= 0; i--) {
+            let jogo = jogos[i];
+            let numerosJogador = _.find(jogo.jogadores.mandante, {jogador: jogador._id}) || _.find(jogo.jogadores.visitante, {jogador: jogador._id});
+            let mes = moment(jogo.dataHora).month();
+
+            jogosPorMes[mes].jogos.push({
+              jogo: jogo,
+              numeros: numerosJogador
+            });
+            
+          }
+
+          $scope.jogadorModal.jogosPorMes = jogosPorMes;
         }
-
-        $scope.jogadorModal.jogosPorMes = jogosPorMes;
-
 
       });
     }

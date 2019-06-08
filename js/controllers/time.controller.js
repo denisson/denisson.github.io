@@ -1,6 +1,7 @@
 angular
   .module('app.controllers')
   .controller('timeController', ['$rootScope', '$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicActionSheet', '$ionicHistory', '$ionicPopup', '$ionicModal' , function ($rootScope, $scope, $state, $stateParams, DataService, AuthService, $ionicActionSheet,$ionicHistory, $ionicPopup, $ionicModal) {
+    var diasExtenso = ['','Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
     $scope.jogadoresOrdem = 'ARTILHARIA';
     $scope.jogosAnteriores = [];
     $scope.exibindoJogosAnteriores = false;
@@ -50,6 +51,14 @@ angular
       return false;
     }
 
+    $scope.irParaInstagram = function(time){
+      $scope.irParaUrl('https://www.instagram.com/' + time.instagram);
+    }
+
+    $scope.diaExtenso = function(num){
+      return diasExtenso[num];
+    }
+
     $scope.atualizar = function(){
       $scope.temporada = $stateParams.temporada = $stateParams.temporada || moment().year();
       if(!$stateParams.id && AuthService.getTime()){
@@ -77,6 +86,7 @@ angular
         }
 
         $scope.time = time;
+
         // $scope.setTemporada();
         $scope.ordenarPor($scope.jogadoresOrdem);
         $scope.$broadcast('scroll.refreshComplete');
@@ -102,23 +112,23 @@ angular
       switch(ordem){
         case 'ARTILHARIA':
           orderFunction = function(a, b){
-            return $scope.golsJogadorNaTemporada(b) - $scope.golsJogadorNaTemporada(a) || a.nome.localeCompare(b.nome);
+            return ($scope.golsJogadorNaTemporada(b) - $scope.golsJogadorNaTemporada(a)) || ($scope.assistJogadorNaTemporada(b) - $scope.assistJogadorNaTemporada(a)) || ($scope.jogosJogadorNaTemporada(b) - $scope.jogosJogadorNaTemporada(a)) ||  a.nome.localeCompare(b.nome);
           }
         break;
         case 'ASSISTENCIAS':
           orderFunction = function(a, b){
-            return $scope.assistJogadorNaTemporada(b) - $scope.assistJogadorNaTemporada(a) || a.nome.localeCompare(b.nome);
+            return $scope.assistJogadorNaTemporada(b) - $scope.assistJogadorNaTemporada(a) || ($scope.golsJogadorNaTemporada(b) - $scope.golsJogadorNaTemporada(a)) || ($scope.jogosJogadorNaTemporada(b) - $scope.jogosJogadorNaTemporada(a)) || a.nome.localeCompare(b.nome);
           }
         break;
         case 'JOGOS':
           orderFunction = function(a, b){
-            return $scope.jogosJogadorNaTemporada(b) - $scope.jogosJogadorNaTemporada(a) || a.nome.localeCompare(b.nome);
+            return $scope.jogosJogadorNaTemporada(b) - $scope.jogosJogadorNaTemporada(a) || ($scope.golsJogadorNaTemporada(b) - $scope.golsJogadorNaTemporada(a)) || ($scope.assistJogadorNaTemporada(b) - $scope.assistJogadorNaTemporada(a)) || a.nome.localeCompare(b.nome);
           }
         break;
         case 'POSICAO':
           orderFunction = function(a, b){
             var posicoes = ['Técnico', 'Auxiliar técnico', 'Goleiro', 'Zagueiro', 'Volante', 'Lateral', 'Meia', 'Atacante'];
-            return posicoes.indexOf(a.posicao) - posicoes.indexOf(b.posicao) || a.nome.localeCompare(b.nome); //Se for a mesma posição, ordena pelo nome
+            return (posicoes.indexOf(a.posicao) - posicoes.indexOf(b.posicao)) || ($scope.golsJogadorNaTemporada(b) - $scope.golsJogadorNaTemporada(a)) || ($scope.assistJogadorNaTemporada(b) - $scope.assistJogadorNaTemporada(a)) || ($scope.jogosJogadorNaTemporada(b) - $scope.jogosJogadorNaTemporada(a)) ||  a.nome.localeCompare(b.nome); //Se for a mesma posição, ordena pelo nome
           }
         break;
         case 'NOME':
@@ -153,7 +163,7 @@ angular
     }
 
     $scope.editavel = function(){
-      return AuthService.getTime() && $scope.timeId === AuthService.getTime()._id && temporadaAtual();
+      return $scope.time && AuthService.getTime() && $scope.timeId === AuthService.getTime()._id && temporadaAtual();
     }
 
     function temporadaAtual(){

@@ -185,6 +185,11 @@ angular.module('app.services')
 		},
 		setNotificationToken: function(usuarioId, oldNotificationToken, newNotificationToken, registrationType){
 			return post('usuario/'+ usuarioId +'/setNotificationToken', {oldNotificationToken: oldNotificationToken, newNotificationToken: newNotificationToken, registrationType: registrationType});
+		},
+		logError: function(exception){
+			var userData = JSON.parse(window.localStorage.getItem('user_data'));
+			var device = device || null;
+			return post('log/error', {exception: exception, user: _.pick(userData, ['time', 'nome', '_id']), device: device});
 		}
 	}
 }]);

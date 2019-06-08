@@ -204,7 +204,7 @@ angular
     //todo:checar se telefone é válido
     if($scope.telefone.numero != undefined){
       // Informou o ddd?
-      if($scope.telefone.numero.length >= 10){ 
+      if($scope.telefone.numero.length >= 10 || $scope.telefone.numero.length == 0){ 
         $scope.time.telefone = $scope.telefone;
         $scope.time.telefone.numeroFormatado = formatarTelefone($scope.time.telefone.numero);
         if(editando()){
@@ -229,7 +229,7 @@ angular
   }
 
   function formatarTelefone(telefone){
-    return telefone.replace(/^(\d{2})?(\d{4,5})(\d{4})$/, "$1 $2-$3").trim();
+    return telefone ? telefone.replace(/^(\d{2})?(\d{4,5})(\d{4})$/, "$1 $2-$3").trim() : '';
   }
 
   $scope.sair = function(){

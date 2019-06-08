@@ -3,12 +3,12 @@ angular.module('app.directives', [])
 .directive('jogPartidas', ['$ionicModal', function($ionicModal){
   return {
   	restrict: 'E',
-  	scope: {partidas: '=', informarPlacar: '@'},
+  	scope: {partidas: '=?', informarPlacar: '@'},
     templateUrl: 'templates/directives/jog-partidas.html',
     controller: function($scope, $state){
     	$scope.irParaTime = function(time){
         if(time._id){
-    		  $state.go('abasInicio.paginaDoTime-'+Object.keys($state.current.views)[0], {id: time._id});
+    		  $state.go('abasInicio.paginaDoTime-'+getNomeAbaAtual(), {id: time._id});
         } else {
           $scope.verTimeSemCadastro(time);
         }
@@ -33,8 +33,13 @@ angular.module('app.directives', [])
         // if ($scope.informarPlacar) {
         //   $state.go('informarPlacar', {id: jogo._id, jogo: jogo});
         // } else {
-          $state.go('abasInicio.jogo-'+Object.keys($state.current.views)[0], {id: jogo._id});
+          $state.go('abasInicio.jogo-'+getNomeAbaAtual(), {id: jogo._id});
         // }
+      }
+
+      function getNomeAbaAtual(){
+        var currentViews = _.get($state, 'current.views');
+        return currentViews ? Object.keys(currentViews)[0] : 'aba-time';
       }
 
       $scope.verTimeSemCadastro = function(time){
@@ -58,20 +63,23 @@ angular.module('app.directives', [])
     restrict: 'A',
     link: function(scope, el, attr) {
       function getUrlImg(urlImg, size){
-        // var mapSize = {'small': '48x48', 'mid': '80x80', 'large': '300x300'};
-        // return config.URL_S3 + (mapSize[size]? mapSize[size] + '/' : '') +  urlImg
-        return config.URL_S3 + urlImg;
+        var mapSize = {'small': '48x48', 'mid': '80x80', 'large': '300x300'};
+        var dimensions = (mapSize[size]? mapSize[size] : '300x300');
+        return config.URL_IMAGEBOSS + 'cover:center/' + dimensions + '/' + config.URL_S3 + urlImg;
+        // return config.URL_S3 + urlImg;
       }
 
       scope.$watch(el.attr('jog-escudo'), function(urlImg) {
         if(/^(\w+\:\/\/)/.test(urlImg)){//caso a imagem seja com o protocolo e tudo completo
           el.attr('src', urlImg);
-        } else if (urlImg) { 
-          // if(el.attr('jog-size') != 'small'){
-          //  el.css({'background-image': 'url(' + getUrlImg(urlImg, 'small') +')'});
-          // }
+        } else if (urlImg) {
+          if(el.attr('jog-size') != 'small'){
+            el.attr('src', '');
+           el.css({'background-image': 'url(' + getUrlImg(urlImg, 'small') +')'});
+          }
           el.attr('src', getUrlImg(urlImg, el.attr('jog-size')));
         } else {
+          el.css({'background-image': 'none'});
           el.attr('src', 'img/escudo.svg');
         }
       });
@@ -83,20 +91,22 @@ angular.module('app.directives', [])
     restrict: 'A',
     link: function(scope, el, attr) {
       function getUrlImg(urlImg, size){
-        // var mapSize = {'small': '40x40', 'mid': '80x80', 'large': '180x180'};
-        // return config.URL_S3 + (mapSize[size]? mapSize[size] + '/' : '') +  urlImg
-        return config.URL_S3 + urlImg;
+        var mapSize = {'small': '48x48', 'mid': '80x80', 'large': '300x300'};
+        var dimensions = (mapSize[size]? mapSize[size] : '300x300');
+        return config.URL_IMAGEBOSS + 'cover:face/' + dimensions + '/' + config.URL_S3 + urlImg;
       }
 
       scope.$watch(el.attr('jog-jogador'), function(urlImg) {
         if(/^(\w+\:\/\/)/.test(urlImg)){//caso a imagem seja com o protocolo e tudo completo
           el.attr('src', urlImg);
         } else if (urlImg) { 
-          // if(el.attr('jog-size') != 'small'){
-          //   el.css({'background-image': 'url(' + getUrlImg(urlImg, 'small') +')'});
-          // }
+          if(el.attr('jog-size') != 'small'){
+            el.attr('src', '');
+            el.css({'background-image': 'url(' + getUrlImg(urlImg, 'small') +')'});
+          }
           el.attr('src', getUrlImg(urlImg, el.attr('jog-size')));
         } else {
+          el.css({'background-image': 'none'});
           el.attr('src', 'img/jogador.svg');
         }
         el.addClass('foto-jogador');
@@ -134,10 +144,12 @@ angular.module('app.directives', [])
       });
 
       scope.buscarEstado = function(query){
-        if(query.length){
-          scope.estados = fuseEstados.search(_.deburr(query));
-        } else {
-          scope.estados = fuseEstados.list;
+        if(fuseEstados) {
+          if(query.length){
+            scope.estados = fuseEstados.search(_.deburr(query));
+          } else {
+            scope.estados = fuseEstados.list;
+          }  
         }
       }
 

@@ -96,7 +96,25 @@ angular
         }
       }
 
-
+      $scope.buscarTime = function(query){
+        if (fuse && fuseSemCidade) {
+          if(query){
+            var times = fuse.search(_.deburr(query));
+            var timesSemCidade = fuseSemCidade.search(_.deburr(query));
+          }  else {
+            var times = $scope.todosTimesInicio;
+            var timesSemCidade = fuseSemCidade.list;
+          }
+          $scope.todosTimes = _.chunk(times, QTD_POR_PAGINA);
+          $scope.todosTimesSemCidade = _.chunk(timesSemCidade, QTD_POR_PAGINA);
+          $scope.page = 1;
+          $scope.pageSemCidade = 1;
+          timesTmp = [];
+          timesSemCidadeTmp = [];
+          $scope.carregarResultados();
+          $scope.carregarResultadosSemCidade();
+        }          
+      }
 
       var retornoTimes =  false;
       if(retornoTimes = carregarTimes()){
@@ -104,24 +122,6 @@ angular
             $scope.carregarResultados();
             $scope.carregarResultadosSemCidade();
           });
-      }
-
-      $scope.buscarTime = function(query){
-        if(query){
-          var times = fuse.search(_.deburr(query));
-          var timesSemCidade = fuseSemCidade.search(_.deburr(query));
-        }  else {
-          var times = $scope.todosTimesInicio;
-          var timesSemCidade = fuseSemCidade.list;
-        }
-        $scope.todosTimes = _.chunk(times, QTD_POR_PAGINA);
-        $scope.todosTimesSemCidade = _.chunk(timesSemCidade, QTD_POR_PAGINA);
-        $scope.page = 1;
-        $scope.pageSemCidade = 1;
-        timesTmp = [];
-        timesSemCidadeTmp = [];
-        $scope.carregarResultados();
-        $scope.carregarResultadosSemCidade();
       }
 
   }])

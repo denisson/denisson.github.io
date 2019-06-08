@@ -1,10 +1,14 @@
 angular
   .module('app.controllers')
-  .controller('placarController', ['$scope', '$stateParams', '$state', 'DataService', function ($scope, $stateParams, $state, DataService) {
+  .controller('placarController', ['$scope', '$stateParams', '$state', 'DataService', '$ionicPopup', '$ionicHistory',   function ($scope, $stateParams, $state, DataService, $ionicPopup, $ionicHistory) {
 
     $scope.jogo = $stateParams.jogo;
     if(!$scope.jogo){
       DataService.jogo($stateParams.id).then(function(jogo){
+        if(!jogo){
+            mostrarAlerta('Esse jogo não foi encontrado');
+            return;
+        }
         $scope.jogo = jogo;
         $scope.jogo.placar = {mandante: 0, visitante: 0};
       });
@@ -32,5 +36,15 @@ angular
 
     $scope.informarDepois = function(){
       $state.go('abasInicio.meuTime');
+    }
+
+
+    function mostrarAlerta(mensagem){
+      $ionicPopup.alert({
+        title: 'Ops!',
+        content: mensagem
+      }).then(function(){
+        $ionicHistory.goBack();
+      });
     }
 }])

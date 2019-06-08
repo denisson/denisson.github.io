@@ -102,6 +102,10 @@ angular
       
     $scope.$on('$ionicView.enter', function(){
       DataService.jogo($stateParams.id).then(function(jogo){
+        if(!jogo){
+            mostrarAlerta('Esse jogo não foi encontrado');
+            return;
+        }
         $scope.jogo = jogo;
         $scope.jogo.jogadores.mandante = _.orderBy($scope.jogo.jogadores.mandante, ['gols', 'assistencias', 'cartoes.vermelho', 'cartoes.amarelo', 'cartoes.azul', 'jogador.nome'], ['desc', 'desc', 'asc', 'asc', 'asc', 'asc']);
         $scope.jogo.jogadores.visitante = _.orderBy($scope.jogo.jogadores.visitante, ['gols', 'assistencias', 'cartoes.vermelho', 'cartoes.amarelo', 'cartoes.azul', 'jogador.nome'], ['desc', 'desc', 'asc', 'asc', 'asc', 'asc']);
@@ -148,6 +152,15 @@ angular
        }
 
        $ionicActionSheet.show(params);
+    }
+
+    function mostrarAlerta(mensagem){
+      $ionicPopup.alert({
+        title: 'Ops!',
+        content: mensagem
+      }).then(function(){
+        $ionicHistory.goBack();
+      });
     }
 
 }]);

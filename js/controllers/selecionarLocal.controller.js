@@ -6,10 +6,14 @@ angular
     $scope.search = {query: ''};
 
     $scope.buscarLocal = function(query){
-      if(query.length){
-        $scope.locais = _.slice(fuseLocais.search(_.deburr(query)), 0, 50);
+      if(fuseLocais) {
+        if(query.length){
+          $scope.locais = _.slice(fuseLocais.search(_.deburr(query)), 0, 50);
+        } else {
+          $scope.locais = _.slice(fuseLocais.list, 0, 50);
+        }
       } else {
-        $scope.locais = _.slice(fuseLocais.list, 0, 50);
+        $scope.locais = [];
       }
     }
 

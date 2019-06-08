@@ -47,7 +47,7 @@ angular
 
     function getUsuarioLogado(){
       if(!usuarioLogado){
-        usuarioLogado = JSON.parse(window.localStorage.getItem('user_data'));;
+        usuarioLogado = JSON.parse(window.localStorage.getItem('user_data'));
       }
       return usuarioLogado;
     }

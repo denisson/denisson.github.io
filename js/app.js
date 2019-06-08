@@ -5,18 +5,22 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'app.routes', 'app.directives', 'app.components', 'app.services', 'ui.utils.masks' ])
+angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'app.routes', 'app.directives', 'app.components', 'app.services', 'ui.utils.masks'])
 .constant('config', {
   // URL_S3:  'http://jogueiros-fc-uploads.s3-website-sa-east-1.amazonaws.com/',
+  URL_IMAGEBOSS:  'https://img.imageboss.me/',
   URL_S3:  'https://s3-sa-east-1.amazonaws.com/jogueiros-fc-uploads/',
   URL_API: 'https://jogueiros-fc-api.herokuapp.com/'
   // URL_API: 'http://localhost:3000/'
-  // URL_API: 'http://10.0.0.104:3000/'
+  // URL_API: 'http://10.0.2.2:3000/'
    })
-.run(function($ionicPlatform, AuthService, LoadingService, $state) {
+.run(function($ionicPlatform, AuthService, LoadingService, $state, DataService) {
+
+  window.dataService = DataService;
 
 
   $ionicPlatform.ready(function() {
+
     if (window.PushNotification){
       var push = PushNotification.init({
         android: {},
@@ -49,7 +53,7 @@ angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'a
       });
 
       push.on('error', function(e) {
-        console.log(e);
+        window.dataService.logError(e);
       });
     }
 
@@ -66,13 +70,13 @@ angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'a
       StatusBar.styleDefault();
     }
 
-    if(cordova.InAppBrowser.open){
+    if(window.cordova && cordova.InAppBrowser.open){
       window.open = cordova.InAppBrowser.open;    
     }
 
   });
 })
-.config(function($ionicConfigProvider, $httpProvider, $authProvider, config) {
+.config(function($ionicConfigProvider, $httpProvider, $authProvider, config, $provide, $injector) {
   $ionicConfigProvider.backButton.text('');
   $ionicConfigProvider.backButton.previousTitleText(false);
   $ionicConfigProvider.tabs.position('bottom');
@@ -90,6 +94,14 @@ angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'a
       height: window.screen.height
     }
   });
+
+  $provide.decorator("$exceptionHandler", function($delegate) {
+    return function(exception, cause) {
+      $delegate(exception, cause);
+      window.dataService.logError(exception.stack);
+    };
+  });
+
 });
 
 angular.module('app.controllers', ['angular.filter']);

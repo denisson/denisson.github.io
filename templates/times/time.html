@@ -97,7 +97,7 @@
       <div ng-if="time.biografia" style="white-space: pre-wrap;">{{time.biografia}}</div>
       <!-- <p ng-if="time.telefone.numero">{{formatarTelefone(time.telefone.numero)}}</p> -->
       <a ng-if="time.site" class="text-overflow" href="#" ng-click="irParaUrl(time.site); $event.stopPropagation();" style="text-decoration: none">{{time.site}}</a>
-      <a ng-if="time.instagram" class="text-overflow" href="#" ng-click="irParaUrl('https://www.instagram.com/{{time.instagram}}'); $event.stopPropagation()" style="text-decoration: none">@{{time.instagram}}</a>
+      <a ng-if="time.instagram" class="text-overflow" href="#" ng-click="irParaInstagram(time); $event.stopPropagation()" style="text-decoration: none">@{{time.instagram}}</a>
       <div ng-if="time.cidade.nomeCompleto">
         {{time.cidade.nomeCompleto}}
       </div>
