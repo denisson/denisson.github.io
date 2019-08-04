@@ -1,6 +1,7 @@
 angular
   .module('app.controllers')
   .controller('verJogoController', ['$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicPopup', '$ionicActionSheet', '$ionicHistory', function ($scope, $state, $stateParams, DataService, AuthService, $ionicPopup, $ionicActionSheet, $ionicHistory) {
+
     $scope.naoInformouGols = function(time){
       //O jogo já foi encerrado (placar informado), mas o time não informou a súmula.
       return $scope.jogo.encerrado && $scope.jogo.jogadores[time].length == 0;
@@ -118,13 +119,22 @@ angular
     }
 
     $scope.exibirMenu = function(){
-        var buttons = [];
+      var i=0;
+      var buttons = [];
+      var indicesBotoes = {};
         
       //Se o time do usuário logado já informou os gols
       if($scope.timeDoUsuario() && $scope.informouGols($scope.timeDoUsuario())){
-        buttons.push({ text: 'Editar Súmula (Gols)' });
+        indicesBotoes['sumula'] = i;
+        buttons[i++] = { text: 'Editar Súmula (Gols)' };
       } else if($scope.timeDoUsuario() && $scope.naoInformouGols($scope.timeDoUsuario())){
-        buttons.push({ text: 'Cadastrar Súmula (Gols)' });
+        indicesBotoes['sumula'] = i;
+        buttons[i++] = { text: 'Cadastrar Súmula (Gols)' };
+      }
+
+      if($scope.podeSolicitarArbitragem()){
+        indicesBotoes['arbitragem'] = i;
+        buttons[i++] = { text: 'Solicitar Arbitragem' };
       }
 
       var params = {
@@ -136,12 +146,12 @@ angular
          },
          buttonClicked: function(index) {
             switch(index){
-              case 0: 
+              case indicesBotoes['sumula']: 
                 $scope.informarSumula();
                 break;
-              // case 1:
-              //   $scope.adicionarJogadores();
-              //   break;
+              case indicesBotoes['arbitragem']:
+                $scope.solicitarArbitragem();
+                break;
             }
            return true;
          }
@@ -152,6 +162,19 @@ angular
        }
 
        $ionicActionSheet.show(params);
+    }
+
+    $scope.podeSolicitarArbitragem = function(){
+      var agora = moment.tz($scope.jogo.local.cidade.timezone);
+      return $scope.deveExibirMenu() && !_.get($scope, 'jogo.arbitragem') && existeLigaDisponivel() && agora.isBefore($scope.jogo.dataHora);
+    }
+
+    $scope.solicitarArbitragem = function(){
+      $state.go('solicitarArbitragem', {id: $scope.jogo._id, jogo: $scope.jogo});
+    }
+
+    function existeLigaDisponivel(){
+      return true; //TODO: fazer consulta para saber se tem liga disponível para o local do jogo
     }
 
     function mostrarAlerta(mensagem){

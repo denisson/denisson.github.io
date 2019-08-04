@@ -1,4 +1,3 @@
-
 angular.module('app.services')
 .service('DataService', ['$rootScope', '$q', '$http', 'CacheFactory', '$cordovaFileTransfer', 'config', '$injector', function($rootScope, $q, $http, CacheFactory, $cordovaFileTransfer, config, $injector){
 	var blockPopup = false;
@@ -183,13 +182,19 @@ angular.module('app.services')
 		salvarJogador: function(jogador){
 			return upload('jogador', jogador.foto, jogador);
 		},
+		ligasDisponiveis: function(){
+			return request('liga/');
+		},
+		solicitarArbitragem: function(jogoId, ligaId){
+			return post('jogo/solicitarArbitragem/'+jogoId + '/' + ligaId);
+		},
 		setNotificationToken: function(usuarioId, oldNotificationToken, newNotificationToken, registrationType){
 			return post('usuario/'+ usuarioId +'/setNotificationToken', {oldNotificationToken: oldNotificationToken, newNotificationToken: newNotificationToken, registrationType: registrationType});
 		},
 		logError: function(exception){
 			var userData = JSON.parse(window.localStorage.getItem('user_data'));
-			var device = device || null;
-			return post('log/error', {exception: exception, user: _.pick(userData, ['time', 'nome', '_id']), device: device});
+			var device = window.device || null;
+			return post('log/error', {exception: exception, user: _.pick(userData, ['time', 'nome', '_id']), device: device, url: window.location.hash});
 		}
 	}
 }]);

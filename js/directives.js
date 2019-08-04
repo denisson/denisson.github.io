@@ -1,10 +1,10 @@
 angular.module('app.directives', [])
 
-.directive('jogPartidas', ['$ionicModal', function($ionicModal){
+.directive('jogPartida', ['$ionicModal', function($ionicModal){
   return {
   	restrict: 'E',
-  	scope: {partidas: '=?', informarPlacar: '@'},
-    templateUrl: 'templates/directives/jog-partidas.html',
+  	scope: {jogo: '=', informarPlacar: '@'},
+    templateUrl: 'templates/directives/jog-partida.html',
     controller: function($scope, $state){
     	$scope.irParaTime = function(time){
         if(time._id){
@@ -56,6 +56,14 @@ angular.module('app.directives', [])
 
 
     }
+  };
+}])
+.directive('jogPartidas', ['$ionicModal', function($ionicModal){
+  return {
+    restrict: 'E',
+    scope: {partidas: '='},
+    templateUrl: 'templates/directives/jog-partidas.html',
+    controller: function($scope, $state){}
   };
 }])
 .directive('jogEscudo', ['config', function(config){
@@ -120,6 +128,7 @@ angular.module('app.directives', [])
     // scope: {mostrarBr: '=', temTime: '=', temJogos: '='},
     link: function(scope, el, attr) {
 
+      var fuseEstados;
       scope.estados = [];
       scope.regiao = scope.ufTimeLogado = attr.regiao || AuthService.getRegiao();
       scope.modalRegiao;
@@ -134,7 +143,7 @@ angular.module('app.directives', [])
         $rootScope.$broadcast('alterarRegiao', reg);
       }
 
-      scope.fuseEstados;
+      
       DataService.estados().then(function(estados){
         scope.estados = estados;
         fuseEstados = new Fuse(estados, {

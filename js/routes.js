@@ -165,6 +165,13 @@ angular.module('app.routes', [])
       params: {jogo: null},
       templateUrl: 'templates/jogos/informarSumula.html'
     })
+
+    .state('solicitarArbitragem', {
+      url: '/jogo/:id/solicitarArbitragem',
+      cache: false,
+      params: {jogo: null},
+      templateUrl: 'templates/ligaAmistosos/solicitarArbitragem.html'
+    })
     ;
 
   // if none of the above states are matched, use this as the fallback

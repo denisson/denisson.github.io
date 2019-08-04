@@ -18,7 +18,7 @@ angular
 
     $scope.podeSalvar = function(){
       try{
-        return $scope.jogo.timeAdversario.nome && $scope.jogo.data && $scope.jogo.hora && $scope.jogo.local.nome;
+        return $scope.jogo.timeAdversario.nome && $scope.jogo.data && $scope.getHoraJogo() && $scope.jogo.local.nome;
       } catch (exception){
         return false;
       }
@@ -172,7 +172,7 @@ angular
 
     $scope.salvarJogo = function(){
       var dataHora = moment($scope.jogo.data);
-      dataHora.hour($scope.jogo.hora.getHours()).minutes($scope.jogo.hora.getMinutes());
+      dataHora.hour($scope.getHoraJogo()).minutes($scope.getMinutosJogo());
 
       var jogo = {
         local: $scope.jogo.local,
@@ -183,13 +183,37 @@ angular
       }
       var agora = moment.tz($scope.jogo.local.cidade.timezone);
       DataService.salvarJogo(jogo).then(function(retorno){
+        jogo._id = retorno.id;
         if(agora.isAfter(jogo.dataHora)){ //Se já passou a hora do jogo
-          jogo._id = retorno.id;
           $state.go('informarPlacar', {id: jogo._id, jogo: jogo}).then(configurarJogoVazio);
         } else {
-          $state.go('abasInicio.meuTime').then(configurarJogoVazio);
+          // $state.go('abasInicio.meuTime').then(configurarJogoVazio);
+          $state.go('solicitarArbitragem', {id: jogo._id, jogo: jogo}).then(configurarJogoVazio);
         }
       });
+    }
 
+
+    $scope.getHoraJogo = function(){
+      if($scope.jogo.hora) {
+        return $scope.jogo.hora.getHours();
+      } else {
+        return $scope.jogo.hhmm.split(':')[0];
+      }
+    }
+
+    $scope.getMinutosJogo = function(){
+      if($scope.jogo.hora) {
+        return $scope.jogo.hora.getMinutes();
+      } else {
+        return $scope.jogo.hhmm.split(':')[1];
+      }
+    }
+
+    $scope.compativelComInputTime = function(){
+      if (window.device && (device.platform == "Android") && _.startsWith(device.version, '5.0')){
+        return false;
+      }
+      return true;
     }
 }])

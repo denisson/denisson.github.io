@@ -103,8 +103,8 @@ angular
     };
 
     $scope.toggleCartao = function(jogador, cartao) {
-      let valorAnterior = _.get(jogador, ['cartoes', cartao], 0);
-      _.set(jogador, ['cartoes', cartao], !valorAnterior)
+      var valorAnterior = _.get(jogador, ['cartoes', cartao], 0);
+      _.set(jogador, ['cartoes', cartao], !valorAnterior);
     };
 
     function getJogadoresElenco(){

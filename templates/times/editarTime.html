@@ -47,7 +47,7 @@
             <label ng-click="modalBiografia.show()" class="item item-input">
                 <span class="input-label">Biografia</span>
                 <input ng-if="!time.biografia" type="text" placeholder="Informações do time"/>
-                <p ng-if="time.biografia" style="white-space: pre-wrap; color: #111">{{time.biografia}}</p>
+                <p ng-if="time.biografia" style="white-space: pre-wrap; color: #111; width: 65%;padding-right: 15px;">{{time.biografia}}</p>
             </label>
 
             <button ng-disabled="!time.nome" type="submit" class="button button-positive button-block">{{labelBotao}}</button>
