@@ -1,0 +1,19 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.jogueirosfc.arbitragem.app",
+    "sha256_cert_fingerprints":
+    ["85:71:CD:73:1E:53:59:1B:52:B8:9E:F1:DF:C5:BA:99:3F:58:F0:77:35:83:95:7C:11:70:A5:67:6F:26:DB:85"]
+  }
+  },
+  {
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.jogueirosfc.app",
+    "sha256_cert_fingerprints":
+    ["85:71:CD:73:1E:53:59:1B:52:B8:9E:F1:DF:C5:BA:99:3F:58:F0:77:35:83:95:7C:11:70:A5:67:6F:26:DB:85"]
+  }
+}]
+
