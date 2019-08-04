@@ -1,0 +1,29 @@
+<ion-view title="Cadastrar Mando de Campo" ng-controller="mandoCampoController" hide-back-button="false">
+  <ion-nav-buttons side="left">
+      <button class="button" ng-click="cancelar()">
+        Cancelar
+      </button>
+  </ion-nav-buttons>
+    <ion-content>
+		<style type="text/css">
+
+		</style>
+        <form class="list padding">
+            <label class="item item-input">
+                <span class="input-label">Dia da Semana</span>
+                <input ng-model="jogo.diaSemana" type="date" placeholder="Data">
+            </label>
+            <label class="item item-input" ng-class="jogo.hora?'preenchido': ''">
+                <span class="input-label">Horário</span>
+                <input ng-model="jogo.hora" type="time" placeholder="Hora">
+            </label>
+            <label class="item item-input" ng-class="jogo.local.nome?'preenchido': ''">
+                <span class="input-label">Local do mando</span>
+                <input ng-model="jogo.local.nome" type="text" placeholder="Local do jogo" on-selecionado="localSelecionado(local)" jog-selecionar-local>
+            </label>
+            <button ng-disabled="!podeSalvar()" ng-click="salvar()" class="button button-positive button-block">Salvar</button>
+        </form>
+
+        Caso seu time tenha mais de um mando de campo por semana, você pode <a href="#">Cadastrar outro mando de campo</a>
+    </ion-content>
+</ion-view>

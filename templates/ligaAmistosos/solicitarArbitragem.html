@@ -1,0 +1,44 @@
+<ion-view hide-nav-bar="true" title="Solicitar Arbitragem" ng-controller="solicitarArbitragemController">
+  <ion-nav-buttons side="left">
+      <button class="button" ng-click="informarDepois()">
+        Cancelar
+      </button>
+  </ion-nav-buttons>
+    <ion-conten>
+    	<style type="text/css">
+    		.item.liga-selecionada,
+    		.item.liga-selecionada.activated
+    		{
+    			background-color: #DCEDC8;
+    		}
+
+    	</style>
+	    <jog-partida jogo="jogo"></jog-partida>
+
+	    <div class="action-sheet-backdrop active" ng-class="cssClass" buttons="buttons">
+	    	<div class="action-sheet-wrapper action-sheet-up" style="    background-color: #fff;">
+
+
+					<div class="list lista-jogadores">
+				    	<div ng-click="selecionarLiga(liga)" class="item item-avatar" ng-repeat="liga in ligas" ng-class="{'liga-selecionada': liga.id == ligaSelecionada.id }">
+				    		<!-- jog-escudo="liga.logo" -->
+				            <img src="https://painel.cbf7.com.br/UserImages/federacoes/FAF7/1-Thumbnail.png" jog-size="small">
+				              <h2>{{liga.nome}}</h2>
+				              <p>{{liga.nomeCompleto}}</p>
+				              <!-- <button ng-click="informarDepois()" class="button button-block">Solicitar</button> -->
+
+				            <div class="col-input col-toggle">
+				              <span style="font-weight: 500">R${{liga.arbitragem.valorPorHora}}/h</span>
+				            </div>
+				    	</div>
+
+				        <div class="padding">
+				        	<button ng-click="solicitarArbitragem()" class="button button-block button-positive">Solicitar arbitragem</button>
+				          	<button ng-click="naoSolicitar()" class="button button-block">Agora não</button>
+				        </div>
+			        </div>
+	    	</div>
+	    </div>        
+    </ion-content>
+</ion-view>
+

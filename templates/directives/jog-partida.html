@@ -1,0 +1,23 @@
+<ion-item ng-if="jogo">
+    <p ng-click="acaoJogo(jogo)" class="resultado-data-hora">
+        <b>{{formatarData(jogo)}}</b>
+        <span class="resultado-local">{{jogo.local.nome}}</span>
+        <b>{{formatarHora(jogo)}}</b>
+        <i ng-if="jogoValido(jogo)" class="icone-confirmado ion-checkmark-circled"></i>
+    </p>
+    <div class="row row-center" style="padding:0;">
+     <!-- ui-sref="abasInicio.paginaDoTime({id: jogo.mandante._id})"  -->
+        <a ng-click="irParaTime(jogo.mandante)" class="col col-40 resultado-time -mandante">
+            <img jog-escudo="jogo.mandante.escudo" jog-size="small">
+            <h3>{{jogo.mandante.nome}}</h3>
+        </a>
+        <div ng-click="acaoJogo(jogo)" class="col col-20 col-top resultado-placar">
+            {{jogo.placar.mandante}} x {{jogo.placar.visitante}}
+        </div>
+        <!-- ui-sref="abasInicio.paginaDoTime({id: jogo.visitante._id})" -->
+        <a ng-click="irParaTime(jogo.visitante)" class="col col-40 resultado-time -visitante">
+            <img jog-escudo="jogo.visitante.escudo" jog-size="small">
+            <h3>{{jogo.visitante.nome}}</h3>
+        </a>
+    </div>
+</ion-item>
