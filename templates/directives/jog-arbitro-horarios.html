@@ -1,0 +1,54 @@
+<style type="text/css">
+  .button.button-royal.button-outline.button-horario {
+    line-height: 18px;
+    padding: 4px 3px;
+    border: 0;
+    margin-bottom: 3px;
+  }
+
+  .button.button-positive.button-outline.button-horario:last-child {
+    margin-bottom: 0;
+  }
+
+  button.button-horario + button.button-horario {
+    margin-bottom: 3px;
+  }
+
+  .button.button-positive.button-outline.button-add {
+    margin: 0;
+  }
+</style>
+
+  <table ng-if="arbitro" class="agenda-semana">
+    <thead>
+      <tr class="dias">
+        <th>Dom</th>
+        <th>Seg</th>
+        <th>Ter</th>
+        <th>Qua</th>
+        <th>Qui</th>
+        <th>Sex</th>
+        <th>Sab</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td ng-repeat="n in [].constructor(7) track by $index">
+          <button ng-click="editarHorario(horario)" ng-repeat="horario in horariosDesteDia($index) track by $index" class="button button-outline button-royal button-block button-small cancel-nowrap button-horario">
+            <span class="nowrap">{{horario.horaInicio}}</span>
+            a
+            <span class="nowrap">{{horario.horaFim}}</span>
+          </button>
+        </td>
+      </tr>
+      <tr ng-if="!arbitro.horariosDisponiveis.length" >
+        <td ng-repeat="n in [].constructor(7) track by $index" class="vazio">
+        </td>
+      </tr>
+      <tr ng-if="editavel">
+        <td ng-repeat="n in [].constructor(7) track by $index">
+          <button ng-click="abrirModalHorario($index)" class="button button-outline button-positive button-block button-small button-add icon ion-plus-round"></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>

@@ -1,5 +1,5 @@
 <ion-modal-view>
-    <ion-header-bar class="bar bar-header bar-positive">
+    <ion-header-bar align-title="center" class="bar bar-header bar-positive">
         <button class="button button-clear button-primary" ng-click="modalFormJogador.hide()">Cancelar</button>
         <h1 class="title">{{jogador._id? 'Editar Jogador': 'Adicionar Jogador'}}</h1>
     </ion-header-bar>
@@ -18,14 +18,7 @@
                 <!-- <input ng-model="jogador.posicao" type="text" placeholder="Posição que joga no time"> -->
                 <select ng-model="jogador.posicao">
                     <option value="" disabled selected>Posição que joga no time</option>
-                    <option value="Técnico">Técnico</option>
-                    <option value="Auxiliar técnico">Auxiliar técnico</option>
-                    <option value="Goleiro">Goleiro</option>
-                    <option value="Zagueiro">Zagueiro</option>
-                    <option value="Volante">Volante</option>
-                    <option value="Lateral">Lateral</option>
-                    <option value="Meia">Meia</option>
-                    <option value="Atacante">Atacante</option>
+                    <option ng-if="posicoes.length" ng-repeat="posicao in posicoes" value="{{posicao.nome}}">{{posicao.nome}}</option>
                 </select>
             </label>
             <label class="item item-input">

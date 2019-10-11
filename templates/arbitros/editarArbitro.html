@@ -1,0 +1,22 @@
+<ion-view title="{{titulo}}">
+    <ion-content padding="true">
+        <form ng-if="arbitro" class="list" ng-submit="enviar()">
+            <div class="captura-foto captura-foto-menor">
+                <!-- <input type="file" id="input-file-foto" class="hidden" accept="image/*" /> -->
+                <img class="captura-foto-img" ng-click="capturarFoto()" id="logotipo" jog-jogador="arbitro.foto"></img>
+                <i ng-click="capturarFoto()" class="icon ion-image captura-foto-icon"></i>
+            </div>
+            <label class="item item-input">
+                <span class="input-label">Nome</span>
+                <input ng-model="arbitro.nome" type="text" placeholder="Nome do seu time" required />
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Telefone</span>
+                <telefone-input telefone="arbitro.telefone" ></telefone-input>
+            </label>
+
+            <button ng-disabled="!arbitro.nome" type="submit" class="button button-positive button-block">{{labelBotao}}</button>
+        </form>
+    </ion-content>
+</ion-view>

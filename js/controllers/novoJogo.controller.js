@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('novoJogoController', ['$scope', '$state', 'DataService', '$ionicModal', 'AuthService', '$rootScope', '$cordovaCamera', '$ionicHistory', '$ionicPopup', function ($scope, $state, DataService, $ionicModal, AuthService, $rootScope, $cordovaCamera, $ionicHistory,  $ionicPopup) {
+  .controller('novoJogoController', ['$scope', '$state', 'DataService', '$ionicModal', 'AuthService', '$rootScope', 'CameraService', '$ionicHistory', '$ionicPopup', function ($scope, $state, DataService, $ionicModal, AuthService, $rootScope, CameraService, $ionicHistory,  $ionicPopup) {
     var fuseCidades, fuseEstados;
 
     DataService.estados().then(function(estados){
@@ -18,7 +18,7 @@ angular
 
     $scope.podeSalvar = function(){
       try{
-        return $scope.jogo.timeAdversario.nome && $scope.jogo.data && $scope.jogo.hora && $scope.jogo.local.nome;
+        return $scope.jogo.timeAdversario.nome && $scope.jogo.data && ($scope.jogo.hora != undefined) && $scope.jogo.local.nome;
       } catch (exception){
         return false;
       }
@@ -63,11 +63,10 @@ angular
       $scope.modalCidade = modal;
     });
 
-    var mandante = AuthService.getTime();
     $scope.jogo.mandante = {
-      _id: mandante._id,
-      nome: mandante.nome,
-      escudo: mandante.escudo
+      _id: AuthService.getTime()
+      // nome: mandante.nome,
+      // escudo: mandante.escudo
     };
 
     $scope.timeSelecionado = function(time){
@@ -108,28 +107,12 @@ angular
       $scope.modalCidade.hide();
     }
 
-    $scope.capturarFoto = function(){
-      if (typeof Camera != 'undefined'){ // Executando no celular
-        var options = {
-          quality: 100,
-          destinationType: Camera.DestinationType.FILE_URI,
-          sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
-          allowEdit: true,
-          encodingType: Camera.EncodingType.PNG,
-          mediaType: Camera.MediaType.PICTURE,
-          targetWidth: 400,
-          targetHeight: 400,
-          correctOrientation:true
-        };
 
-        $cordovaCamera.getPicture(options).then(function(imagePath) {
-          $scope.jogo.timeAdversario.escudo = imagePath;
-        }, function(err) {
-          console.log(err)
-        });
-      } else {
-        // document.getElementById('input-file-foto').click();
-      }
+    $scope.capturarFoto = function(){
+      CameraService.getPicture().then(function(imagePath){
+        $scope.jogo.timeAdversario.escudo = imagePath;
+        $scope.$apply();
+      });
     };
 
     $scope.enviar = function(){
@@ -172,7 +155,7 @@ angular
 
     $scope.salvarJogo = function(){
       var dataHora = moment($scope.jogo.data);
-      dataHora.hour($scope.jogo.hora.getHours()).minutes($scope.jogo.hora.getMinutes());
+      dataHora.hour($scope.getHoraJogo()).minutes($scope.getMinutosJogo());
 
       var jogo = {
         local: $scope.jogo.local,
@@ -183,13 +166,36 @@ angular
       }
       var agora = moment.tz($scope.jogo.local.cidade.timezone);
       DataService.salvarJogo(jogo).then(function(retorno){
+        jogo._id = retorno.id;
+        $ionicHistory.nextViewOptions({
+          // disableAnimate: true,
+          disableBack: true
+        });
         if(agora.isAfter(jogo.dataHora)){ //Se já passou a hora do jogo
-          jogo._id = retorno.id;
-          $state.go('informarPlacar', {id: jogo._id, jogo: jogo}).then(configurarJogoVazio);
-        } else {
-          $state.go('abasInicio.meuTime').then(configurarJogoVazio);
+          AuthService.redirectClean('informarPlacar', null, {id: jogo._id}).then(configurarJogoVazio);
+        } else if (retorno.ligasDisponiveis && retorno.ligasDisponiveis.length) {
+          AuthService.redirectClean('solicitarArbitragem', null, {id: jogo._id, ligas: retorno.ligasDisponiveis}).then(configurarJogoVazio);
+        } else { //não tem liga para solicitar arbitragem
+          AuthService.redirectClean('abasInicio.meuTime').then(configurarJogoVazio);
         }
       });
-
     }
+
+
+    $scope.getHoraJogo = function(){
+      if(typeof $scope.jogo.hora == "string") {
+        return $scope.jogo.hora.split(':')[0];
+      } else {
+        return $scope.jogo.hora.getHours();
+      }
+    }
+
+    $scope.getMinutosJogo = function(){
+      if(typeof $scope.jogo.hora == "string") {
+        return $scope.jogo.hora.split(':')[1];
+      } else {
+        return $scope.jogo.hora.getMinutes();
+      }
+    }
+    
 }])

@@ -3,8 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="viewport-fit=cover, initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title>JogueirosFC.com</title>
+    <title>Jogueiros FC</title>
 
+    <meta property="og:title" content="Jogueiros FC"/>
+    <meta property="og:image" content="http://jogueirosfc.com/img/icon.png"/>
+    <meta property="og:description" content="Treino é treino. Jogo é jogo."/>
 
 
   <script src="lib/ionic/js/ionic.bundle.js"></script>
@@ -21,6 +24,8 @@
     <script src="lib/moment/min/moment-timezone-with-data-2012-2022.min.js"></script>
     <script src="lib/fuse.js/dist/fuse.min.js"></script>
     <script src="lib/angular-input-masks/angular-input-masks-standalone.min.js"></script>
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
     
     <!-- <script src="lib/chart.js/dist/Chart.min.js"></script>  -->
 
@@ -28,8 +33,9 @@
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
 
-
+    <link href="lib/ion.rangeSlider/css/ion.rangeSlider.min.css" rel="stylesheet">
     <link href="css/ionic.app.css" rel="stylesheet">
+
 
 
     <style type="text/css">
@@ -69,6 +75,13 @@
       float: right;
     }
 
+    .nowrap{
+      white-space: nowrap; 
+    }
+
+    .cancel-nowrap{
+      white-space: initial !important; 
+    }
 
     .resumo-time{
         border: none;
@@ -77,6 +90,10 @@
 
     .resumo-time h2{
         font-weight: bold;
+    }
+
+    .item .badge{
+      right: 17px;
     }
 
     .item p.resultado-data-hora {
@@ -511,35 +528,80 @@
     display: none;
   }
 
+  .container-baixe-app a{
+    text-decoration: none;
+    margin: 10px 10px 0px 10px;
+    display: inline-block;
+  }
+
   .platform-browser .container-baixe-app{
     display: block;
     text-align: center;
   }
 
   .platform-browser .container-baixe-app .img-baixe-google-play{
-    width: 190px;
+    width: 170px;
   }
 
   .platform-browser .loginBtn--google{
     display: none;
   }
 
+  .show-only-browser{
+    display: none;
+  }
 
+  .platform-browser .show-only-browser{
+    display: initial;
+  }
+
+  .platform-browser .hide-only-browser{
+    display: none;
+  }
+
+/*
   .modal.modal-minimo {
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    /*width: 80%;*/
     height: 50%;
     min-height: 344px;
     max-width: 300px;
     margin: auto;
     border-radius: 7px;
+  }*/
+
+   .modal.modal-minimo {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 80%;
+    height: fit-content; 
+    min-height: fit-content;
+    max-width: 300px;
+    margin: auto;
+    border-radius: 7px;
+    /*transform: translateY(-50%); */
+    /* height: auto; */
+    display: block;
+    overflow: auto;
+   }
+
+  .modal.modal-minimo ion-content{
+    position: static;
+    display: block;
   }
 
+  .modal.modal-minimo ion-content.has-header {
+    padding-top: 44px;
+  }
+
+
+
   .modal.modal-minimo.tem-rodape {
-    min-height: 386px;
+    /*min-height: 386px;*/
   }
 
   .modal-minimo.tem-rodape ion-content{
@@ -547,15 +609,17 @@
   }
       
   .modal-minimo .foto-escudo-modal {
-    position: absolute;
+    /*position: absolute;*/
     top: 0;
     bottom: 0;
     margin: auto;
     left: 0;
     right: 0;
     border-radius: 0 !important;
-    width: 300px;
-    height: 300px;
+    max-width: 300px;
+    max-height: 300px;
+    width: 100%;
+    min-height: 300px;
   }
 
   .modal-backdrop .modal-backdrop-bg {
@@ -857,6 +921,105 @@
     flex-wrap: wrap; padding-right: 72px;
   }
 
+  .classificacao{
+    display: flex;
+    position: relative;
+    color: #212121;
+  }
+
+  .classificacao td,
+  .classificacao img {
+    vertical-align: middle;
+  }
+
+  .classificacao th{
+    vertical-align: bottom;
+    padding-bottom: 8px;
+  }
+
+  .classificacao .tabela-times{
+    width: 50%;
+    min-width: 50%;
+    table-layout: fixed;
+  }
+
+  .classificacao .tabela-times th {
+    text-align: left;
+    color: #757575;
+  }
+
+  .classificacao .tabela-times .nome-time{
+    /*font-size: 16px;*/
+  }
+
+  .classificacao .tabela-times .col-posicao{
+    width: 34px;
+  }
+
+  .classificacao .tabela-times .col-escudo{
+    width: 32px;
+  }
+
+  .classificacao .tabela-times .posicao{
+    text-align: center;
+    padding-right: 8px;
+    color: #757575;
+  }
+
+  .classificacao .tabela-times td{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-top: solid 1px #f5f5f5;
+  }
+
+  .classificacao .tabela-times img{
+    max-width: 24px;
+    max-height: 24px;
+  }
+
+  .classificacao .tabela-numeros{
+    width: 100%;
+    display: block;
+    overflow-x: scroll;
+  }
+
+  .classificacao .tabela-numeros th {
+    width: 10%;
+    white-space: nowrap;
+    padding-left: 12px;
+    padding-right: 12px;
+    color: #757575;
+  }
+
+  .classificacao .tabela-numeros td {
+    padding: 4px;
+    text-align: center;
+    white-space: nowrap;
+    border-top: solid 1px #f5f5f5;
+  }
+
+  .classificacao .tabela-numeros .criterio-principal{
+    font-weight: bold;
+  }
+
+  .classificacao .tabela-times tbody tr,
+  .classificacao .tabela-numeros tbody tr {    
+      height: 40px;
+  }
+
+  .classificacao::after{
+    content: "";
+    width: 36px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: auto;
+    background: -webkit-linear-gradient(left,rgba(255,255,255,0) 0%,#fff 100%);
+    pointer-events: none;
+  }
+
   /*7fbf7f*/
 
 
@@ -872,6 +1035,235 @@
       font-size: 14px;
       line-height: 26px;
     }
+
+
+
+
+
+
+
+ .agenda-semana-header{
+    text-align: center;
+  }
+
+  .agenda-semana-header .icon{
+    position: absolute;
+    padding: 8px 18px;
+    top: 0;
+  }
+
+  .agenda-semana-header .icon.left{
+    left: 0;
+  }
+
+  .agenda-semana-header .icon.right{
+    right: 0; 
+  }
+
+  .agenda-semana{
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .agenda-semana .dias th {
+    font-size: 0.9em;
+    font-weight: 500;
+  }
+
+  .agenda-semana .datas th{
+    color: #999;
+    font-size: 0.8em;
+  }
+
+  .agenda-semana td{
+    border: solid 3px #fff;
+    background-color: #f9f9f9;
+  }
+
+  .agenda-semana td.vazio{
+    height: 30px;
+  }
+
+  .agenda-semana .hoje span{
+    border-radius: 50%;
+    padding: 3px;
+    /*background-color: #813d84;*/
+    background-color: #3fa7f4;
+    color: #fff;
+    font-weight: 600;
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+  }
+
+  /*.button.button-royal.button-outline {
+      border: 0;
+      background: #f5e2f9;
+      color: #813d84;
+      border-radius: 0;
+      border-left: solid 2px #cd74e1;
+      font-weight: 400;
+      margin: 0;
+  }*/
+
+  .button.button-royal.button-outline {
+    border: 0;
+    background: #e7f2fa;
+    color: #2c64c4;
+    border-radius: 0;
+    border-left: solid 2px #3fa7f4;
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .button.button-royal.button-outline.jogo-nao-confirmado {
+    background: #fbf9e4;
+    color: #856404;
+    border-left: solid 2px #F9A825;
+  }
+
+  .button.button-royal.button-outline.jogo-informar-placar {
+    background: #fbe2e5;
+    color: #721c24;
+    border-left: solid 2px #D32F2F;
+  }
+
+  .background-cinza{
+    background-color: #f8f8f8;
+  }
+
+  img[jog-jogador]{
+    border-radius: 50%;
+  }
+
+
+
+  .dias-semana .destaque{
+    /*background-color: pink;
+    color: red;
+    border-radius: 50%;*/
+    font-weight: bold;
+  }
+ 
+  .botoes-dias-semana{
+    overflow: auto;
+  }
+ 
+  .botoes-dias-semana .button{
+    border-radius: 50%;
+    font-size: 14px;
+    padding: 2px 10px 1px;
+    color: #666;
+    margin: 0 1px;
+  }
+ 
+  .botoes-dias-semana .button.button-positive{
+    color: #fff;
+  }
+ 
+  /*Range*/
+  .irs--round .irs-handle {
+    top: 30px;
+    width: 16px;
+    height: 16px;
+    border-color:#387ef5;
+    background-color: #387ef5;
+  }
+ 
+  .irs--round .irs-bar {
+    background-color: #387ef5;
+  }
+ 
+  .irs--round .irs-handle.state_hover,
+  .irs--round .irs-handle:hover {
+    background-color: #387ef5;
+    box-shadow: 0 0 0px 4px #dfe4ebc7;
+    width: 20px;
+    height: 20px;
+    top: 28px;
+  }
+
+
+  .redondo{
+      border-radius: 50%; 
+  }
+ 
+  .mando-campo .item-avatar{
+     border-width: 0;
+  }
+ 
+  .mando-campo .item-avatar .item-content{
+    padding: 8px;
+    padding-left: 96px;
+    min-height: 96px;
+  }
+ 
+  .mando-campo .item-avatar .item-content > img:first-child{
+    left: 8px;
+    top: 8px;
+    max-width: 80px;
+    max-height: 80px;
+  }
+ 
+  .mando-campo .horario{
+      font-size: 1em;
+      text-align: right;
+      margin-bottom: 4px;
+      color: #387ef5;
+      margin-top: 4px;
+      white-space: normal;
+      overflow: initial;
+  }
+ 
+  .mando-campo .horario .icon{
+      font-size: 2.3em;
+      position: relative;
+      top: 8px;
+      right: 5px;
+  }
+ 
+  .mando-campo .horario .lua{
+      color: #607D8B;
+  }
+  .mando-campo .horario .sol{
+      color: #FFC107;
+  }
+ 
+  .mando-campo .datas-disponiveis{
+      text-align: right;
+      color: #999;
+      white-space: normal;
+      overflow: initial;
+  }
+ 
+  .mando-campo .msg-datas-indisponiveis{
+      text-align: right;
+      color: #999;
+      white-space: normal;
+      overflow: initial;
+  }
+ 
+  .mando-campo .lista-datas{
+      clear: both;
+      text-align: right;
+      white-space: normal;
+      overflow: initial;
+  }
+ 
+  .mando-campo .lista-datas .data{
+      min-height: 34px;
+      line-height: 34px;
+      margin-bottom: 3px;
+  }
+
+
+    .vertical-middle{
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+    }
+
+    
     </style>
 
     <script src="js/app.js"></script>
@@ -887,13 +1279,36 @@
     <script src="js/controllers/cadastrarTime.controller.js"></script>
     <script src="js/controllers/buscaPorTimes.controller.js"></script>
     <script src="js/controllers/selecionarLocal.controller.js"></script>
+    <script src="js/controllers/solicitarArbitragem.controller.js"></script>
+    <script src="js/controllers/cadastrarArbitro.controller.js"></script>
+    <script src="js/controllers/selecionarArbitro.controller.js"></script>
+    <script src="js/controllers/arbitro.controller.js"></script>
+    <script src="js/controllers/editarHorariosArbitro.controller.js"></script>
+    <script src="js/controllers/jogos.controller.js"></script>
+    <script src="js/controllers/liga.controller.js"></script>
+    <script src="js/controllers/ligaTimes.controller.js"></script>
+    <script src="js/controllers/ligaConfiguracao.controller.js"></script>
+    <script src="js/controllers/ranking.controller.js"></script>
+    <script src="js/controllers/cadastrarRanking.controller.js"></script>
+    <script src="js/controllers/timeRanking.controller.js"></script>
+    <script src="js/controllers/cadastrarLiga.controller.js"></script>
+    <script src="js/controllers/selecionarPerfil.controller.js"></script>
+    <script src="js/controllers/conviteArbitroLiga.controller.js"></script>
+    <script src="js/controllers/buscarAmistosos.controller.js"></script>
+<!--     <script src="js/controllers/propostaJogo.controller.js"></script>
+    <script src="js/controllers/mandoCampo.controller.js"></script> -->
+    
+    
 
     <script src="js/routes.js"></script>
     <script src="js/directives.js"></script>
+    <script src="js/directives/arbitragem.directive.js"></script>
+    <script src="js/directives/telefone.directive.js"></script>
     <script src="js/components.js"></script>
     <script src="js/services/auth.service.js"></script>
     <script src="js/services/data.service.js"></script>
     <script src="js/services/loading.service.js"></script>
+    <script src="js/services/camera.service.js"></script>
 
     <!-- Only required for Tab projects w/ pages in multiple tabs
     <script src="lib/ionicuirouter/ionicUIRouter.js"></script>

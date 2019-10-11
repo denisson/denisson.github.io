@@ -32,8 +32,8 @@ angular
         // }        
       // });
 
-    $scope.$on('alterarRegiao', function(event, regiao){
-      $scope.regiao = regiao;
+    $scope.$on('alterarRegiao', function(event, estado){
+      $scope.regiao = estado.uf;
       carregarTimes().then(function(){
         $scope.buscarTime($scope.search.query);
       });

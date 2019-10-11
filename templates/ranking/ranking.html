@@ -1,0 +1,120 @@
+<ion-view ng-controller="rankingController">
+  <ion-nav-title>{{ranking.liga.nome}} • {{ranking.nome}}</ion-nav-title>
+  <ion-nav-buttons side="right">
+      <button ng-if="editavel()" class="button" ng-click="exibirMenu()">
+        <i class="icon ion-android-more-vertical"></i>
+      </button>
+  </ion-nav-buttons>
+<ion-content>
+
+  <style type="text/css">
+    .caixa{
+      border: solid 1px #ddd;
+      margin: -1px;
+    }
+
+    .perfil-jogador .nome{
+      margin-top: 10px;
+    }
+  </style>
+
+  <div ng-if="ranking">
+
+    <div class="image-background img-jogador perfil-jogador" style="padding-top: 15px;text-align: center;">
+      <img ng-click="verLiga(ranking.liga._id)" jog-escudo="ranking.liga.escudo" jog-size="mid" style="max-width: 80px; max-height: 80px;">
+      <h3 class="nome">{{ranking.nome}}</h1>
+      <p ng-click="verLiga(ranking.liga._id)" class="posicao">
+          {{ranking.liga.nome}}
+      </p>
+
+      <ion-item class="row numeros">
+          <div class="col">
+              <h5 class="valor">{{ranking.numeros.times || 0}}</h5>
+              <p class="campo">{{pluralize(ranking.numeros.times, 'Time')}}</p>
+          </div>
+          <div class="col" ng-click="verJogos(false)">
+              <h5 class="valor">{{ranking.numeros.jogos || 0}}</h5>
+              <p class="campo">{{pluralize(ranking.numeros.jogos, 'Jogo')}}</p>
+          </div>
+<!--           <div class="col">
+              <h5 class="valor">{{ranking.numeros.dias || 0}}</h5>
+              <p class="campo">{{pluralize(ranking.numeros.dias, 'Dia')}}</p>
+          </div> -->
+      </ion-item>
+    </div>
+
+    <div>
+      <div class="padding" style="color: #999">
+        <b>Período dos jogos</b><br/>
+        <p class="dark">{{ranking.dataInicio | date:'dd/MM/yyyy'}} a {{ranking.dataFim| date:'dd/MM/yyyy'}}</p>
+
+        <b ng-if="ranking.descricao">Informações</b><br/>
+        <p ng-if="ranking.descricao" class="dark" style="white-space: pre-wrap;">{{ranking.descricao}}</p>
+
+        <a ng-if="ranking.numeros.jogos" ng-click="verJogos(false)" class="pull-right" style="text-decoration: none">Ver todos os jogos</a>
+      </div>
+
+      <ion-item class="item-divider">Classificação</ion-item>
+      <div class="padding">
+        <p ng-if="!ranking.times.length" class="dark" style="text-align: center;">A classificação será atualizada assim que os resultados forem informados.</p>
+        <div ng-if="ranking.times.length" class="classificacao">
+          <table class="tabela-times">
+            <colgroup>
+              <col class="col-posicao" >
+              <col class="col-escudo" >
+              <col class="col-nome" >
+            </colgroup>
+            <thead>
+              <tr><th colspan="3" style="text-align: center;">Time</th></tr>  
+            </thead>
+            <tbody>
+              <tr ng-click="verTimeRanking(timeRanking)"  ng-repeat="timeRanking in ranking.times">
+                <td class="posicao">
+                  {{$index + 1}}.
+                </td>
+                <td>
+                  <img jog-escudo="timeRanking.time.escudo" jog-size="small">
+                </td>
+                <td class="nome-time">
+                  {{timeRanking.time.nome}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="tabela-numeros">
+            <thead>
+              <tr>
+                <th ng-class="{'criterio-principal': criterioPrincipal('pontos') }">P</th>
+                <th ng-class="{'criterio-principal': criterioPrincipal('jogos') }">J</th>
+                <th ng-class="{'criterio-principal': criterioPrincipal('vitorias') }">V</th>
+                <th ng-class="{'criterio-principal': criterioPrincipal('empates') }">E</th>
+                <th ng-class="{'criterio-principal': criterioPrincipal('derrotas') }">D</th>
+                <th ng-class="{'criterio-principal': criterioPrincipal('golsPro') }">GP</th>
+                <th ng-class="{'criterio-principal': criterioPrincipal('golsContra') }">GC</th>
+                <th ng-class="{'criterio-principal': criterioPrincipal('saldoGols') }">SG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-click="verTimeRanking(timeRanking)" ng-repeat="timeRanking in ranking.times">
+                <td ng-class="{'criterio-principal': criterioPrincipal('pontos') }">{{timeRanking.numeros.pontos}}</td>
+                <td ng-class="{'criterio-principal': criterioPrincipal('jogos') }">{{timeRanking.numeros.jogos}}</td>
+                <td ng-class="{'criterio-principal': criterioPrincipal('vitorias') }">{{timeRanking.numeros.vitorias}}</td>
+                <td ng-class="{'criterio-principal': criterioPrincipal('empates') }">{{timeRanking.numeros.empates}}</td>
+                <td ng-class="{'criterio-principal': criterioPrincipal('derrotas') }">{{timeRanking.numeros.derrotas}}</td>
+                <td ng-class="{'criterio-principal': criterioPrincipal('golsPro') }">{{timeRanking.numeros.golsPro}}</td>
+                <td ng-class="{'criterio-principal': criterioPrincipal('golsContra') }">{{timeRanking.numeros.golsContra}}</td>
+                <td ng-class="{'criterio-principal': criterioPrincipal('saldoGols') }">{{timeRanking.numeros.saldoGols}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button ng-if="ranking.temMaisTimes" ng-click="verMaisTimes()" class="button button-positive button-outline button-block button-small" href="#"> Ver mais </button>
+      </div>
+
+
+    </div>
+    <br/>
+  </div>
+</ion-content>
+</ion-view>

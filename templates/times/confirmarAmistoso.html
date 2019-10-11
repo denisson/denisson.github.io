@@ -1,0 +1,50 @@
+<ion-modal-view class="modal-minimo" >
+
+    <ion-content scroll="false" style="position: static">
+      <jog-partidas ng-if="!propostaEnviada" partidas="[amistoso]"></jog-partidas>
+      <div ng-if="!propostaEnviada" class="padding">
+	      <p style="color: #666">
+	      	Sua proposta de amistoso será enviada para {{amistoso.mandante.nome}} e o jogo será marcado somente quando o time adversário confirmar. 
+	      </p>
+	      <br/>
+		<button 
+			ng-click="enviarPropostaJogo(amistoso)"
+			class="button button-positive button-block">
+			Enviar proposta
+		</button>
+		<button 
+			ng-click="modalConfirmarAmistoso.hide()"
+			class="button button-positive button-clear button-block">
+			Cancelar
+		</button>      	
+      </div>
+      <div ng-if="propostaEnviada" class="padding">
+      	<div style="
+		    text-align: center;
+		">
+		<i class="ion-checkmark-circled" style="
+		    color: #7bc669;
+		    /* text-align: center; */
+		    font-size: 70px;
+		"></i>
+		</div>
+		<h2 style="
+    color: #7bc669;
+    text-align: center;
+">Proposta enviada!</h2>
+	      <p style="color: #666">
+	      	Sua proposta foi enviada e está aguardando confirmação do time adversário, mas não se preocupe, pois você será notificado assim que houver uma resposta.
+	      </p>
+	      <br/>
+		<button 
+			ng-click="modalConfirmarAmistoso.hide()"
+			class="button button-positive button-block">
+			OK. Entendi!
+		</button>
+      </div>
+
+    </ion-content>
+<!--     <ion-footer-bar ng-if="!time._id" class="bar">
+      <p class="title" style="font-size: 0.9em; color: #999;">Time não cadastrado no Jogueiros FC</p>
+    </ion-footer-bar> -->
+</ion-modal-view>

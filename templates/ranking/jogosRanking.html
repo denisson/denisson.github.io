@@ -1,0 +1,37 @@
+<ion-view>
+  <ion-nav-title>{{nomeRanking}}</ion-nav-title>
+    <div  class="tabs-striped tabs-top tabs-light">
+        <div class="tabs">
+          <a class="tab-item" ng-click="mostrarEncerrados()" ng-class="{active: !proximos}">
+            Jogos encerrados
+          </a>
+          <a class="tab-item" ng-click="mostrarProximos()" ng-class="{active: proximos}">
+            Próximos Jogos
+          </a>
+        </div>
+    </div>
+    <ion-content class="has-tabs-top">
+        <!-- Tab 1 -->
+        <div ng-if="!proximos" ng-controller="jogosController">
+            <ion-list> 
+                <jog-partidas partidas="jogos"></jog-partidas>
+            </ion-list>
+            <div ng-show="!jogos.length && dadosCarregados" class="padding mensagem-destacada">
+                <h3 class="dark">A bola ainda não rolou por aqui :(</h3>
+            </div>
+            <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarJogos()" distance="10%"></ion-infinite-scroll>
+        </div>
+
+
+        <!-- Tab 2 -->
+        <div ng-if="proximos" ng-controller="jogosController" proximos-jogos="true">
+             <ion-list> 
+                <jog-partidas partidas="jogos"></jog-partidas>
+            </ion-list>
+            <div ng-show="!jogos.length && dadosCarregados" class="padding mensagem-destacada">
+                <h3 class="dark">Sem previsão de novos jogos</h3>
+            </div>
+            <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarJogos()" distance="10%"></ion-infinite-scroll>
+        </div>
+    </ion-content>
+</ion-view>

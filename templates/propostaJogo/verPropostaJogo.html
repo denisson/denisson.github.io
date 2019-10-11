@@ -1,0 +1,13 @@
+<ion-view ng-controller="propostaJogoController" >
+  <ion-nav-title>Proposta de Jogo</ion-nav-title>
+    <ion-content>
+      <div ng-if="propostaJogo">
+        <jog-partidas partidas="[propostaJogo]"></jog-partidas>
+        <div class="confirmacao-jogo">
+          <p class="dark"><b>{{propostaJogo.visitante.nome}}</b> deseja marcar um jogo contra o seu time</p>
+          <button ng-click="confirmarJogo()" class="button button-positive" href="#">Confirmar</button>
+          <button ng-click="rejeitarJogo()" class="button button-stable button-outline" href="#">Excluir</button>
+        </div>
+      </div>
+    </ion-content>
+</ion-view>

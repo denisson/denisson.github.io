@@ -1,4 +1,3 @@
-
 angular.module('app.services')
 .service('DataService', ['$rootScope', '$q', '$http', 'CacheFactory', '$cordovaFileTransfer', 'config', '$injector', function($rootScope, $q, $http, CacheFactory, $cordovaFileTransfer, config, $injector){
 	var blockPopup = false;
@@ -76,11 +75,11 @@ angular.module('app.services')
     	}
     }
 
-	CacheFactory('dataCache', {
-    // maxAge: 15 * 60 * 1000, // Items added to this cache expire after 15 minutes
-    // cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
-    // deleteOnExpire: 'aggressive', // Items will be deleted from this cache when they expire
-    storageMode: 'localStorage' // This cache will use `localStorage`.
+	CacheFactory('oneDayCache', {
+	    maxAge: 24 * 60 * 60 * 1000, // Items added to this cache expire after 15 minutes
+	    // cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
+	    deleteOnExpire: 'aggressive', // Items will be deleted from this cache when they expire
+	    storageMode: 'localStorage' // This cache will use `localStorage`.
 	});
 
 	// $http.defaults.cache = CacheFactory.get('dataCache');
@@ -137,6 +136,9 @@ angular.module('app.services')
 		jogadorJogos: function(id, temporada){
 			return request('jogador/' + id + '/jogos?temporada='+temporada);
 		},
+		jogadorPosicoes: function(){
+			return request('jogador/posicoes');
+		},
 		salvarJogo: function(jogo){
 			var escudoVisitante = jogo.visitante.id ? null : jogo.visitante.escudo; //só envia o escudo se for de um visitante sem cadastro
 			return upload('jogo', escudoVisitante, jogo);
@@ -183,13 +185,148 @@ angular.module('app.services')
 		salvarJogador: function(jogador){
 			return upload('jogador', jogador.foto, jogador);
 		},
+		ligasDisponiveis: function(jogo){
+			return request('liga/disponiveis?cidadeId=' + jogo.local.cidade._id + '&dataHora=' + jogo.dataHora );
+		},
+		solicitarArbitragem: function(jogoId, ligaId){
+			return post('jogo/solicitarArbitragem/'+jogoId + '/' + ligaId);
+		},
+		cancelarSolicitacaoArbitragem: function(jogoId){
+			return deleteRequest('jogo/cancelarSolicitacaoArbitragem/'+jogoId);
+		},
+		salvarArbitro: function(arbitro){
+			return upload('arbitro', arbitro.foto, arbitro);
+		},
+		editarArbitro: function(arbitro){
+			return upload('arbitro/' + arbitro._id, arbitro.foto, arbitro);
+		},
+
+		arbitro: function(id){
+			return request('arbitro/' + id);
+		},
+		arbitroAgenda: function(id, dataInicio, dataFim){
+			return request('arbitro/' + id + '/agenda/' + dataInicio + '/' + dataFim);
+		},
+		arbitroJogos: function(id){
+			return request('arbitro/' + id + '?jogos=true');
+		},
+		arbitroJogosFuturos: function(id, pag, porPag){
+			return request('arbitro/' + id + '/jogos/futuros?pag=' + pag + '&porPag=' + porPag);
+		},
+		arbitroJogosEncerrados: function(id, pag, porPag){
+			return request('arbitro/' + id + '/jogos/encerrados?pag=' + pag + '&porPag=' + porPag);
+		},
+		arbitros: function(ligaId){
+			return request('liga/' + ligaId + '/arbitros');
+		},
+		liga: function(id){
+			return request('liga/' + id);
+		},
+		ligaJogosFuturos: function(id, pag, porPag, filtro){
+			return request('liga/' + id + '/jogos/futuros?pag=' + pag + '&porPag=' + porPag + '&filtro=' + filtro);
+		},
+		ligaJogosEncerrados: function(id, pag, porPag, filtro){
+			return request('liga/' + id + '/jogos/encerrados?pag=' + pag + '&porPag=' + porPag + '&filtro=' + filtro);
+		},
+		ligaCompleto: function(id){
+			return request('liga/' + id + '?arbitros=true');
+		},
+		ligaTimes: function(id, pag, porPag){
+			return request('liga/' + id + '/times?pag=' + pag + '&porPag=' + porPag);
+		},
+		ligaConfiguracao: function(id){
+			return request('liga/' + id + '?arbitros=false&admins=true');
+		},
+		enviarConviteArbitroLiga: function(ligaId, dados){
+			return post('liga/' + ligaId + '/arbitro/convite', dados);
+		},
+		enviarConviteAdminLiga: function(ligaId, dados){
+			return post('liga/' + ligaId + '/admin/convite', dados);
+		},
+		excluirAdminLiga: function(ligaId, administradorId){
+			return deleteRequest('liga/' + ligaId + '/admin/' + administradorId);
+		},
+		excluirConviteEmail: function(conviteId){
+			return deleteRequest('liga/convite/' + conviteId);
+		},
+		gerarTokenArbitroLiga: function(ligaId){
+			return request('liga/' + ligaId + '/arbitro/token');
+		},
+		desativarTokenArbitroLiga: function(ligaId){
+			return deleteRequest('liga/' + ligaId + '/arbitro/token');
+		},
+		validarTokenLiga: function(ligaId, token, usuarioId){
+			return request('liga/' + ligaId + '/validar/' + token + '/' + (usuarioId ? usuarioId : '') );
+		},
+		editarLiga: function(liga){
+			return upload('liga/' + liga._id, liga.escudo, liga);
+		},
+		designarArbitro: function(jogoId, arbitroId){
+			return post('jogo/designarArbitro/' + jogoId + '/' + arbitroId);
+		},
+		excluirArbitro: function(arbitroId){
+			return deleteRequest('arbitro/' + arbitroId);
+		},
+		confirmarArbitragem: function(jogoId){
+			return post('jogo/confirmarArbitragem/' + jogoId);
+		},
+		rejeitarArbitragem: function(jogoId){
+			return post('jogo/rejeitarArbitragem/' + jogoId);
+		},
+		cancelarArbitroJogo: function(jogoId, motivo){
+			return post('jogo/cancelarArbitragem/' + jogoId, {motivo: motivo});
+		},
+		ranking: function(id){
+			return request('ranking/' + id);
+		},
+		rankingTimes: function(id, pag){
+			return request('ranking/' + id + '/times?pag=' + pag);
+		},
+		timeRanking: function(id){
+			return request('ranking/time/' + id);
+		},
+		rankingJogosFuturos: function(id, pag, porPag){
+			return request('ranking/' + id + '/jogos/futuros?pag=' + pag + '&porPag=' + porPag);
+		},
+		rankingJogosEncerrados: function(id, pag, porPag){
+			return request('ranking/' + id + '/jogos/encerrados?pag=' + pag + '&porPag=' + porPag);
+		},
+		cadastrarRanking: function(ranking){
+			return upload('ranking', ranking.foto, ranking);
+		},
+		editarRanking: function(id, ranking){
+			return upload('ranking/' + id, ranking.foto, ranking);
+		},
+		excluirRanking: function(rankingId){
+			return deleteRequest('ranking/' + rankingId);
+		},
+		criteriosClassificacao: function(){
+			return request('criteriosClassificacao');
+		},
+
+		mandosCampo: function(filtro){
+			return request('mandoCampo', filtro);
+		},
+		salvarPropostaJogo: function(propostaJogo){
+			return post('propostaJogo', propostaJogo);
+		},
+		propostaJogo: function(id){
+			return request('propostaJogo/' + id);
+		},
+	    confirmarPropostaJogo: function(id, mandanteId){
+	   		return post('propostaJogo/confirmar/' + id, {mandanteId: mandanteId});
+	    },
+
+		usuarioPerfis: function(){
+			return request('usuario/perfis');
+		},
 		setNotificationToken: function(usuarioId, oldNotificationToken, newNotificationToken, registrationType){
 			return post('usuario/'+ usuarioId +'/setNotificationToken', {oldNotificationToken: oldNotificationToken, newNotificationToken: newNotificationToken, registrationType: registrationType});
 		},
 		logError: function(exception){
 			var userData = JSON.parse(window.localStorage.getItem('user_data'));
-			var device = device || null;
-			return post('log/error', {exception: exception, user: _.pick(userData, ['time', 'nome', '_id']), device: device});
+			var device = window.device || null;
+			return post('log/error', {exception: exception, user: _.pick(userData, ['time', 'nome', '_id']), device: device, url: window.location.hash});
 		}
 	}
 }]);

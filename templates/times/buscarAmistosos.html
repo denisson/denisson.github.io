@@ -1,0 +1,103 @@
+<ion-view hide-nav-bar="false" ng-controller="buscarAmistososController">
+  <ion-nav-title>Buscar Amistoso</ion-nav-title>
+  <ion-nav-buttons side="right">
+    <button class="button" id="botao-escolher-regiao" jog-escolher-regiao abrir-modal="true">
+        Região:
+        <b class="padding-left">{{regiao}}</b>
+        <i class="icon ion-android-arrow-dropdown"></i>
+    </button>
+  </ion-nav-buttons>
+    <ion-content padding="true" class="scroll-with-keyboard" style="background-color: #f5f5f5">
+        <form class="list form-buscar-amistosos">
+            <div class="item item-input item-stacked-label">
+                <span class="input-label">Dia da Semana</span>
+                <div class="botoes-dias-semana padding">
+                    <button ng-click="toggleDiaSemana(1)" class="button button-small redondo" ng-class="{'button-positive': diaSemanaSelecionado(1)}">D</button>
+                    <button ng-click="toggleDiaSemana(2)" class="button button-small redondo" ng-class="{'button-positive': diaSemanaSelecionado(2)}">S</button>
+                    <button ng-click="toggleDiaSemana(3)" class="button button-small redondo" ng-class="{'button-positive': diaSemanaSelecionado(3)}">T</button>
+                    <button ng-click="toggleDiaSemana(4)" class="button button-small redondo" ng-class="{'button-positive': diaSemanaSelecionado(4)}">Q</button>
+                    <button ng-click="toggleDiaSemana(5)" class="button button-small redondo" ng-class="{'button-positive': diaSemanaSelecionado(5)}">Q</button>
+                    <button ng-click="toggleDiaSemana(6)" class="button button-small redondo" ng-class="{'button-positive': diaSemanaSelecionado(6)}">S</button>
+                    <button ng-click="toggleDiaSemana(7)" class="button button-small redondo" ng-class="{'button-positive': diaSemanaSelecionado(7)}">S</button>
+                </div>
+            </div>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Horário</span>
+                <p> 
+                    Início do jogo entre <b class="positive">{{filtro.horario.inicio}}h</b> e <b class="positive">{{filtro.horario.fim}}h</b>
+                </p> 
+                <div class="padding-right padding-vertical">
+                    <jog-range-horario horario="filtro.horario"/>
+                </div>
+            </label>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Cidade</span>
+                <input type="text" placeholder="Todas" on-selecionado="cidadeSelecionada(cidade)" jog-selecionar-cidade multi="true" pre-selecionados="filtro.cidades"/>
+            </label>
+            <label  class="item item-input item-stacked-label"
+                    on-selecionado="locaisSelecionados(locais)"
+                    jog-selecionar-local 
+                    locais-pre-selecionados="filtro.locais" 
+                    multi="true">
+                <span class="input-label">Local</span>
+                <p class="padding-vertical">{{nomesLocais() || "Todos"}}</p>
+            </label>
+
+            <label class="item item-input item-stacked-label" ng-click="modalTiposCampo.show()">
+                <span class="input-label">Tipo de campo</span>
+                <p class="padding-vertical">{{getTextoTiposCampo(filtro.modalidades)}}</p>
+            </label>
+            <button ng-click="carregarResultados(true)" class="button button-positive button-block">Pesquisar</button>
+        </form>
+
+        <ion-list class="lista-mandos-campo">
+            <div class="card mando-campo" ng-repeat="mandoCampo in resultados track by mandoCampo._id" style="margin: 8px 0;">
+                <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: mandoCampo.time._id})">
+                    <img jog-escudo="mandoCampo.time.escudo" jog-size="small" style="border-radius: 5px;">
+                    <h2>{{mandoCampo.time.nome}}</h2>
+                    <p style="color: #333;"> <i class="icon ion-ios-location"></i> {{mandoCampo.local.nome}}</p>
+                    <p>
+                        <span ng-if="mandoCampo.local.tipo">{{tipoCampo(mandoCampo.local.tipo)}}</span>
+                        <span ng-if="mandoCampo.local.numJogadores">{{mandoCampo.local.numJogadores}}x{{mandoCampo.local.numJogadores}}</span>
+                    </p>
+                    <p >{{mandoCampo.local.cidade.nomeCompleto}}</p>
+                </ion-item>
+                <div class="item" style="border-top: 0;">
+                    <p class="horario">
+                        <i ng-if="mandoCampo.horario < '05:00' || mandoCampo.horario >= '18:00'  " class="icon ion-ios-moon lua"></i>
+                        <i ng-if="mandoCampo.horario >= '05:00' && mandoCampo.horario < '18:00'  " class="icon ion-ios-sunny sol"></i>
+
+                    {{diaExtenso(mandoCampo.diaSemana)}}, {{mandoCampo.horario}}
+                    </p>
+
+                    <p ng-if="mandoCampo.datasDisponiveis.length" class="datas-disponiveis">Datas disponíveis:</p>
+                    <p ng-if="!mandoCampo.datasDisponiveis.length" class="msg-datas-indisponiveis">
+                                Não há datas disponíveis para este período</p>
+
+                    <p class="lista-datas">
+                        <span ng-repeat="dataJogo in mandoCampo.datasDisponiveis track by dataJogo.id">
+                            <button 
+                                ng-click="confirmarAmistoso(mandoCampo, dataJogo.dataCompleta)"
+                                ng-class="{'disabled': !dataJogo.disponivel}"
+                                class="button button-positive button-outline data">
+                                {{dataJogo.data}}
+                            </button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </ion-list>
+
+        <div ng-show="!resultados.length && dadosCarregados" class="padding mensagem-destacada">
+            <h3 class="dark">Nenhum time encontrado :(</h2>
+            <p class="dark">Talvez outro dia da semana? Outro horário? Pode ser que os times da sua região ainda não saibam que podem cadastrar o mando de campo no Jogueiros. Temos que espalhar essa idéia. ;)</p>
+        </div>
+
+        <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarResultados()" distance="10%"></ion-infinite-scroll>
+    </ion-content>
+    <style type="text/css">
+        .form-buscar-amistosos .item-input{
+            background-color: #fff;
+        }
+    </style>
+</ion-view>

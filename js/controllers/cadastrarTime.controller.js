@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('cadastrarTimeController', ['$scope', '$state', '$stateParams', 'DataService', '$cordovaCamera', 'AuthService','$ionicModal', '$ionicPopup',  function ($scope, $state, $stateParams, DataService, $cordovaCamera, AuthService, $ionicModal, $ionicPopup) {
+  .controller('cadastrarTimeController', ['$scope', '$state', '$stateParams', 'DataService', 'CameraService', 'AuthService','$ionicModal', '$ionicPopup',  function ($scope, $state, $stateParams, DataService, CameraService, AuthService, $ionicModal, $ionicPopup) {
   var imagePath = '';
   $scope.modalidade = {};
   $scope.telefone = {ddi: '55', whatsapp: true};
@@ -10,10 +10,7 @@ angular
   });
 
   if(editando()){
-    $scope.time = AuthService.getTime();
-
-
-    DataService.time($scope.time._id).then(function(time){
+    DataService.time(AuthService.getTime()).then(function(time){
       $scope.time = time;
       tratarModalidadeParaMostrar();
       tratarTelefone();
@@ -21,8 +18,8 @@ angular
 
     $scope.titulo = 'Editar perfil do time';
     $scope.labelBotao = 'Salvar';
-  } else if (AuthService.temTime()) {
-    $state.go('abasInicio.meuTime', {location: 'replace'}, {reload: true});
+  } else if (AuthService.getTime()) {
+    AuthService.redirectClean('abasInicio.time-aba-time', null, {id: AuthService.getTime()});
   } else {
     $scope.time = {nome: '', escudo: ''};
     $scope.titulo = 'Cadastrar time';
@@ -30,7 +27,7 @@ angular
   }
 
   function editando(){
-    return AuthService.getTime() && ($stateParams.id == AuthService.getTime()._id);
+    return AuthService.getTime() && ($stateParams.id == AuthService.getTime());
   }
 
   // document.getElementById('input-file-foto').addEventListener('change', function(){
@@ -74,14 +71,6 @@ angular
       $scope.modalTelefone = modal;
     });
 
-    $ionicModal.fromTemplateUrl('templates/times/informarBiografia.html', {
-      scope: $scope,
-      animation: 'no-animation',
-      focusFirstInput: true,
-    }).then(function(modal){
-      $scope.modalBiografia = modal;
-    });
-
     $ionicModal.fromTemplateUrl('templates/times/informarModalidades.html', {
       scope: $scope,
       animation: 'no-animation',
@@ -110,39 +99,12 @@ angular
     $scope.modalCidade.hide();
   }
 
-  $scope.confirmarBiografia = function(){
-    if(editando()){
-      DataService.editarTime(_.pick($scope.time, ['_id', 'biografia'])).then(function(){
-        $scope.modalBiografia.hide();
-      });
-    } else {
-      $scope.modalBiografia.hide();
-    }
-  }
-
   $scope.capturarFoto = function(){
-    if (typeof Camera != 'undefined'){ // Executando no celular
-      var options = {
-        quality: 100,
-        destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
-        allowEdit: true,
-        encodingType: Camera.EncodingType.PNG,
-        mediaType: Camera.MediaType.PICTURE,
-        targetWidth: 400,
-        targetHeight: 400,
-        correctOrientation:true
-      };
-
-      $cordovaCamera.getPicture(options).then(function(imagePath) {
-        $scope.time.escudo = imagePath;
-        $scope.fotoAlterada = true;
-      }, function(err) {
-        console.log(err)
-      });
-    } else {
-      // document.getElementById('input-file-foto').click();
-    }
+    CameraService.getPicture().then(function(imagePath){
+      $scope.time.escudo = imagePath;
+      $scope.fotoAlterada = true;
+      $scope.$apply();
+    });
   };
 
   $scope.enviar = function(){
@@ -154,14 +116,14 @@ angular
       }
       
       DataService.editarTime(timeSalvar).then(function(time){
-        AuthService.atualizarTime(time);
-        $state.go('abasInicio.paginaDoTime-aba-time', {id: time._id});
+        AuthService.atualizarCidade(time.cidade);
+        AuthService.redirectClean('abasInicio.time-aba-time', null, {id: time._id});
       });
     } else {
       $scope.time.dono = AuthService.getUsuarioId();
       DataService.salvarTime($scope.time).then(function(resposta){
-        AuthService.atualizarTime(resposta.time, resposta.token);
-        $state.go('abasInicio.editarTime', {id: resposta.time._id});
+        AuthService.atualizarPerfil(resposta.perfil, resposta.token);
+        AuthService.redirectClean('abasInicio.editarTime', null, {id: resposta.perfil.perfil});
       });
     }
   }

@@ -12,7 +12,6 @@
     {
         color: #387ef5;
     }*/
-
 </style>
         <form class="list padding">
             <label class="item item-input" ng-class="jogo.timeAdversario.nome?'preenchido': ''">
@@ -25,7 +24,8 @@
             </label>
             <label class="item item-input" ng-class="jogo.hora?'preenchido': ''">
                 <span class="input-label"><!-- <i class="icon ion-ios-time-outline placeholder-icon"></i> -->Que horas?</span>
-                <input ng-model="jogo.hora" type="time" placeholder="Hora">
+                <input ng-model="jogo.hora" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+<!--                 <input ng-if="!compativelComInputTime()" ng-model="jogo.hhmm" type="text" placeholder="HH:MM" ui-time-mask="short"> -->
             </label>
             <label class="item item-input" ng-class="jogo.local.nome?'preenchido': ''">
                 <span class="input-label"><!-- <i class="icon ion-ios-location-outline placeholder-icon"></i> -->Onde?</span>

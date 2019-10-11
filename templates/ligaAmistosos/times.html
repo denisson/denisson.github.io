@@ -1,0 +1,13 @@
+<ion-view ng-controller="ligaTimesController">
+  <ion-nav-title>{{nomeLiga}} - Times</ion-nav-title>
+    <ion-content padding="true" class="scroll-with-keyboard">
+        <ion-list class="lista-times">
+            <ion-item class="item-avatar item" ui-sref="time({id: timeLiga.time._id})" ng-repeat="timeLiga in times">
+                <img jog-escudo="timeLiga.time.escudo" jog-size="small" style="border-radius: 5px">
+                <h2>{{timeLiga.time.nome}}</h2>
+                <p>{{timeLiga.numeros.jogos}} {{timeLiga.numeros.jogos == 1 ? 'jogo' : 'jogos'}}</p>
+            </ion-item>
+        </ion-list>
+        <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarTimes()" distance="10%"></ion-infinite-scroll>
+    </ion-content>
+</ion-view>

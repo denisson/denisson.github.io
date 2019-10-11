@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('placarController', ['$scope', '$stateParams', '$state', 'DataService', '$ionicPopup', '$ionicHistory',   function ($scope, $stateParams, $state, DataService, $ionicPopup, $ionicHistory) {
+  .controller('placarController', ['$scope', '$stateParams', '$state', 'DataService', '$ionicPopup', '$ionicHistory', 'AuthService',   function ($scope, $stateParams, $state, DataService, $ionicPopup, $ionicHistory, AuthService) {
 
     $scope.jogo = $stateParams.jogo;
     if(!$scope.jogo){
@@ -10,7 +10,7 @@ angular
             return;
         }
         $scope.jogo = jogo;
-        $scope.jogo.placar = {mandante: 0, visitante: 0};
+        $scope.jogo.placar = $scope.jogo.placar || {mandante: 0, visitante: 0};
       });
     } else {
       $scope.jogo.placar = {mandante: 0, visitante: 0};
@@ -26,16 +26,16 @@ angular
 
     $scope.salvarPlacar = function(){
       DataService.salvarPlacar($scope.jogo._id, $scope.jogo.placar).then(function(retorno){
-        // if($scope.jogo.placar.mandante > 0){
-          $state.go('informarSumula', {location: 'replace', id:$scope.jogo._id, jogo: $scope.jogo, time:'mandante'});
-        // } else {
-        //   $state.go('abasInicio.meuTime');
-        // }
+        if($scope.jogo.temSolicitacaoArbitragem){
+          AuthService.redirectClean('jogo', null, {id: $scope.jogo._id});
+        } else {
+          AuthService.redirectClean('informarSumula', null, {id:$scope.jogo._id, jogo: $scope.jogo, time:'mandante'});
+        }
       });
     };
 
     $scope.informarDepois = function(){
-      $state.go('abasInicio.meuTime');
+      AuthService.redirectClean('jogo', null, {id: $scope.jogo._id});
     }
 
 

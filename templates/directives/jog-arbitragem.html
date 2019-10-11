@@ -1,0 +1,174 @@
+  <style type="text/css">
+    .card{
+      margin: 8px 10px;
+    }
+
+    .card .botao-card{
+      top: 50%;
+      text-align: right;
+      position: absolute;
+      right: 16px;
+      transform: translate(0, -50%);
+    }
+
+    textarea.motivo-cancelamento{
+      width: 100%;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    .img-mini-texto{
+      max-height: 20px;
+      vertical-align: middle;
+    }
+
+    .informar-arbitro{
+      background-color: #f8f8f8;  
+    }
+
+
+  </style>
+
+
+<div ng-if="jogo.temSolicitacaoArbitragem && !jogo.arbitragem.arbitro && !permissaoArbitragem()" class="list card">
+  <ion-item  class="item-avatar item" ng-class="{'item-button-right': podeCancelarSolicitacaoArbitragem()}">
+      <div ng-click="verLiga()">
+        <img class="item-image" jog-escudo="jogo.arbitragem.solicitacao.liga.escudo" jog-size="small">
+        <h2>  Arbitragem {{jogo.arbitragem.solicitacao.liga.nome}} solicitada</h2>
+        <p class="cancel-nowrap">
+          {{mensagemAoSolicitarArbitragem()}}
+        </p>
+      </div>
+      <a ng-if="podeCancelarSolicitacaoArbitragem()" ng-click="cancelarSolicitacaoArbitragem()" class="botao-card">
+        Cancelar
+      </a>
+  </ion-item>
+  <div ng-if="jogo.ranking" ng-click="verRanking()" class="item background-cinza">
+    <p class="cancel-nowrap" >Jogo válido pelo ranking {{jogo.ranking.nome}} - {{jogo.arbitragem.solicitacao.liga.nome}}</p>
+  </div>
+</div>
+
+<div ng-if="jogo.arbitragem.arbitro && !permissaoArbitragem()" class="list card">
+  <ion-item class="item-avatar item" ng-class="{'item-button-right': podeCancelarSolicitacaoArbitragem()}">
+      <div ver-arbitro="jogo.arbitragem.arbitro" liga="jogo.arbitragem.solicitacao.liga" mostrar-telefone="true">
+        <img class="item-image" jog-jogador="designacao.arbitro.foto" jog-size="small" />
+        <h2>{{designacao.arbitro.nome}} • {{jogo.arbitragem.solicitacao.liga.nome}}</h2>
+        <p ng-if="jogo.aguardandoPlacar" class="cancel-nowrap">
+          Ainda não informou o placar do jogo
+        </p>
+        <p ng-if="!jogo.aguardandoPlacar" class="cancel-nowrap">Árbitro da partida</p>
+      </div>
+      <a ng-if="podeCancelarSolicitacaoArbitragem()" ng-click="cancelarSolicitacaoArbitragem()" class="botao-card">
+        Cancelar
+      </a>
+  </ion-item>
+  <div ng-if="jogo.ranking" ng-click="verRanking()" class="item background-cinza">
+    <p class="cancel-nowrap" >Jogo válido pelo ranking {{jogo.ranking.nome}} - {{jogo.arbitragem.solicitacao.liga.nome}}</p>
+  </div>
+</div>
+
+<div ng-if="faltaConfirmarArbitragem()" class="confirmacao-jogo">
+  <p class="dark">Você foi escalado para ser o árbitro deste jogo</p>
+  <p>
+    <button ng-click="confirmarArbitragem()" class="button button-positive" href="#">Confirmar</button>    
+    <button ng-click="rejeitarArbitragem()" class="button button-stable button-outline" href="#">Cancelar</button>
+  </p>
+  <p class="dark">Ao confirmar, você será o arbitro da partida e, caso precise cancelar posteriormente, será necessário informar o motivo.</p>
+</div>
+
+
+<div ng-if="jogo.arbitragem.solicitacao.dataHoraCancelamento && permissaoArbitragem()" class="list card">
+  <ion-item class="item-avatar item" ui-sref="time({id: jogo.arbitragem.solicitacao.time._id})">
+      <img jog-jogador="jogo.arbitragem.solicitacao.time.escudo" jog-size="small">
+      <h2>{{jogo.arbitragem.solicitacao.time.nome}}</h2>
+      <p class="cancel-nowrap">Cancelou a solicitação de arbitragem em {{formatarData(jogo, 'arbitragem.solicitacao.dataHoraCancelamento')}} às {{formatarHora(jogo, 'arbitragem.solicitacao.dataHoraCancelamento')}}</p>
+  </ion-item>
+</div>
+
+<div ng-if="jogo.encerrado && permissaoArbitragem()" class="list card">
+  <ion-item class="item-avatar item">
+      <img ng-if="jogo.placar.quemInformou.tipo == 'Liga'" jog-escudo="jogo.placar.quemInformou.ref.escudo" jog-size="small">
+      <img ng-if="jogo.placar.quemInformou.tipo == 'Arbitro'" jog-jogador="jogo.placar.quemInformou.ref.foto" jog-size="small" ui-sref="arbitro({id:designacao.arbitro._id})">
+      <h2>{{jogo.placar.quemInformou.ref.nome}}</h2>
+      <p class="cancel-nowrap" >Informou o placar em {{formatarData(jogo, 'placar.quemInformou.dataHora')}} às {{formatarHora(jogo, 'placar.quemInformou.dataHora')}}</p>
+  </ion-item>
+</div>
+
+<div ng-if="designacao.dataHoraCancelamento && permissaoArbitragem()" class="list card">
+  <ion-item class="item-avatar item" ui-sref="arbitro({id:designacao.arbitro._id})">
+      <img jog-jogador="designacao.arbitro.foto" jog-size="small">
+      <h2>{{designacao.arbitro.nome}}</h2>
+      <p class="cancel-nowrap" >Cancelou em {{formatarData(jogo, 'arbitragem.designacao.dataHoraCancelamento')}} às {{formatarHora(jogo, 'arbitragem.designacao.dataHoraCancelamento')}} informando o seguinte motivo: "{{designacao.motivoCancelamento}}"</p>
+  </ion-item>
+  <div ng-if="editavel('liga') && jogo.temSolicitacaoArbitragem" class="item informar-arbitro">
+    <p class="cancel-nowrap padding-horizontal" >É necessário escalar um novo árbitro para essa partida.</p>
+    <informar-arbitro jogo="jogo"  ao-salvar="aposDesignarArbitro(arbitro)"></informar-arbitro>
+  </div>
+</div>
+<div ng-if="permissaoArbitragem() && designacao.dataHoraResposta && !designacao.resposta" class="list card">
+  <ion-item class="item-avatar item" ui-sref="arbitro({id:designacao.arbitro._id})">
+      <img jog-jogador="designacao.arbitro.foto" jog-size="small">
+      <h2>{{designacao.arbitro.nome}}</h2>
+      <p class="cancel-nowrap" >Recusou em {{formatarData(jogo, 'arbitragem.designacao.dataHoraResposta')}} às {{formatarHora(jogo, 'arbitragem.designacao.dataHoraResposta')}}</p>
+  </ion-item>
+  <div ng-if="editavel('liga')  && jogo.temSolicitacaoArbitragem" class="item informar-arbitro">
+    <p class="cancel-nowrap padding-horizontal" >É necessário escalar um novo árbitro para essa partida.</p>
+    <informar-arbitro jogo="jogo" ao-salvar="aposDesignarArbitro(arbitro)"></informar-arbitro>
+  </div>
+</div>
+<div ng-if="permissaoArbitragem() && designacao.resposta" class="card">
+  <ion-item  class="item-avatar item" ng-class="{'item-button-right': podeCancelarArbitragem()}">
+      <img jog-jogador="designacao.arbitro.foto" jog-size="small" ui-sref="arbitro({id:designacao.arbitro._id})">
+      <h2 ui-sref="arbitro({id:designacao.arbitro._id})">{{designacao.arbitro.nome}}</h2>
+      <!-- <p>Foi o árbitro escalado</p> -->
+      <p class="cancel-nowrap" ui-sref="arbitro({id:designacao.arbitro._id})">Confirmou em {{formatarData(jogo, 'arbitragem.designacao.dataHoraResposta')}} às {{formatarHora(jogo, 'arbitragem.designacao.dataHoraResposta')}}</p>
+      <a ng-if="podeCancelarArbitragem()" ng-click="cancelarArbitragem()" class="botao-card">
+        Cancelar
+      </a>
+  </ion-item>
+  <div ng-if="cancelandoArbitragem" class="item">
+      <div class="padding-horizontal">
+          <span class="input-label" style="width: 20%;">Motivo</span>
+          <textarea class="motivo-cancelamento" ng-model="designacao.motivoCancelamento" maxlength="150" rows="7" placeholder="Informe o motivo do cancelamento">
+            </textarea>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button ng-click="naoCancelarArbitragem()" class="button button-stable button-block" href="#">Voltar</button>
+        </div>
+        <div class="col">
+          <button ng-click="salvarCancelarArbitragem()" class="button button-positive button-block" href="#">Enviar</button>
+        </div>
+      </div>
+  </div>
+</div>
+<div ng-if="designacao.arbitro && editavel('liga')" class="card">
+  <ion-item  class="item-avatar item  item-button-right">
+      <img jog-jogador="designacao.arbitro.foto" jog-size="small" ui-sref="arbitro({id:designacao.arbitro._id})">
+      <h2 ui-sref="arbitro({id:designacao.arbitro._id})">{{designacao.arbitro.nome}}</h2>
+      <!-- <p>Foi o árbitro escalado</p> -->
+      <p class="cancel-nowrap" ui-sref="arbitro({id:designacao.arbitro._id})">Foi escalado em {{formatarData(jogo, 'arbitragem.designacao.dataHora')}} às {{formatarHora(jogo, 'arbitragem.designacao.dataHora')}}</p>
+      <a ng-if="editavel('liga') && !alterandoDesignacao && !designacao.dataHoraResposta && jogo.temSolicitacaoArbitragem" ng-click="alterarDesignacao()" class="botao-card">
+        Alterar
+      </a>
+  </ion-item>
+  <div ng-if="alterandoDesignacao" class="item informar-arbitro">
+      <informar-arbitro jogo="jogo" pode-cancelar="true" ao-cancelar="cancelarAlteracaoDesignacao()" ao-salvar="aposDesignarArbitro(arbitro)"></informar-arbitro>
+  </div>
+</div>
+
+<div ng-if="jogo.arbitragem.solicitacao && editavel('liga')" class="list card">
+  <ion-item class="item-avatar item" ui-sref="time({id: jogo.arbitragem.solicitacao.time._id})">
+      <img jog-jogador="jogo.arbitragem.solicitacao.time.escudo" jog-size="small">
+      <h2>{{jogo.arbitragem.solicitacao.time.nome}}</h2>
+      <p class="cancel-nowrap" >Solicitou arbitragem em {{formatarData(jogo, 'arbitragem.solicitacao.dataHora')}} às {{formatarHora(jogo, 'arbitragem.solicitacao.dataHora')}}</p>
+  </ion-item>
+  <div ng-if="faltaDesignarArbitro() && jogo.temSolicitacaoArbitragem" class="item informar-arbitro">
+    <informar-arbitro jogo="jogo" ao-salvar="aposDesignarArbitro(arbitro)"></informar-arbitro>
+  </div>
+</div>
+
+<!-- <div class="padding">
+  <button ng-if="!faltaConfirmarArbitragem && jogo.aguardandoPlacar && editavel('arbitro')" ng-click="informarPlacar()" class="button button-positive button-block " href="#">Informar Placar</button>
+</div> -->

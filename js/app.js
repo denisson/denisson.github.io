@@ -10,11 +10,14 @@ angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'a
   // URL_S3:  'http://jogueiros-fc-uploads.s3-website-sa-east-1.amazonaws.com/',
   URL_IMAGEBOSS:  'https://img.imageboss.me/',
   URL_S3:  'https://s3-sa-east-1.amazonaws.com/jogueiros-fc-uploads/',
-  URL_API: 'https://jogueiros-fc-api.herokuapp.com/'
-  // URL_API: 'http://localhost:3000/'
-  // URL_API: 'http://10.0.2.2:3000/'
-   })
-.run(function($ionicPlatform, AuthService, LoadingService, $state, DataService) {
+  URL_API: 'https://jogueiros-fc-api.herokuapp.com/',
+  // URL_API: 'http://localhost:3000/',
+  // URL_API: 'http://10.0.0.104:3000/',
+  // TIPO_APP: 'ARBITRAGEM', //TIPO_APP: 'TIME'
+  URL_SITE: 'https://jogueirosfc.com/'
+
+})
+.run(function($ionicPlatform, AuthService, LoadingService, $state, DataService, $location, $timeout, $ionicHistory) {
 
   window.dataService = DataService;
 
@@ -47,8 +50,26 @@ angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'a
             } catch (error) { //caso a string do json venha mal formatada...
               params = {};
             }
+
+            if(data.additionalData.redirectState == 'abasInicio.jogo-aba-time'){
+              data.additionalData.redirectState = 'jogo';
+            }
+
+            if(data.additionalData.perfilId){
+              AuthService.atualizarPerfisUsuario().then(function(){
+                AuthService.setPerfilbyId(data.additionalData.perfilId);
+                $ionicHistory.nextViewOptions({
+                  historyRoot: true
+                });
+                if(AuthService.getArbitro() || AuthService.getLiga()){
+                  params.coringa = false;
+                }
+                $state.go(data.additionalData.redirectState, params);
+              });
+            } else {
+              $state.go(data.additionalData.redirectState, params);
+            }
             
-            $state.go(data.additionalData.redirectState, params);
         }
       });
 
@@ -57,7 +78,30 @@ angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'a
       });
     }
 
+    if(window.IonicDeeplink){
+      IonicDeeplink.route(
+        {
+          // http://localhost:8100/#/liga/5d32350c862550caad95e5f0/convite/38f74083a9cfd81a1ecc50d036b329ad
+          // '/#/liga/:ligaId/convite/:token': {
+          '/': {
+            target: 'qualquerUrl',
+            // parent: 'products'
+          }
+        }
+        ,function(match) {
+          $timeout(function(){
+            $location.url(match.$link.fragment);
+          });
+            // $state.go();
+        }
+        ,function(nomatch) {
+          console.warn('No match', nomatch);
+        }
+      );
+    } 
+
     AuthService.checarCidadeDoTimeLogado();
+    AuthService.atualizarPerfisUsuario();
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -77,7 +121,7 @@ angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'a
   });
 })
 .config(function($ionicConfigProvider, $httpProvider, $authProvider, config, $provide, $injector) {
-  $ionicConfigProvider.backButton.text('');
+  $ionicConfigProvider.backButton.text('').icon('ion-ios-arrow-back');
   $ionicConfigProvider.backButton.previousTitleText(false);
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('left');
@@ -98,7 +142,7 @@ angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'a
   $provide.decorator("$exceptionHandler", function($delegate) {
     return function(exception, cause) {
       $delegate(exception, cause);
-      window.dataService.logError(exception.stack);
+      // window.dataService.logError(exception.stack);
     };
   });
 

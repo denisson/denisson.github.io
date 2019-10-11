@@ -1,0 +1,18 @@
+<ion-modal-view class="modal-minimo">
+    <ion-header-bar class="bar bar-header bar-stable">
+        <h1 class="title">Perfil do árbitro</h1>
+        <button class="button button-clear button-primary" ng-click="modal.hide()">
+            <i class="icon ion-android-close"></i>
+        </button>
+    </ion-header-bar>
+    <ion-content class="perfil-jogador padding">
+
+        <div class="captura-foto-redonda">
+            <img class="captura-foto-img" jog-jogador="arbitro.foto" jog-size="large"></img>
+        </div>
+        <h1 class="nome">{{arbitro.nome}}</h1>
+        <p class="posicao" ng-click="verLiga(liga)">{{liga.nome}}</p>
+        <telefone-link ng-if="mostrarTelefone" telefone="arbitro.telefone" style="text-align: center;font-size: 1.3em;"></telefone-link>
+
+    </ion-content>
+</ion-modal-view>

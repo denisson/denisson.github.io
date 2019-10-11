@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('timeController', ['$rootScope', '$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicActionSheet', '$ionicHistory', '$ionicPopup', '$ionicModal' , function ($rootScope, $scope, $state, $stateParams, DataService, AuthService, $ionicActionSheet,$ionicHistory, $ionicPopup, $ionicModal) {
+  .controller('timeController', ['$rootScope', '$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicActionSheet', '$ionicHistory', '$ionicPopup', '$ionicModal' , 'config', function ($rootScope, $scope, $state, $stateParams, DataService, AuthService, $ionicActionSheet,$ionicHistory, $ionicPopup, $ionicModal, config) {
     var diasExtenso = ['','Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
     $scope.jogadoresOrdem = 'ARTILHARIA';
     $scope.jogosAnteriores = [];
@@ -13,7 +13,7 @@ angular
         title: 'Ops!',
         content: mensagem
       }).then(function(){
-        $ionicHistory.goBack();
+        // $ionicHistory.goBack();
       });
     }
 
@@ -36,13 +36,13 @@ angular
       return temporada == $stateParams.temporada;
     }
 
-    $scope.irParaSite = function(timeId){
-      window.open('http://jogueirosfc.com/#/time/'+timeId + '/', '_system');
-      return false;
-    }
-
-    $scope.irParaWhatsapp = function(telefone){
-      window.open('https://api.whatsapp.com/send?phone=' + telefone.ddi + '' + telefone.numero, '_system'); 
+    $scope.compartilharLink = function(time){
+      var url = config.URL_SITE + '#/time/'+time._id + '/';
+      if (window.plugins) {
+        window.plugins.socialsharing.share(time.nome + ' está no Jogueiros FC! Você pode acompanhar tudo pelo site ou pelo aplicativo! \n' + url);
+      } else {
+        window.open(url);
+      }
       return false;
     }
 
@@ -61,21 +61,12 @@ angular
 
     $scope.atualizar = function(){
       $scope.temporada = $stateParams.temporada = $stateParams.temporada || moment().year();
-      if(!$stateParams.id && AuthService.getTime()){
-          // $scope.timeId = AuthService.getTime()._id;
-        $ionicHistory.nextViewOptions({
-          disableAnimate: true,
-          disableBack: true
-        });
-        $state.go('abasInicio.paginaDoTime-aba-time', {id: AuthService.getTime()._id, location: 'replace'});
-        return;
-      } else {
-        $scope.timeId = $stateParams.id;
-      }
+      $scope.timeId = $stateParams.id || AuthService.getTime();
       
       DataService.timeJogos($scope.timeId, $stateParams.temporada).then(function(time){
         if(!time){
             mostrarAlerta('Esse time não existe mais');
+            AuthService.logout();
             return;
         }
         
@@ -127,8 +118,7 @@ angular
         break;
         case 'POSICAO':
           orderFunction = function(a, b){
-            var posicoes = ['Técnico', 'Auxiliar técnico', 'Goleiro', 'Zagueiro', 'Volante', 'Lateral', 'Meia', 'Atacante'];
-            return (posicoes.indexOf(a.posicao) - posicoes.indexOf(b.posicao)) || ($scope.golsJogadorNaTemporada(b) - $scope.golsJogadorNaTemporada(a)) || ($scope.assistJogadorNaTemporada(b) - $scope.assistJogadorNaTemporada(a)) || ($scope.jogosJogadorNaTemporada(b) - $scope.jogosJogadorNaTemporada(a)) ||  a.nome.localeCompare(b.nome); //Se for a mesma posição, ordena pelo nome
+            return a.posicao.localeCompare(b.posicao) || ($scope.golsJogadorNaTemporada(b) - $scope.golsJogadorNaTemporada(a)) || ($scope.assistJogadorNaTemporada(b) - $scope.assistJogadorNaTemporada(a)) || ($scope.jogosJogadorNaTemporada(b) - $scope.jogosJogadorNaTemporada(a)) ||  a.nome.localeCompare(b.nome); //Se for a mesma posição, ordena pelo nome
           }
         break;
         case 'NOME':
@@ -163,7 +153,7 @@ angular
     }
 
     $scope.editavel = function(){
-      return $scope.time && AuthService.getTime() && $scope.timeId === AuthService.getTime()._id && temporadaAtual();
+      return $scope.time && AuthService.getTime() && $scope.timeId === AuthService.getTime() && temporadaAtual();
     }
 
     function temporadaAtual(){
@@ -191,7 +181,7 @@ angular
         }).then(function(res) {
           if(res) {
             DataService.excluirTime($scope.time._id).then(function(resposta){
-              AuthService.atualizarTime(null, resposta.token);
+              AuthService.atualizarPerfil(null, resposta.token);
               $state.go('abasInicio.inicio');
             });
          }
@@ -221,11 +211,22 @@ angular
     }
 
     $scope.exibirMenuTime = function(){
-       $ionicActionSheet.show({
-         buttons: [ 
-           { text: 'Editar Time' },
-           { text: 'Adicionar Jogador' }
-         ],
+      var i=0;
+      var buttons = [];
+      var indicesBotoes = {};
+
+      indicesBotoes['compartilhar'] = i;
+      buttons[i++] = { text: 'Compartilhar' };
+      indicesBotoes['jogador'] = i;
+      buttons[i++] = { text: 'Adicionar Jogador' };
+
+      if($scope.podeSelecionarPerfil()){
+        indicesBotoes['perfis'] = i;
+        buttons[i++] = { text: 'Gerenciar perfis' };
+      }
+
+      var params = {
+         buttons: buttons,
          destructiveText: 'Sair',
          cancelText: 'Cancelar',
          destructiveButtonClicked: function(){
@@ -234,16 +235,28 @@ angular
          },
          buttonClicked: function(index) {
             switch(index){
-              case 0: 
-                $scope.editarTime();
+              case indicesBotoes['compartilhar']: 
+                $scope.compartilharLink($scope.time);
                 break;
-              case 1:
+              case indicesBotoes['jogador']:
                 $scope.$broadcast('adicionarJogador', $scope.time.id);
+                break;
+              case indicesBotoes['perfis']:
+                $scope.selecionarPerfil();
                 break;
             }
            return true;
          }
-       });
+       }
+
+       $ionicActionSheet.show(params);
+    }
+
+
+    $scope.selecionarPerfil = function(){
+      if($scope.podeSelecionarPerfil()){
+        $state.go('selecionarPerfil');
+      }
     }
 
     $scope.setTemporada = function (temporada) {
@@ -252,11 +265,7 @@ angular
         var temp = _.maxBy($scope.time.temporadas, 'ano');
         temporada = temp.ano;
       }
-      $ionicHistory.nextViewOptions({
-        disableAnimate: true,
-        // disableBack: true
-      });
-      $state.go('abasInicio.paginaDoTime-'+Object.keys($state.current.views)[0], {id: $scope.timeId, temporada: temporada, location: 'replace'});
+      AuthService.redirectClean('time', null, {id: $scope.timeId, temporada: temporada});
     }
 
     $scope.mostrarTemporadas = function(){
@@ -266,4 +275,21 @@ angular
     $scope.formatarTelefone = function(telefone){
       return telefone.replace(/^(\d{2})?(\d{4,5})(\d{4})$/, "$1 $2-$3").trim();
     }
+
+    $scope.verRanking = function(ranking){
+      $state.go('liga_ranking', {id: ranking._id});
+    }
+
+    $scope.temMaisRankings = function(){
+      return _.find($scope.time.rankings, {atual: false}) && !$scope.mostrarTodosRankings;
+    }
+
+    $scope.podeSelecionarPerfil = function(){
+      return $scope.editavel() && AuthService.temMaisPerfis();
+    }
+
+    $scope.verRankingsAnteriores = function(){
+      $scope.mostrarTodosRankings = true;
+    }
+
 }])

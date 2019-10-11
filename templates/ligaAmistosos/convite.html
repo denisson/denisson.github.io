@@ -1,0 +1,48 @@
+<ion-view title="Login" hide-nav-bar="true" ng-controller="conviteArbitroLigaController">
+    <ion-content padding="true" class="image-background img-login">
+    	<div ng-if="liga" class="show-only-browser">
+	        <div class="mensagem-destacada">
+	            <h3 class="dark"><b>{{liga.nome}}</b> convidou você para ser parte de seu quadro de <b>árbitros</b>!</h3>
+	            <p class="dark"> Você precisa baixar o aplicativo do Jogueiros e clicar nesse link novamente quando o aplicativo estiver instalado.</p>
+	        </div>
+	        <br/>
+	        <div class="container-baixe-app">
+	            <h4 class="dark">Baixe nosso aplicativo</h4>
+	            <a  href="https://play.google.com/store/apps/details?id=com.jogueirosfc.app&amp;pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
+	            	<img class="img-baixe-google-play" alt="Disponível no Google Play" src="img/googleplay.svg">
+	            </a>
+	            <a  href="https://apps.apple.com/us/app/jogueiros-fc/id1436662118">
+	                <img class="img-baixe-google-play" alt="Disponível na App Store" src="img/appstore.svg">
+	            </a>
+	        </div>
+		</div>
+
+		<div ng-if="liga && !usuarioLogado()" class="hide-only-browser">
+	        <div class="mensagem-destacada">
+	            <h3 class="dark"><b>{{liga.nome}}</b> convidou você para ser parte de seu quadro de <b>árbitros</b>!</h3>
+	            <p class="dark">Você precisa fazer login para aceitar este convite.</p>
+	        </div>
+	        <br/>
+	        <button ng-click="authenticate('google')" class="loginBtn loginBtn--google">Login com Google</button>
+    	</div>
+
+		<div ng-if="liga && usuarioLogado()" class="hide-only-browser">
+	        <div class="mensagem-destacada">
+	            <h3 class="dark"><b>{{liga.nome}}</b> convidou você para ser parte de seu quadro de <b>árbitros</b>!</h3>
+	            <p class="dark">
+	            	<span ng-if="!usuarioJaTemPerfil">Clique no botão continuar para fazer o seu cadastro. </span>
+					<span ng-if="usuarioJaTemPerfil">Você já faz parte desse quadro de arbitragem. Clique no botão continuar para acessar o seu perfil de árbitro.</span>
+	           	</p>
+	        </div>
+	        <br/>
+	        <div style="text-align: center;">
+	        	<p class="padding">
+	    	    	<button ng-click="continuar()" class="button button-positive button-block">Continuar</button>
+		        </p>
+		        <br/>
+		        <a href="#" ng-click="sair()">Fazer login com outro email</a>
+	        </div>
+    	</div>
+
+    </ion-content>
+</ion-view>

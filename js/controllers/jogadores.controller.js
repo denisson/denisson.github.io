@@ -1,7 +1,9 @@
 angular
   .module('app.controllers')
-  .controller('jogadoresController', ['$scope', '$state', '$stateParams', 'DataService', '$cordovaCamera', '$ionicModal', 'AuthService', '$ionicActionSheet', '$ionicPopup', function ($scope, $state, $stateParams, DataService, $cordovaCamera, $ionicModal, AuthService, $ionicActionSheet, $ionicPopup) {
+  .controller('jogadoresController', ['$scope', '$state', '$stateParams', 'DataService', 'CameraService', '$ionicModal', 'AuthService', '$ionicActionSheet', '$ionicPopup', function ($scope, $state, $stateParams, DataService, CameraService, $ionicModal, AuthService, $ionicActionSheet, $ionicPopup) {
     inicializarJogador();
+
+    $scope.posicoes = [];
 
     $ionicModal.fromTemplateUrl('templates/jogadores/formJogador.html',{
       scope: $scope
@@ -61,18 +63,18 @@ angular
 
 
       DataService.timeJogos(jogador.time, temporada).then(function(time){
-        let jogos = time.jogos.encerrados;
+        var jogos = time.jogos.encerrados;
         if(jogos) {
-          let jogosPorMes = {};
-          let ultimoMes = ( temporada == moment().year() ) ? ( moment().month() ) : 11; 
+          var jogosPorMes = {};
+          var ultimoMes = ( temporada == moment().year() ) ? ( moment().month() ) : 11; 
           for (var i = 11; i >= 0; i--) {
             jogosPorMes[i] = {jogos: [], mes: moment().month(i).format('MMM'), mesFuturo: (i > ultimoMes)};
           }
           
           for (var i = jogos.length - 1; i >= 0; i--) {
-            let jogo = jogos[i];
-            let numerosJogador = _.find(jogo.jogadores.mandante, {jogador: jogador._id}) || _.find(jogo.jogadores.visitante, {jogador: jogador._id});
-            let mes = moment(jogo.dataHora).month();
+            var jogo = jogos[i];
+            var numerosJogador = _.find(jogo.jogadores.mandante, {jogador: jogador._id}) || _.find(jogo.jogadores.visitante, {jogador: jogador._id});
+            var mes = moment(jogo.dataHora).month();
 
             jogosPorMes[mes].jogos.push({
               jogo: jogo,
@@ -89,7 +91,7 @@ angular
 
     $scope.verJogo = function(jogo){
       $scope.modalJogador.hide();
-      $state.go('abasInicio.jogo-'+Object.keys($state.current.views)[0], {id: jogo._id});
+      $state.go('jogo', {id: jogo._id});
     }
 
     $scope.verDetalhesJogo = function(jogo, mes, jogos){
@@ -148,23 +150,10 @@ angular
     }
 
     $scope.capturarFoto = function(){
-      var options = {
-        quality: 100,
-        destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.SAVEDPHOTOALBUM,
-        allowEdit: true,
-        encodingType: Camera.EncodingType.JPEG,
-        mediaType: Camera.MediaType.PICTURE,
-        targetWidth: 400,
-        targetHeight: 400,
-        correctOrientation:true
-      };
-
-      $cordovaCamera.getPicture(options).then(function(imagePath) {
+      CameraService.getPicture().then(function(imagePath){
         $scope.jogador.foto = imagePath;
         $scope.jogador.fotoAlterada = true;
-      }, function(err) {
-        console.log(err)
+        $scope.$apply();
       });
     };
 
@@ -200,6 +189,7 @@ angular
 
     $scope.adicionarJogador = function(timeId, opcaoConvidado){
         inicializarJogador();
+        $scope.carregarPosicoes();
         $scope.jogador.time = timeId;
         if(opcaoConvidado){
           $scope.opcaoConvidado = true;
@@ -208,7 +198,16 @@ angular
         $scope.modalFormJogador.show();
     }
 
+    $scope.carregarPosicoes = function(){
+      if(!$scope.posicoes.length){
+        DataService.jogadorPosicoes().then(function(posicoes){
+          $scope.posicoes = posicoes;
+        });        
+      }
+    }
+
     $scope.editarJogador = function(jogador){
+      $scope.carregarPosicoes();
       $scope.jogador = jogador;
       $scope.modalFormJogador.show();
       $scope.modalJogador.hide();

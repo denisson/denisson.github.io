@@ -1,4 +1,4 @@
-<ion-modal-view class="modal-minimo">
+<ion-modal-view class="modal-minimo" style="height: 70%">
     <ion-header-bar class="bar bar-header bar-positive">
         <h1 class="title">Selecionar região</h1>
         <button ng-if="!ocultarCancelar" class="button button-clear button-primary" ng-click="modalRegiao.hide()">
@@ -18,7 +18,7 @@
             <ion-item ng-if="mostrarBr" class="item" ng-click="regiaoSelecionada('BR')">
                 <h2>Todo o Brasil</h2>
             </ion-item>
-            <ion-item ng-if="mostrarEstado(estado)" class="item" ng-click="regiaoSelecionada(estado.uf)" ng-repeat="estado in estados">
+            <ion-item ng-if="mostrarEstado(estado)" class="item" ng-click="regiaoSelecionada(estado)" ng-repeat="estado in estados">
                 <h2>{{estado.nome}}</h2>
             </ion-item>
         </ion-list>

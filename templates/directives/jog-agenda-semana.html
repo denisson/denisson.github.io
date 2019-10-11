@@ -1,0 +1,40 @@
+<style type="text/css">
+ 
+
+
+</style>
+
+<ion-item class="item-divider agenda-semana-header">
+  <i ng-click="atualizarAgenda(-1)" class="icon ion-chevron-left left"></i>
+  {{mesAnoDaSemana()}}
+  <i ng-click="atualizarAgenda(1)" class="icon ion-chevron-right right"></i>
+</ion-item>
+<div class="item">
+  <table class="agenda-semana">
+    <thead>
+      <tr class="dias">
+        <th>Dom</th>
+        <th>Seg</th>
+        <th>Ter</th>
+        <th>Qua</th>
+        <th>Qui</th>
+        <th>Sex</th>
+        <th>Sab</th>
+      </tr>
+      <tr class="datas">
+        <th ng-repeat="(dia, data) in datasSemana" ng-class="{hoje: diaSemanaHoje(dia)}"><span>{{data}}</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="(horario, jogosDesteHorario) in jogosPorHorario">
+        <td ng-repeat="n in [].constructor(7) track by $index">
+          <button ng-click="verJogo(jogo)" ng-repeat="jogo in jogosDesteHorario[$index]" class="button button-outline button-royal button-block button-small" ng-class="{'jogo-nao-confirmado': !jogo.temArbitro, 'jogo-informar-placar': jogo.aguardandoPlacar}">{{horario}}</button>
+        </td>
+      </tr>
+      <tr ng-if="!jogosPorHorario" ng-repeat="n in [].constructor(3) track by $index">
+        <td ng-repeat="n in [].constructor(7) track by $index" class="vazio">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
