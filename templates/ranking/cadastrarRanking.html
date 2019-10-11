@@ -1,0 +1,45 @@
+<ion-view title="{{titulo}}" ng-controller="cadastrarRankingController">
+    <ion-content padding="true">
+        <style type="text/css">
+            .cadastro-ranking .item-reorder .button.icon {
+                color: #ccc;
+            }
+        </style>
+        <form class="list cadastro-ranking" ng-submit="enviar()">
+<!--             <div class="captura-foto captura-foto-menor">
+                <img class="captura-foto-img" ng-click="capturarFoto()" id="logotipo" jog-ranking="ranking.foto"></img>
+                <i ng-click="capturarFoto()" class="icon ion-image captura-foto-icon"></i>
+            </div> -->
+            <label class="item item-input">
+                <span class="input-label">Nome</span>
+                <input ng-model="ranking.nome" type="text" placeholder="Nome do ranking" required />
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Início</span>
+                <input ng-model="ranking.dataInicio" type="date" placeholder="Data de início">
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Fim</span>
+                <input ng-model="ranking.dataFim" type="date" placeholder="Data de fim">
+            </label>
+
+            <jog-textarea label="Informações" objeto="ranking" campo-texto="descricao" descricao="Informações sobre o ranking" limite="1000"></jog-textarea>
+            <label class="item item-input">
+                <span class="input-label">Jogos por semana</span>
+                <input ng-model="ranking.numJogosPorSemana" type="number" placeholder="1" required />
+            </label>
+            <ion-item class="item-divider">Critérios de classificação</ion-item>
+            <ion-list show-reorder="true">
+              <ion-item ng-repeat="criterio in ranking.criterios">
+                <h2>{{$index+1}}. {{criterio.nome}}</h2>
+                <p>{{criterio.descricao}}</p>
+                <ion-reorder-button class="ion-drag stable" on-reorder="moveItem(criterio, $fromIndex, $toIndex)"></ion-reorder-button>
+              </ion-item>
+            </ion-list>
+
+            <button ng-disabled="!ranking.nome || !ranking.dataInicio" type="submit" class="button button-positive button-block">{{labelBotao}}</button>
+        </form>
+    </ion-content>
+</ion-view>

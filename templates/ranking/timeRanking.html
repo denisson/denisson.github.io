@@ -1,0 +1,72 @@
+<ion-view ng-controller="timeRankingController">
+  <ion-nav-title>{{timeRanking.ranking.nome}}</ion-nav-title>
+<ion-content>
+	<div ng-if="timeRanking">
+    <style type="text/css">
+      .caixa{
+        border: solid 1px #ddd;
+        margin: -1px;
+      }
+
+      .perfil-jogador .nome{
+        margin-top: 10px;
+      }
+
+      .numeros .col{
+        min-width: 0;
+      }
+    </style>
+
+    <div class="image-background img-jogador perfil-jogador" style="padding-top: 15px;text-align: center;">
+      <img ng-click="verTime(timeRanking.time)" jog-escudo="timeRanking.time.escudo" jog-size="mid" style="width: 80px;height: 80px;">
+      <h3 ng-click="verTime(timeRanking.time)" class="nome">{{timeRanking.time.nome}}</h1>
+<!--       <p ng-click="verLiga(ranking.liga._id)" class="posicao">
+          1º Lugar
+      </p> -->
+
+      <ion-item class="row numeros">
+          <div class="col">
+              <h5 class="valor">{{timeRanking.numeros.pontos || 0}}</h5>
+              <p class="campo">{{pluralize(timeRanking.numeros.pontos, 'Ponto')}}</p>
+          </div>
+          <div class="col">
+              <h5 class="valor">{{timeRanking.numeros.jogos || 0}}</h5>
+              <p class="campo">{{pluralize(timeRanking.numeros.jogos, 'Jogo')}}</p>
+          </div>
+          <div class="col">
+              <h5 class="valor">{{timeRanking.numeros.vitorias || 0}}</h5>
+              <p class="campo">{{pluralize(timeRanking.numeros.vitorias, 'Vitória')}}</p>
+          </div>
+          <div class="col">
+              <h5 class="valor">{{timeRanking.numeros.empates || 0}}</h5>
+              <p class="campo">{{pluralize(timeRanking.numeros.empates, 'Empate')}}</p>
+          </div>
+      </ion-item>
+      <ion-item class="row numeros">
+          <div class="col">
+              <h5 class="valor">{{timeRanking.numeros.derrotas || 0}}</h5>
+              <p class="campo">{{pluralize(timeRanking.numeros.derrotas, 'Derrota')}}</p>
+          </div>
+          <div class="col">
+              <h5 class="valor">{{timeRanking.numeros.golsPro || 0}}</h5>
+              <p class="campo">{{pluralize(timeRanking.numeros.golsPro, 'Gol')}} pró</p>
+          </div>
+          <div class="col">
+              <h5 class="valor">{{timeRanking.numeros.golsContra || 0}}</h5>
+              <p class="campo">{{pluralize(timeRanking.numeros.golsContra, 'Gol')}} contra</p>
+          </div>
+          <div class="col">
+              <h5 class="valor">{{timeRanking.numeros.saldoGols || 0}}</h5>
+              <p class="campo">Saldo de {{pluralize(timeRanking.numeros.saldoGols, 'Gol')}}</p>
+          </div>
+      </ion-item>
+    </div>
+
+    <ion-list>
+      <ion-item class="item-divider">Jogos</ion-item>
+      <jog-partidas partidas="timeRanking.jogos"></jog-partidas>
+	</ion-list>
+  </div>
+  <br>
+  </ion-content>  
+</ion-view>

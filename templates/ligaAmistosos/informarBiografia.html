@@ -1,0 +1,18 @@
+<ion-modal-view>
+    <ion-header-bar align-title="center" class="bar bar-header bar-positive">
+        <button class="button button-clear button-primary" ng-click="modalBiografia.hide()">Cancelar</button>
+        <h1 class="title">Biografia</h1>
+    </ion-header-bar>
+    <ion-content class="padding">
+        <div class="list">
+          <label class="item item-input">
+              <textarea ng-model="liga.biografia" maxlength="150" rows="7" placeholder="Informações sobre esse perfil">
+              </textarea>
+          </label>
+          <div style="text-align: right">
+            <small>{{150 - liga.biografia.length}}</small>
+          </div>
+        </div>
+        <button ng-click="confirmarBiografia()" class="button button-positive button-block">Confirmar</button>
+    </ion-content>
+</ion-modal-view>

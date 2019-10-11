@@ -17,11 +17,15 @@ angular
       }
     }
 
-    DataService.locaisPreferidos($scope.jogo.mandante._id).then(function(locaisPreferidos){
-      $scope.locaisSugeridos = locaisPreferidos;
-    });
+    if($scope.jogo.mandante._id){
+      DataService.locaisPreferidos($scope.jogo.mandante._id).then(function(locaisPreferidos){
+        $scope.locaisSugeridos = locaisPreferidos;
+      });      
+    }
+
 
     function carregarLocais(){
+      if(!$scope.regiao) return false;
       return DataService.locais($scope.regiao).then(function(locais){
         $scope.locais = _.slice(locais, 0, 50);
         fuseLocais = new Fuse(locais, {
@@ -33,8 +37,8 @@ angular
 
     carregarLocais();
 
-    $scope.$on('alterarRegiao', function(event, regiao){
-      $scope.regiao = regiao;
+    $scope.$on('alterarRegiao', function(event, estado){
+      $scope.regiao = estado.uf;
       carregarLocais().then(function(){
         $scope.buscarLocal($scope.search.query);
       });

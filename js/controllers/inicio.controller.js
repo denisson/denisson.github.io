@@ -9,7 +9,7 @@ angular
     $scope.proximos = $attrs.proximosJogos;
     
 
-    $scope.$on('alterarRegiao', function(event, regiao){
+    $scope.$on('alterarRegiao', function(event, estado){
       $scope.atualizar();
     });
 

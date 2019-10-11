@@ -1,0 +1,29 @@
+<ion-modal-view>
+    <ion-header-bar align-title="center" class="bar bar-header bar-positive">
+        <button class="button button-clear button-primary" ng-click="modalAddArbitro.hide()">Voltar</button>
+        <h1 class="title">Adicionar árbitro</h1>
+    </ion-header-bar>
+    <ion-content class="padding">
+        <form class="list" ng-submit="enviar()">
+        	<h4 class="dark">Convidar individualmente</h4>
+        	<!-- <p class="padding" style="color: #999">Um convite será enviado para o email abaixo, instruindo o árbitro a baixar o aplicativo e fazer login.</p> -->
+            <p class="padding" style="color: #999">Informe o email que será cadastrado. Após o cadastro, basta o árbitro baixar o Jogueiros e fazer login.</p>
+            <label class="item item-input">
+                <span class="input-label">Email</span>
+                <input ng-model="arbitro.email" type="email" placeholder="endereço de email" required />
+            </label>
+            
+            <button ng-click="enviarConviteArbitro()" ng-disabled="!arbitro.email" type="submit" class="button button-positive button-block">Convidar</button>
+        </form>
+        <h4 class="dark">Convidar com link </h4>
+        <p class="padding" style="color: #999">Envie este link para todos os árbitros e eles poderão se cadastrar utilizando o mesmo link.
+        	<a href ng-if="liga.token || carregandoToken" ng-click="desativarLinkConvite()">Desativar link</a>
+        </p>
+        <button ng-if="!liga.token && !carregandoToken" ng-click="criarLinkConviteArbitro()" class="button button-positive button-block icon ion-link"> Criar link</button>
+    	
+	    <label ng-if="liga.token || carregandoToken" class="item item-input">
+	        <input ng-value="linkConviteArbitro(liga.token)" type="text"/>
+	    </label>
+        <button ng-if="liga.token || carregandoToken" ng-click="compartilharLinkConvite(liga.token)" class="button button-positive button-block">Compartilhar link</button>
+    </ion-content>
+</ion-modal-view>

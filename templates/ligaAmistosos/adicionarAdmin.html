@@ -1,0 +1,18 @@
+<ion-modal-view>
+    <ion-header-bar align-title="center" class="bar bar-header bar-positive">
+        <button class="button button-clear button-primary" ng-click="modalAddAdmin.hide()">Voltar</button>
+        <h1 class="title">Adicionar administrador</h1>
+    </ion-header-bar>
+    <ion-content class="padding">
+        <form class="list" ng-submit="enviar()">
+<!--         	<p class="padding" style="color: #999">Um convite será enviado para o email abaixo, com instruções de como baixar e fazer login no Jogueiros FC. </p> -->
+            <p class="padding" style="color: #999">Informe o email que será cadastrado. Após o cadastro, basta o usuário baixar o Jogueiros e fazer login.</p>
+            <label class="item item-input">
+                <span class="input-label">Email</span>
+                <input ng-model="administrador.email" type="email" placeholder="endereço de email" required />
+            </label>
+            
+            <button ng-click="enviarConviteAdmin()" ng-disabled="!administrador.email" type="submit" class="button button-positive button-block">Salvar</button>
+        </form>
+    </ion-content>
+</ion-modal-view>

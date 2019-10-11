@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('informarSumulaController', ['$scope', '$stateParams', '$state', 'DataService', function ($scope, $stateParams, $state, DataService) {
+  .controller('informarSumulaController', ['$scope', '$stateParams', '$state', 'DataService', 'AuthService', function ($scope, $stateParams, $state, DataService, AuthService) {
     var time = $stateParams.time || 'mandante';
     $scope.time = time;
     $scope.jogo = $stateParams.jogo;
@@ -128,11 +128,11 @@ angular
 
     $scope.salvarGols = function(){
       DataService.salvarSumula($scope.jogo._id, getJogadoresElenco(), time).then(function(retorno){
-        $state.go('abasInicio.jogo-aba-time', {id: $scope.jogo._id});
+        AuthService.redirectClean('abasInicio.jogo-aba-time', null, {id: $scope.jogo._id});
       });
     };
     
     $scope.informarDepois = function(){
-      $state.go('abasInicio.meuTime');
+      AuthService.redirectClean('abasInicio.meuTime');
     }
   }])

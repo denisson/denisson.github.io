@@ -1,0 +1,49 @@
+<ion-view title="{{titulo}}">
+    <ion-content padding="true">
+        <form ng-if="liga" class="list" ng-submit="enviar()">
+            <div class="captura-foto captura-foto-menor">
+                <!-- <input type="file" id="input-file-foto" class="hidden" accept="image/*" /> -->
+                <img class="captura-foto-img" ng-click="capturarFoto()" id="logotipo" jog-escudo="liga.escudo"></img>
+                <i ng-click="capturarFoto()" class="icon ion-image captura-foto-icon"></i>
+            </div>
+            <label class="item item-input">
+                <span class="input-label">Nome curto</span>
+                <input ng-model="liga.nome" type="text" placeholder="Sigla ou um nome mais curto da liga" required />
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Nome completo</span>
+                <input ng-model="liga.nomeCompleto" type="text" placeholder="Nome completo da liga" required />
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Cidade sede</span>
+                <input ng-model="liga.cidade.nomeCompleto" jog-selecionar-cidade on-selecionado="cidadeSelecionada(cidade, estado)"  type="text" placeholder="Nome da cidade" />
+            </label>
+            <label ng-if="liga.cidade" class="item item-input" on-selecionado="cidadesAtuacaoSelecionadas(cidades)" jog-selecionar-cidade multi="true" pre-selecionados="liga.cidadesAtuacao" estado="liga.cidade.uf" label-botao="Confirmar">
+                <span class="input-label">Onde atua</span>
+                <p class="padding-vertical dark">{{nomesCidadesAtuacao() || 'Cidades de atuação'}}</p>
+            </label>
+
+
+            <ion-item class="item-divider">Informações adicionais</ion-item>
+
+            <label class="item item-input">
+                <span class="input-label">Telefone</span>
+                <telefone-input telefone="liga.telefone"></telefone-input>
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Site</span>
+                <input ng-model="liga.site" type="text" placeholder="www.meusite.com" />
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Instagram</span>
+                <input ng-model="liga.instagram" type="text" placeholder="conta_instagram" />
+            </label>
+
+            <jog-textarea label="Biografia" objeto="liga" campo-texto="biografia" descricao="Informações sobre esse perfil" limite="150"></jog-textarea>
+
+            <button ng-disabled="!liga.nome" type="submit" class="button button-positive button-block">{{labelBotao}}</button>
+        </form>
+    </ion-content>
+</ion-view>

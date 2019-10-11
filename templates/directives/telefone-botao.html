@@ -1,0 +1,14 @@
+<div>
+  <a 	ng-if="telefone.numero && telefone.whatsapp === true"
+  		ng-click="irParaWhatsapp(telefone); $event.stopPropagation()"
+  		class="button button-outline button-positive button-block button-small"	
+  		style="margin: 0" >
+  		Whatsapp
+  </a>
+  <a 	ng-if="telefone.numero && (telefone.whatsapp === false)"
+  		href="tel:+{{telefone.ddi}}{{telefone.numero}}"
+  		class="button button-outline button-positive button-block button-small"
+  		style="margin: 0" >
+  		Telefone
+  </a>
+</div>

@@ -1,0 +1,87 @@
+<ion-view ng-controller="arbitroController">
+  <ion-nav-title ng-click="selecionarPerfil()">{{arbitro.nome}} <i ng-if="editavel()" class="icon ion-arrow-down-b dark"></i></ion-nav-title>
+  <ion-nav-buttons side="right">
+      <button ng-if="editavel()" class="button" ng-click="exibirMenu()">
+        <i class="icon ion-android-more-vertical"></i>
+      </button>
+  </ion-nav-buttons>
+<ion-content padding="true">
+<!--     <ion-refresher
+      pulling-text="Atualizar..."
+      on-refresh="atualizar()">
+    </ion-refresher> -->
+
+
+    <div ng-if="arbitro">
+
+    <ion-list>
+        <ion-item class="item-thumbnail-left resumo-time">
+            <img ng-click="editarPerfil()" jog-jogador="arbitro.foto" jog-size="mid">
+
+            <div class="row resumo-jogos">
+                <div ng-click="verJogos(false)" class="col"><b>{{arbitro.numeros.encerrados}}</b><p style="color: #999">Concluídos</p></div>
+                <div ng-click="verJogos(true)" class="col"><b>{{arbitro.numeros.proximos}}</b><p style="color: #999">Agendados</p></div>
+            </div>
+
+            <div ng-if="usuarioArbitro()" class="row">
+              <div class="col">
+                <button ng-click="editarPerfil()"  class="button button-outline button-positive button-block button-small" style="margin: 0" >Editar perfil</button>
+              </div>
+            </div>
+            <telefone-botao ng-if="!usuarioArbitro()" telefone="arbitro.telefone"></telefone-botao>
+
+        </ion-item>
+    </ion-list>
+
+    <div class="padding-horizontal padding-bottom">
+      <b>{{arbitro.nome}}</b><br/>
+      <telefone-link telefone="arbitro.telefone" editavel="{{usuarioArbitro()}}"></telefone-link>
+    </div>
+
+    <jog-agenda-semana arbitro="arbitro"></jog-agenda-semana>
+
+    <ion-item class="item-divider agenda-semana-header" style="text-align: left">
+      Horários disponíveis
+      <a ng-if="usuarioArbitro()" ng-click="editarHorariosDisponiveis()" style="text-decoration: none;float: right;font-size: 14px; ">Editar</a>
+    </ion-item>
+    <div class="item">
+      <jog-arbitro-horarios arbitro="arbitro" somente-leitura="usuarioArbitro()"></jog-arbitro-horarios>
+    </div>
+
+    <ion-item ng-click="verJogos(false)" class="item-icon-left">
+      <i class="icon ion-ios-timer-outline"></i>
+      Histórico de jogos
+      <span class="item-note">{{arbitro.numeros.encerrados}} jogos</span>
+    </ion-item>
+    <ion-item ng-click="verJogos(true)" class="item-icon-left">
+      <i class="icon ion-ios-calendar-outline"></i>
+      Próximos jogos
+      <span class="item-note">{{arbitro.numeros.proximos}} jogos</span>
+    </ion-item>
+
+
+    <ion-item ng-if="editavel() && arbitro.jogos.aguardandoPlacar.length" class="item-divider">
+      Informar placar
+      <span class="badge badge-assertive">{{arbitro.jogos.aguardandoPlacar.length}}</span>
+    </ion-item>
+    <jog-partidas ng-if="editavel()" partidas="arbitro.jogos.aguardandoPlacar"></jog-partidas>
+    <ion-item ng-if="editavel() && arbitro.jogos.confirmarJogo.length" class="item-divider">
+      Confirmar jogo
+      <span class="badge badge-assertive">{{arbitro.jogos.confirmarJogo.length}}</span>
+    </ion-item>
+    <jog-partidas ng-if="editavel()" partidas="arbitro.jogos.confirmarJogo"></jog-partidas>
+
+
+
+
+
+
+    <br/>
+    <p ng-if="usuarioArbitro()" style="text-align: center">
+      Dúvidas ou sugestões?
+      <br/>
+      <a href="#" ng-click="irParaUrl('mailto:jogueirosfc.inc@gmail.com'); $event.stopPropagation();">jogueirosfc.inc@gmail.com</a>
+    </p>
+  </div>
+  </ion-content>
+</ion-view>

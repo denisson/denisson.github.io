@@ -1,11 +1,31 @@
-<ion-view ng-controller="verJogoController" >
-  <ion-nav-title>{{jogo.mandante.nome}} x {{jogo.visitante.nome}}</ion-nav-title>
-  <ion-nav-buttons side="right">
-      <button ng-if="deveExibirMenu()" class="button" ng-click="exibirMenu()">
-        <i class="icon ion-android-more-vertical"></i>
-      </button>
-  </ion-nav-buttons>
-    <ion-content>
+<ion-view ng-controller="verJogoController" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button" ng-click="voltar()" style="margin: 0">
+          <i class="icon ion-ios-arrow-back"></i>
+        </button>
+    </ion-nav-buttons>
+    <ion-nav-title style="left: 28px;">{{jogo.mandante.nome}} x {{jogo.visitante.nome}}</ion-nav-title>
+    <ion-nav-buttons side="right">
+        <button ng-if="deveExibirMenu()" class="button" ng-click="exibirMenu()">
+          <i class="icon ion-android-more-vertical"></i>
+        </button>
+    </ion-nav-buttons>
+  <style type="text/css">
+    .mensagem-discreta{
+      font-size: 0.9em;
+      text-align: center;
+      color: #999;
+    }
+
+    .jogo-jogadores{
+      background-color: #fff;
+    }
+
+    .bar .buttons-left span{
+      margin-right: -2px;
+    }
+  </style>
+    <ion-content style="background-color: #fafafa">
       <div ng-if="jogo">
         <jog-partida jogo="jogo"></jog-partida>
 <!-- <i class="icon ion-android-done-all" style="
@@ -21,13 +41,13 @@
           </p>
           <p class="dark">Ao excluir, o jogo não será mais exibido nas rodadas nem no seu perfil</p>
         </div>
-        <p ng-if="!editavel('visitante') && jogo.situacao == 'confirmarJogo'" style="font-size: 0.9em; text-align: right;  color: #999;" class="padding dark">
+        <p ng-if="!editavel('visitante') && jogo.situacao == 'confirmarJogo'" style="text-align: right;"  class="padding mensagem-discreta" >
           Jogo ainda <b>não confirmado</b> pelo {{jogo.visitante.nome}}
         </p>
-        <p ng-if="editavel('visitante') && jogo.aguardandoPlacar" style="font-size: 0.9em; text-align: center; color: #999;" class="padding">
+        <p ng-if="editavel('visitante') && jogo.aguardandoPlacar && !temArbitragem()" class="padding mensagem-discreta">
           Aguardando <b>{{jogo.mandante.nome}}</b> informar o placar do jogo.
         </p>
-        <p ng-if="jogo.situacao == 'jogoRejeitado'" style="font-size: 0.9em; text-align: right;  color: #999;" class="padding dark">
+        <p ng-if="jogo.situacao == 'jogoRejeitado'" style="text-align: right;" class="padding mensagem-discreta">
           Jogo <b>não confirmado</b> pelo {{jogo.visitante.nome}}
         </p>
         <div ng-if="jogo.encerrado && !aguardandoConfirmarPlacar()" class="row jogo-jogadores">
@@ -36,7 +56,7 @@
                   <p ng-if="!editavel('mandante')" style="font-size: 0.9em; color: #999;">
                     Acho que não quiseram revelar os craques do time ;)
                   </p>
-                  <button ng-if="editavel('mandante')" ng-click="informarSumula()" class="button button-positive button-block " href="#">Cadastrar Súmula</button>
+                  <button ng-if="editavel('mandante')" ng-click="informarSumula()" class="button button-positive button-block  button-small" href="#">Cadastrar Súmula</button>
                 </div>
                 <ion-list ng-controller="jogadoresController">
                     <ion-item  class="item-avatar" ng-click="verJogador(jogadorGol.jogador)" ng-repeat="jogadorGol in jogo.jogadores.mandante">
@@ -64,7 +84,7 @@
                       {{jogo.visitante.nome}} não está cadastrado no Jogueiros FC
                     </p>
                   </div>
-                  <button ng-if="editavel('visitante') && jogo.situacao == 'placarConfirmado'" ng-click="informarSumula()" class="button button-positive button-block">Cadastrar Súmula</button>
+                  <button ng-if="editavel('visitante') && jogo.situacao == 'placarConfirmado'" ng-click="informarSumula()" class="button button-positive button-block button-small">Cadastrar Súmula</button>
                 </div>
                 <ion-list ng-controller="jogadoresController">
                     <ion-item class="item-avatar" ng-click="verJogador(jogadorGol.jogador)" ng-repeat="jogadorGol in jogo.jogadores.visitante">
@@ -77,24 +97,20 @@
                 </ion-list>
             </div>
         </div>
-        <p ng-if="jogo.arbitragem.solicitacao && !jogo.arbitragem.arbitro" class="padding dark">
-          Arbitragem solicitada: <b>{{jogo.arbitragem.solicitacao.liga.nome}}</b>
-        </p>
         <p ng-if="podeSolicitarArbitragem()" class="padding dark">
           <button ng-click="solicitarArbitragem()" class="button button-positive button-block" href="#">Solicitar arbitragem</button>    
-        </p>
-        <p ng-if="jogo.arbitragem.arbitro" class="padding dark">
-          Árbitro: <b>{{jogo.arbitragem.arbitro.nome}} ({{jogo.arbitragem.solicitacao.liga.nome}})</b>
         </p>
         <div ng-if="aguardandoConfirmarJogo()" class="confirmacao-jogo">
           <p class="dark"><b>{{jogo.mandante.nome}}</b> marcou um jogo contra o seu time</p>
           <button ng-click="confirmarJogo()" class="button button-positive" href="#">Confirmar</button>    
           <button ng-click="rejeitarJogo()" class="button button-stable button-outline" href="#">Excluir</button>
         </div>
-        <div class="padding">
-          <button ng-if="jogo.aguardandoPlacar && editavel('mandante')" ng-click="informarPlacar()" class="button button-positive button-block " href="#">Informar Placar</button>
+        <div ng-if="podeInformarPlacar()" class="padding">
+          <button  ng-click="informarPlacar()" class="button button-positive button-block " href="#">Informar Placar</button>
           <!-- <div ng-if="jogoValido()"><i class="icone-confirmado ion-checkmark-circled"></i> Confirmado pelos dois times</div> -->
         </div>
+
+        <jog-arbitragem jogo="jogo"></jog-arbitragem>
       </div>
     </ion-content>
 </ion-view>

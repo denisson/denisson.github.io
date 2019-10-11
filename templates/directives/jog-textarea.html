@@ -1,0 +1,6 @@
+<label ng-click="exibirModal()" class="item item-input">
+    <span class="input-label">{{label}}</span>
+	<input ng-if="!objeto[campoTexto]" type="text" placeholder="{{descricao}}" />
+	<p ng-if="objeto[campoTexto]" style="white-space: pre-wrap; color: #111; width: 65%;padding-right: 15px;">{{objeto[campoTexto]}}</p>
+</label>
+

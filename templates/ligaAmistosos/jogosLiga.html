@@ -1,0 +1,71 @@
+<ion-view class="has-tabs-top">
+  <ion-nav-title>{{nomeLiga}}</ion-nav-title>
+
+  <style type="text/css">
+        .info-arbitragem{
+            background-color: #f8f8f8;
+        }
+  </style>
+  <div  class="tabs-striped tabs-top tabs-light">
+      <div class="tabs">
+        <a class="tab-item" ng-click="mostrarEncerrados()" ng-class="{active: !proximos}">
+          Jogos encerrados
+        </a>
+        <a class="tab-item" ng-click="mostrarProximos()" ng-class="{active: proximos}">
+          Próximos Jogos
+        </a>
+      </div>
+  </div>
+  <ion-content class="has-tabs-top">
+    <!-- Tab 1 -->
+    <div ng-if="!proximos" ng-controller="jogosController" class="background-cinza">
+      <div ng-if="editavel" class="list card" ng-repeat="jogo in jogos">
+        <jog-partidas partidas="[jogo]"></jog-partidas>  
+        <ion-item ng-if="!jogo.precisaInformarArbitro" ui-sref="arbitro({id:jogo.arbitragem.designacao.arbitro._id})" class="item-avatar item item-icon-right info-arbitragem">
+          <img jog-jogador="jogo.arbitragem.designacao.arbitro.foto" jog-size="small">
+          <h2>{{jogo.arbitragem.designacao.arbitro.nome}}</h2>
+          <p ng-if="!jogo.encerrado">Ainda não informou o placar</p>
+          <i ng-if="!jogo.encerrado" class="icon ion-alert-circled energized"></i>
+          <p ng-if="jogo.encerrado">Informou o placar</p>
+          <i ng-if="jogo.encerrado" class="icon ion-checkmark-circled positive"></i>
+        </ion-item>
+        <div ng-if="jogo.precisaInformarArbitro" class="item info-arbitragem">
+          <p class="cancel-nowrap padding-horizontal" >É necessário escalar um novo árbitro para essa partida.</p>
+          <informar-arbitro jogo="jogo" ao-cancelar="cancelarAlteracaoDesignacao()" ao-salvar="aposDesignarArbitro(arbitro)"></informar-arbitro>
+        </div>
+      </div>
+      <jog-partidas ng-if="!editavel" partidas="jogos"></jog-partidas>  
+      <div ng-show="!jogos.length && dadosCarregados" class="padding mensagem-destacada">
+        <h3 class="dark">Nenhum jogo</h3>
+        <!-- <p class="dark"></p> -->
+      </div>
+      <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarJogos()" distance="10%"></ion-infinite-scroll>
+    </div>
+
+
+    <!-- Tab 2 -->
+    <div ng-if="proximos" ng-controller="jogosController" proximos-jogos="true" class="background-cinza">
+      <div ng-if="editavel" class="list card" ng-repeat="jogo in jogos">
+        <jog-partidas partidas="[jogo]"></jog-partidas>  
+        <ion-item ng-if="!jogo.precisaInformarArbitro" ui-sref="arbitro({id:jogo.arbitragem.designacao.arbitro._id})" class="item-avatar item item-icon-right info-arbitragem">
+            <img jog-jogador="jogo.arbitragem.designacao.arbitro.foto" jog-size="small">
+            <h2>{{jogo.arbitragem.designacao.arbitro.nome}}</h2>
+            <p ng-if="!jogo.temArbitro">Ainda não confirmou este jogo</p>
+            <i ng-if="!jogo.temArbitro" class="icon ion-alert-circled energized"></i>
+            <p ng-if="jogo.temArbitro">Confirmado para este jogo</p>
+            <i ng-if="jogo.temArbitro" class="icon ion-checkmark-circled positive"></i>
+        </ion-item>
+        <div ng-if="jogo.precisaInformarArbitro" class="item info-arbitragem">
+          <p ng-if="jogo.arbitragem.designacao.arbitro" class="cancel-nowrap padding-horizontal" >É necessário escalar um novo árbitro para essa partida.</p>
+          <p ng-if="!jogo.arbitragem.designacao.arbitro" class="cancel-nowrap padding-horizontal" >É necessário escalar um árbitro para essa partida.</p>
+          <informar-arbitro jogo="jogo" ao-cancelar="cancelarAlteracaoDesignacao()" ao-salvar="jogo.arbitragem.designacao.arbitro = arbitro"></informar-arbitro>
+        </div>
+      </div>
+      <jog-partidas ng-if="!editavel" partidas="jogos"></jog-partidas>  
+      <div ng-show="!jogos.length && dadosCarregados" class="padding mensagem-destacada">
+          <h3 class="dark">Nenhum jogo</h3>
+          <!-- <p class="dark">Parece que os jogueiros estão se poupando pra próxima rodada.</p> -->
+      </div>
+      <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarJogos()" distance="10%"></ion-infinite-scroll>
+    </div>
+</ion-view>

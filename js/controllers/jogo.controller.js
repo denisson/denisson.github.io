@@ -2,6 +2,14 @@ angular
   .module('app.controllers')
   .controller('verJogoController', ['$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicPopup', '$ionicActionSheet', '$ionicHistory', function ($scope, $state, $stateParams, DataService, AuthService, $ionicPopup, $ionicActionSheet, $ionicHistory) {
 
+    $scope.voltar = function(){
+      if($ionicHistory.backView()){
+        $ionicHistory.goBack();
+      } else {
+        $state.go('abasInicio.meuPerfil');
+      }
+    }
+
     $scope.naoInformouGols = function(time){
       //O jogo já foi encerrado (placar informado), mas o time não informou a súmula.
       return $scope.jogo.encerrado && $scope.jogo.jogadores[time].length == 0;
@@ -15,7 +23,18 @@ angular
     $scope.editavel = function(time){
       return $scope.jogo 
         && AuthService.getTime() 
-        && _.get($scope.jogo[time], ['_id']) === AuthService.getTime()._id;
+        && _.get($scope.jogo[time], ['_id']) === AuthService.getTime();
+    }
+
+    $scope.permissaoArbitragem = function(){
+      return $scope.jogo && 
+        (AuthService.getArbitro() && _.get($scope.jogo, 'arbitragem.arbitro._id') === AuthService.getArbitro())
+        ||
+        (AuthService.getLiga() && _.get($scope.jogo, 'arbitragem.solicitacao.liga.id') === AuthService.getLiga());
+    }
+
+    $scope.temArbitragem = function(){
+      return $scope.jogo.temSolicitacaoArbitragem;
     }
 
     $scope.jogoValido = function(){
@@ -34,6 +53,13 @@ angular
 
     $scope.informarSumula = function(){
       $state.go('informarSumula', {id:$scope.jogo._id, jogo: $scope.jogo, time: $scope.timeDoUsuario()});
+    }
+
+    $scope.podeInformarPlacar = function(){
+      return $scope.jogo.aguardandoPlacar && 
+              ((!$scope.temArbitragem() && $scope.editavel('mandante'))
+              ||
+              ($scope.temArbitragem() && $scope.permissaoArbitragem()));
     }
 
     $scope.informarPlacar = function(){
@@ -86,11 +112,7 @@ angular
        confirmPopup.then(function(res) {
          if(res) {
            DataService.removerJogo($scope.jogo._id).then(function(){
-              if($ionicHistory.backView()){
-                $ionicHistory.goBack();
-              } else {
-                $state.go('abasInicio.meuTime');
-              }
+              $state.go('time');
            }, function(err){
               $ionicPopup.alert({
                 title: 'Erro',
@@ -166,15 +188,16 @@ angular
 
     $scope.podeSolicitarArbitragem = function(){
       var agora = moment.tz($scope.jogo.local.cidade.timezone);
-      return $scope.deveExibirMenu() && !_.get($scope, 'jogo.arbitragem') && existeLigaDisponivel() && agora.isBefore($scope.jogo.dataHora);
+      return $scope.deveExibirMenu() && !$scope.jogo.temSolicitacaoArbitragem && existeLigaDisponivel() && agora.isBefore($scope.jogo.dataHora);
     }
 
     $scope.solicitarArbitragem = function(){
       $state.go('solicitarArbitragem', {id: $scope.jogo._id, jogo: $scope.jogo});
     }
 
+
     function existeLigaDisponivel(){
-      return true; //TODO: fazer consulta para saber se tem liga disponível para o local do jogo
+      return $scope.jogo.temLigasDisponiveis;
     }
 
     function mostrarAlerta(mensagem){

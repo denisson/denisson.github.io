@@ -1,0 +1,187 @@
+<ion-view ng-controller="ligaController">
+  <ion-nav-title ng-click="selecionarPerfil()">{{liga.nome}} <i ng-if="editavel()" class="icon ion-arrow-down-b dark"></i></ion-nav-title>
+  <ion-nav-buttons side="right">
+      <button ng-if="editavel()" class="button" ng-click="exibirMenu()">
+        <i class="icon ion-android-more-vertical"></i>
+      </button>
+  </ion-nav-buttons>
+<ion-content padding="true">
+
+  <style type="text/css">
+    .jogos-liga-arbitros{
+      width: 100%;
+    }
+
+    .jogos-liga-arbitros td{
+      padding: 8px;
+    }
+
+    .col-70{
+      flex: 0 0 70%;
+      max-width: 70%;      
+    }
+
+    .col-15{
+      flex: 0 0 15%;
+      max-width: 15%;      
+    }
+
+  </style>
+
+    <div ng-if="liga">
+    <ion-list>
+        <ion-item class="item-thumbnail-left resumo-time">
+            <img ng-click="editarPerfil()" jog-escudo="liga.escudo" jog-size="mid">
+
+            <div class="row resumo-jogos">
+              <div class="col"><b>{{liga.numeros.jogos || 0}}</b><p style="color: #999">jogos</p></div>
+              <div class="col"><b>{{liga.numeros.times || 0}}</b><p style="color: #999">times</p></div>
+              <div class="col"><b>{{liga.arbitros.length || 0}}</b><p style="color: #999">árbitros</p></div>
+            </div>
+            <div ng-if="editavel()" class="row">
+              <div class="col col-70">
+                <button ng-click="editarPerfil()"  class="button button-outline button-positive button-block button-small" style="margin: 0" >Editar perfil</button>
+              </div>
+              <div class="col col-15">
+                <button ng-click="editarConfiguracoes()" class="button button-outline button-positive button-block button-small icon ion-gear-b" style="margin: 0"></button>
+              </div>
+              <div class="col col-15">
+                <button ng-click="compartilharLink(liga); $event.stopPropagation()" class="button button-outline button-positive button-block button-small icon ion-android-share-alt" style="margin: 0"></button>
+              </div>
+            </div>
+            <telefone-botao ng-if="!editavel()" telefone="liga.telefone"></telefone-botao>
+
+        </ion-item>
+    </ion-list>
+
+    <div class="padding-horizontal padding-bottom">
+      <b>{{liga.nomeCompleto}}</b><br/>
+      <div ng-if="liga.biografia" style="white-space: pre-wrap;">{{liga.biografia}}</div>
+      <a ng-if="liga.site" class="text-overflow" href="#" ng-click="irParaUrl(liga.site); $event.stopPropagation();" style="text-decoration: none">{{liga.site}}</a>
+      <a ng-if="liga.instagram" class="text-overflow" href="#" ng-click="irParaInstagram(liga); $event.stopPropagation()" style="text-decoration: none">@{{liga.instagram}}</a>
+      <div ng-if="liga.cidade.nomeCompleto">
+        {{liga.cidade.nomeCompleto}}
+      </div>
+      <telefone-link telefone="liga.telefone" editavel="{{editavel()}}"></telefone-link>
+    </div>
+
+
+
+    <ion-list>
+      <ion-item class="item-divider">Jogos </ion-item>
+      <ion-item ng-if="editavel()" ng-click="verJogos(true, 'precisaInformarArbitro')" class="item-icon-left">
+        <i class="icon ion-person-add"></i>
+        Jogos sem árbitro escalado
+        <span ng-if="liga.numeros.precisaInformarArbitro" class="badge badge-assertive">{{liga.numeros.precisaInformarArbitro}}</span>
+        <span ng-if="!liga.numeros.precisaInformarArbitro" class="badge badge-stable">{{liga.numeros.precisaInformarArbitro}}</span>
+      </ion-item>
+      <ion-item ng-if="editavel()" ng-click="verJogos(true, 'aguardandoConfirmacaoArbitro')" class="item-icon-left">
+        <i class="icon ion-checkmark"></i>
+        Aguardando confirmação do árbitro
+        <span class="badge badge-stable">{{liga.numeros.aguardandoConfirmacaoArbitro}}</span>
+      </ion-item>
+      <ion-item ng-if="editavel()" ng-click="verJogos(false, 'aguardandoPlacar')" class="item-icon-left">
+        <i class="icon ion-ios-barcode"></i>
+        Placar não informado
+        <span class="badge badge-stable">{{liga.numeros.aguardandoPlacar}}</span>
+      </ion-item>
+      <ion-item ng-click="verJogos(false)" class="item-icon-left">
+        <i class="icon ion-ios-timer-outline"></i>
+        Histórico de jogos
+        <!-- <span class="item-note">{{arbitro.numeros.encerrados}} jogos</span> -->
+      </ion-item>
+      <ion-item ng-click="verJogos(true)" class="item-icon-left">
+        <i class="icon ion-ios-calendar-outline"></i>
+        Próximos jogos
+        <!-- <span class="item-note">{{arbitro.numeros.proximos}} jogos</span> -->
+      </ion-item>
+      <ion-item ng-if="liga.times.length" class="item-divider">
+        Times 
+        <span class="item-note">
+          <a ng-click="verTimes()"> Ver todos</a>
+        </span>
+      </ion-item>
+      <ion-item ng-if="liga.times.length" ng-click="verTimes()" class="item">
+          <div class="row" style="    flex-wrap: wrap;">
+            <div class="col" ng-repeat="timeLiga in liga.times" style="    flex-grow: 0;">
+              <img jog-escudo="timeLiga.time.escudo" jog-size="small" style="border-radius: 5px; max-width: 34px; max-height: 34px">
+            </div>
+            <div ng-if="liga.numeros.times - liga.times.length > 0" class="col" style="    flex-grow: 0;">
+              <a class="dark" style="    line-height: 34px;">+{{liga.numeros.times - liga.times.length}}</a>
+            </div>
+          </div>
+      </ion-item>
+
+
+      <ion-item ng-if="liga.rankings.length || editavel()" class="item-divider">Rankings</ion-item>
+      <ion-item ng-click="verRanking(ranking)" ng-repeat="ranking in liga.rankings">
+          <!-- <img jog-ranking="ranking.foto" jog-size="mid"> -->
+          <h2>{{ranking.nome}}</h2>
+          <p>{{ranking.dataInicio | date:'dd/MM/yyyy'}} a {{ranking.dataFim| date:'dd/MM/yyyy'}}</p>
+          <div class="item-col-assist">
+            <p>Times</p>
+            <h2 class="qtd-gols">{{ranking.numeros.times || 0}}</h2>
+          </div>
+          <div class="item-col-gols">
+            <p>Jogos</p>
+            <h2 class="qtd-gols">{{ranking.numeros.jogos || 0}}</h2>
+          </div>
+      </ion-item>
+      <ion-item ng-if="liga && editavel()" >
+        <button ng-click="cadastrarRanking()" class="button button-positive button-outline button-block icon ion-plus-circled" href="#"> Cadastrar ranking </button>
+      </ion-item>
+
+      <ion-item ng-if="editavel()" class="item-divider">Árbitros</ion-item>
+      <ion-item ng-if="editavel()" ng-click="verArbitro(arbitro)" class="item-avatar" ng-repeat="arbitro in liga.arbitros">
+          <img jog-jogador="arbitro.foto" jog-size="small">
+          <h2>{{arbitro.nome}}</h2>
+          <p>{{!arbitro.usuario ? "Cadastro pendente" : arbitro.usuario.email }}</p>
+      </ion-item>
+      <ion-item ng-if="liga && editavel()" >
+        <button ng-click="adicionarArbitro()" class="button button-positive button-outline button-block icon ion-person-add" href="#"> Adicionar arbitro </button>
+      </ion-item>
+
+      <ion-item ng-if="liga.arbitros.length && !editavel()" class="item-divider">Árbitros</ion-item>
+      <ion-item ng-if="!editavel()" ver-arbitro="arbitro" liga="liga" mostrar-telefone="false" class="item-avatar" ng-repeat="arbitro in liga.arbitros">
+          <img jog-jogador="arbitro.foto" jog-size="small">
+          <h2>{{arbitro.nome}}</h2>
+          <p>Árbitro {{liga.nome}}</p>
+
+      </ion-item>
+    </ion-list>
+
+    <ion-list ng-if="editavel()">
+      <ion-item class="item-divider">Administradores</ion-item>
+      <ion-item ng-click="verAdmin(administrador)" class="item-avatar item-button-right" ng-repeat="administrador in liga.administradores">
+          <img jog-jogador="administrador.foto" jog-size="small">
+          <h2>{{administrador.nome}}</h2>
+          <p>{{administrador.email}}</p>
+      <button ng-if="liga.administradores.length > 1" ng-click="excluirAdmin(administrador._id)" class="button button-clear vertical-middle" >
+        <i class="icon ion-close-circled assertive"></i>
+      </button>
+      </ion-item>
+      <ion-item ng-click="verAdmin(administrador)" class="item-avatar item-button-right" ng-repeat="convite in liga.convitesAdmin">
+          <img jog-jogador="" jog-size="small">
+          <h2>{{convite.email}}</h2>
+          <p>Pendente</p>
+      <button ng-click="excluirConviteAdmin(convite._id)" class="button button-clear vertical-middle">
+        <i class="icon ion-close-circled assertive"></i>
+      </button>
+      </ion-item>
+      <ion-item>
+        <button ng-click="adicionarAdmin()" class="button button-positive button-outline button-block icon ion-person-add" href="#"> Adicionar administrador </button>
+      </ion-item>
+    </ion-list>
+
+
+    <br/>
+    <p style="text-align: center">
+      Dúvidas ou sugestões?
+      <br/>
+      <a href="#" ng-click="irParaUrl('mailto:jogueirosfc.inc@gmail.com'); $event.stopPropagation();">jogueirosfc.inc@gmail.com</a>
+    </p>
+  </div>
+  </ion-content>
+
+  
+</ion-view>

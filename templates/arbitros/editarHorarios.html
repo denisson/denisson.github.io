@@ -1,0 +1,38 @@
+<ion-view ng-controller="arbitroController">
+  <ion-nav-title ng-click="selecionarPerfil()">{{arbitro.nome}}</ion-nav-title>
+  <ion-content padding="true">
+
+    <style type="text/css">
+      .button.button-royal.button-outline.button-horario {
+        line-height: 18px;
+        padding: 4px 3px;
+        border: 0;
+        margin-bottom: 3px;
+      }
+
+      .button.button-royal.button-outline.button-horario:last-child {
+        margin-bottom: 0;
+      }
+
+      button.button-horario + button.button-horario {
+        margin-bottom: 3px;
+      }
+
+      .button.button-royal.button-outline.button-add {
+        background-color: #3fa7f4;
+        color: #fff;
+        border: 0;
+        border-radius: 4px
+      }
+    </style>
+
+    <ion-item class="item-divider agenda-semana-header" style="text-align: left">
+      Editar horários disponíveis
+    </ion-item>
+    <div class="item">
+      <jog-arbitro-horarios arbitro="arbitro" editavel="true" on-change="horariosAlterados(horariosDisponiveis)"></jog-arbitro-horarios>
+    </div>
+
+    <button ng-click="salvar()" class="button button-positive button-block">Salvar</button>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,26 @@
+<ion-modal-view class="modal-minimo" >
+
+	<ion-header-bar class="bar-stable">
+      <h1 class="title">{{diaExtenso(horarioNovo.diaSemana)}}</h1>
+    </ion-header-bar>
+    <ion-content scroll="false">
+
+      <div class="padding">
+<!-- 	      <p class="dark">
+	      	Informe a sua disponibilidade de acordo com os horários de início da partida.
+	      </p> -->
+        <label class="item item-input">
+            <span class="input-label">Início</span>
+            <input ng-model="horarioNovo.horaInicio" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+        </label>    	
+        <label class="item item-input">
+            <span class="input-label">Fim</span>
+            <input ng-model="horarioNovo.horaFim" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+        </label>
+        <p style="color: #666" class="padding">Atenção! Se você informa que está disponível até 22:00, um jogo que inicie às 22:01 não será considerado.</p>
+        <button ng-if="!horarioEditando" ng-click="adicionarHorario(horarioNovo)" class="button button-block button-positive">Adicionar</button>
+        <button ng-if="horarioEditando" ng-click="adicionarHorario(horarioNovo)" class="button button-block button-positive">Alterar</button>
+        <button ng-if="horarioEditando" ng-click="excluirHorario()" class="button button-block button-clear button-assertive">Excluir</button>
+      </div>
+    </ion-content>
+</ion-modal-view>

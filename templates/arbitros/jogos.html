@@ -1,0 +1,47 @@
+<ion-view class="has-tabs-top">
+  <ion-nav-title>{{nomeArbitro}}</ion-nav-title>
+    <ion-pane>
+        <ion-tabs class="tabs-striped tabs-top tabs-stable" delegate-handle="abas-jogos-arbitro">
+
+            <!-- Tab 1 -->
+            <ion-tab title="Jogos encerrados">
+                <ion-nav-view name="tab-tab1">
+                    <ion-content class="has-header" overflow-scroll="true" ng-controller="jogosController">
+                      <ion-refresher
+                        pulling-text="Atualizar..."
+                        on-refresh="atualizar()">
+                      </ion-refresher>
+                         <ion-list> 
+                            <jog-partidas partidas="jogos"></jog-partidas>
+                        </ion-list>
+                        <div ng-show="!jogos.length && dadosCarregados" class="padding mensagem-destacada">
+                            <h3 class="dark">Nenhum jogo</h2>
+                        </div>
+                        <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarJogos()" distance="10%"></ion-infinite-scroll>
+                    </ion-content>
+                </ion-nav-view>
+            </ion-tab>
+
+
+            <!-- Tab 2 -->
+            <ion-tab title="Próximos Jogos">
+                <ion-nav-view name="tab-tab2">
+                    <ion-content class="has-header" overflow-scroll="true" ng-controller="jogosController" proximos-jogos="true">
+                      <ion-refresher
+                        pulling-text="Atualizar..."
+                        on-refresh="atualizar()">
+                      </ion-refresher>
+                         <ion-list> 
+                            <jog-partidas partidas="jogos"></jog-partidas>
+                        </ion-list>
+                        <div ng-show="!jogos.length && dadosCarregados" class="padding mensagem-destacada">
+                            <h3 class="dark">Nenhum jogo</h2>
+                        </div>
+                        <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarJogos()" distance="10%"></ion-infinite-scroll>
+                    </ion-content>
+                </ion-nav-view>
+            </ion-tab>
+        </ion-tabs>
+
+    </ion-pane>
+</ion-view>

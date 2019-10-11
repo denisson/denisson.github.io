@@ -1,0 +1,52 @@
+<ion-view ng-controller="ligaConfiguracaoController">
+  <ion-nav-title>Configurações - {{liga.nome}}</ion-nav-title>
+  <ion-nav-buttons side="right">
+      <button ng-if="editavel()" class="button" ng-click="exibirMenuTime()">
+        <i class="icon ion-android-more-vertical"></i>
+      </button>
+  </ion-nav-buttons>
+<ion-content padding="true">
+
+	<style type="text/css">
+		.config-arbitragem input{
+			text-align: right;
+		}
+	</style>
+
+
+    <div ng-if="liga">
+
+	    <form class="list config-arbitragem">
+	    	<ion-item class="item-divider">Solicitação de Arbitragem</ion-item>
+	        <label class="item item-input">
+	            <span class="input-label">Preço por hora</span>
+	            <input ng-model="liga.arbitragem.valorPorHora" type="number" placeholder="0" required />
+	        </label>
+	       	<label class="item item-input">
+	            <span class="input-label">Mínimo de antecedência (horas)</span>
+	            <input ng-model="liga.arbitragem.timeline.solicitacoesAte" type="number" placeholder="0" required />
+	        </label>
+	       	<label class="item item-input">
+	            <span class="input-label">Urgente (horas antes do jogo)</span>
+	            <input ng-model="liga.arbitragem.timeline.urgencia" type="number" placeholder="0" required />
+	        </label>
+	        <ion-item class="item-divider">Escalação do árbitro</ion-item>
+	        <label class="item item-input">
+	            <span class="input-label">Dias antes do jogo</span>
+	            <input ng-model="liga.arbitragem.timeline.designacaoDiasAntes" type="number" placeholder="0" required/>
+	        </label>
+	        <label class="item item-input">
+	            <span class="input-label">Horário do dia</span>
+	            <input ng-model="liga.arbitragem.timeline.designacaoHorario" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+	        </label>
+	       	<label class="item item-input">
+	            <span class="input-label">Prazo para árbitro confirmar (horas)</span>
+	            <input ng-model="liga.arbitragem.timeline.tempoRespostaArbitro" type="number" placeholder="0" required />
+	        </label>
+	        <button ng-click="salvar()" class="button button-positive button-block">Salvar</button>
+	    </form>
+  </div>
+  </ion-content>
+
+  
+</ion-view>

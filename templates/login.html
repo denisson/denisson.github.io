@@ -1,9 +1,19 @@
 <ion-view title="Login" hide-nav-bar="true" ng-controller="loginController">
     <ion-content padding="true" class="image-background img-login">
 
-        <div class="mensagem-destacada">
+        <div ng-if="!appArbitragem" class="mensagem-destacada">
             <h2 class="dark">Você também tem um time?</h2>
             <p class="dark"> Ótimo! Vamos te ajudar a organizar as suas partidas e encontrar adversários.</p>
+        </div>
+<!--         <div ng-if="appArbitragem" class="mensagem-destacada">
+            <h2 class="dark">Você é um árbitro de futebol 7?</h2>
+            <p class="dark"> Ganhe dinheiro apitando os jogos da sua região. </p>
+        </div> -->
+        <div ng-if="appArbitragem" class="mensagem-destacada">
+            <h2 class="dark"><span class="nowrap">Jogueiros FC</span> - Arbitragem</h2>
+            <p class="dark"> O aplicativo de arbitragem do Jogueiros está em fase beta e para acessá-lo é necessário ter um convite.</p>
+            <p class="dark">Caso tenha recebido um convite para ser árbitro ou administrador, basta fazer login.</p>
+            <p class="dark">Se você ainda não recebeu um convite, entre em contato com o administrador da sua liga ou federação.</p>
         </div>
 <!--         <div class="mensagem-destacada">
             <h2 class="dark">Quer criar um grupo de times com ranking?</h2>
@@ -14,7 +24,16 @@
         <div class="container-baixe-app">
             <h4 class="dark">Baixe nosso aplicativo</h4>
             <a  href="https://play.google.com/store/apps/details?id=com.jogueirosfc.app&amp;pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
-                <img class="img-baixe-google-play" alt="Disponível no Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/pt_badge_web_generic.png"></a>
-            </div>
+                <img class="img-baixe-google-play" alt="Disponível no Google Play" src="img/googleplay.svg">
+            </a>
+            <a  href="https://apps.apple.com/us/app/jogueiros-fc/id1436662118">
+                <img class="img-baixe-google-play" alt="Disponível na App Store" src="img/appstore.svg">
+            </a>
+        </div>
+
+        <p style="text-align: center;margin-top: 24px;color: #666;">
+            {{textoTrocarApp()}}
+            <a ng-click="trocarApp()" style="text-decoration: none;">Acesse aqui</a>
+        </p>
     </ion-content>
 </ion-view>

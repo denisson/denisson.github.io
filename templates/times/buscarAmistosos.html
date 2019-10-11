@@ -1,7 +1,13 @@
 <ion-view hide-nav-bar="false" ng-controller="buscarAmistososController">
   <ion-nav-title>Buscar Amistoso</ion-nav-title>
+  <ion-nav-buttons side="right">
+    <button class="button" id="botao-escolher-regiao" jog-escolher-regiao abrir-modal="true">
+        Região:
+        <b class="padding-left">{{regiao}}</b>
+        <i class="icon ion-android-arrow-dropdown"></i>
+    </button>
+  </ion-nav-buttons>
     <ion-content padding="true" class="scroll-with-keyboard" style="background-color: #f5f5f5">
-
         <form class="list form-buscar-amistosos">
             <div class="item item-input item-stacked-label">
                 <span class="input-label">Dia da Semana</span>
@@ -26,7 +32,7 @@
             </label>
             <label class="item item-input item-stacked-label">
                 <span class="input-label">Cidade</span>
-                <input ng-value="filtro.cidade.nomeCompleto" type="text" placeholder="Todas" on-selecionado="cidadeSelecionada(cidade)" jog-selecionar-cidade />
+                <input type="text" placeholder="Todas" on-selecionado="cidadeSelecionada(cidade)" jog-selecionar-cidade multi="true" pre-selecionados="filtro.cidades"/>
             </label>
             <label  class="item item-input item-stacked-label"
                     on-selecionado="locaisSelecionados(locais)"
@@ -46,7 +52,7 @@
 
         <ion-list class="lista-mandos-campo">
             <div class="card mando-campo" ng-repeat="mandoCampo in resultados track by mandoCampo._id" style="margin: 8px 0;">
-                <ion-item class="item-avatar item" ui-sref="abasInicio.paginaDoTime-aba-busca({id: mandoCampo.time._id})">
+                <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: mandoCampo.time._id})">
                     <img jog-escudo="mandoCampo.time.escudo" jog-size="small" style="border-radius: 5px;">
                     <h2>{{mandoCampo.time.nome}}</h2>
                     <p style="color: #333;"> <i class="icon ion-ios-location"></i> {{mandoCampo.local.nome}}</p>

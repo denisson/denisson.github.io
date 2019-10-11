@@ -15,8 +15,8 @@
             </label>
         </form>
         <ion-list class="lista-times">
-            <!-- <ion-item class="item-avatar item" ui-sref="abasInicio.paginaDoTime-aba-busca({id: time._id})" ng-repeat="time in times | latinize | fuzzyBy:'nome':search"> -->
-            <ion-item class="item-avatar item" ui-sref="abasInicio.paginaDoTime-aba-busca({id: time._id})" ng-repeat="time in times track by time._id">
+            <!-- <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in times | latinize | fuzzyBy:'nome':search"> -->
+            <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in times track by time._id">
                 <img jog-escudo="time.escudo" jog-size="small" style="border-radius: 5px">
                 <h2>{{time.nome}}</h2>
                 <p>{{time.numeros.vitorias}} vitórias, {{time.numeros.empates}} empates e {{time.numeros.derrotas}} derrotas</p>
@@ -25,8 +25,8 @@
         <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarResultados()" distance="10%"></ion-infinite-scroll>
         <ion-list ng-if="!temMaisResultados && timesSemCidade.length" class="lista-times">
             <ion-item class="item-divider" style="border: 0;">Times sem cidade informada</ion-item>
-            <!-- <ion-item class="item-avatar item" ui-sref="abasInicio.paginaDoTime-aba-busca({id: time._id})" ng-repeat="time in times | latinize | fuzzyBy:'nome':search"> -->
-            <ion-item class="item-avatar item" ui-sref="abasInicio.paginaDoTime-aba-busca({id: time._id})" ng-repeat="time in timesSemCidade track by time._id">
+            <!-- <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in times | latinize | fuzzyBy:'nome':search"> -->
+            <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in timesSemCidade track by time._id">
                 <img jog-escudo="time.escudo" jog-size="small" style="border-radius: 5px">
                 <h2>{{time.nome}}</h2>
                 <p>{{time.numeros.vitorias}} vitórias, {{time.numeros.empates}} empates e {{time.numeros.derrotas}} derrotas</p>

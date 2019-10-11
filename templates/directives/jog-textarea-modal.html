@@ -1,0 +1,18 @@
+<ion-modal-view>
+    <ion-header-bar align-title="center" class="bar bar-header bar-positive">
+        <button class="button button-clear button-primary" ng-click="cancelar()">Cancelar</button>
+        <h1 class="title">{{label}}</h1>
+    </ion-header-bar>
+    <ion-content class="padding">
+        <div class="list">
+          <label class="item item-input">
+              <textarea ng-model="objeto[campoTexto]" maxlength="{{limite}}" rows="7" placeholder="{{descricao}}" oninput='this.style.minHeight = "";this.style.minHeight = this.scrollHeight + "px"'>
+              </textarea>
+          </label>
+          <div style="text-align: right">
+            <small>{{limite - objeto[campoTexto].length}}</small>
+          </div>
+        </div>
+        <button ng-click="confirmar()" class="button button-positive button-block">Confirmar</button>
+    </ion-content>
+</ion-modal-view>
