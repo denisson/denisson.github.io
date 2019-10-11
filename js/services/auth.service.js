@@ -254,7 +254,7 @@ angular
           setPerfisUsuario(perfis);
         });        
       } else {
-        return Promise.reject(new Error('Usuário não está logado'));
+        return Promise.resolve([]);
       }
     }
 
