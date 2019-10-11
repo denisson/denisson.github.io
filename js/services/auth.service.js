@@ -249,9 +249,13 @@ angular
     }
 
     function atualizarPerfisUsuario(){
-      return DataService.usuarioPerfis().then(function(perfis){
-        setPerfisUsuario(perfis);
-      });
+      if(isAuthenticated()) {
+        return DataService.usuarioPerfis().then(function(perfis){
+          setPerfisUsuario(perfis);
+        });        
+      } else {
+        return Promise.reject(new Error('Usuário não está logado'));
+      }
     }
 
     function atualizarCidade(cidade){
