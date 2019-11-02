@@ -131,6 +131,10 @@ angular.module('app.directives')
         return $scope.jogo.temSolicitacaoArbitragem && ($scope.jogo.arbitragem.solicitacao.time._id == AuthService.getTime()) && !$scope.permissaoArbitragem() && !$scope.jogo.encerrado && !$scope.jogo.aguardandoPlacar;
       }
 
+      $scope.usuarioDeUmDosTimes = function(){
+        return AuthService.getTime() && ($scope.jogo.mandante._id == AuthService.getTime() || _.get($scope, 'jogo.visitante._id') == AuthService.getTime());
+      }
+
       $scope.cancelarSolicitacaoArbitragem = function(){
 
         var confirmPopup = $ionicPopup.confirm({

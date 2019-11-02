@@ -17,9 +17,9 @@ angular
     }
 
     $scope.compartilharLink = function(ranking){
-      var url = config.URL_SITE + '#/ranking/'+ranking._id + '/';
+      var url = config.URL_SITE + '#/ranking/'+ranking._id;
       if (window.plugins) {
-        window.plugins.socialsharing.share('Ranking de amistosos é no Jogueiros FC! Você pode acompanhar tudo pelo site ou pelo aplicativo! \n' + url);
+        window.plugins.socialsharing.share(ranking.nome + ' - ' + ranking.liga.nome + ' está no Jogueiros FC! Você pode acompanhar tudo pelo site ou pelo aplicativo! \n' + url);
       } else {
         window.open(url);
       }

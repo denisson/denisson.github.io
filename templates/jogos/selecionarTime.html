@@ -1,7 +1,7 @@
 <ion-modal-view ng-controller="buscaPorTimesController">
     <ion-header-bar class="bar bar-header bar-positive">
         <button class="button button-clear button-primary" ng-click="modalTime.hide()">Cancelar</button>
-        <h1 class="title">Selecionar adversário</h1>
+        <h1 class="title">Selecionar time</h1>
         
           <button class="button" id="botao-escolher-regiao" mostrar-br="false" tem-time="true"  regiao="{{regiao}}" jog-escolher-regiao>
             Região:
@@ -14,7 +14,7 @@
         <form class="list">
             <label class="item item-input">
                 <i class="icon ion-search placeholder-icon"></i>
-                <input ng-model="search.query" ng-change="buscarTime(search.query)" type="search" placeholder="Digite o nome do time adversário">
+                <input ng-model="search.query" ng-change="buscarTime(search.query)" type="search" placeholder="Digite o nome do time">
             </label>
         </form>
         <div class="spacer" style="width: 300px; height: 1px;"></div>
@@ -23,7 +23,7 @@
                 <ion-item class="item-avatar item" ng-click="timeSelecionado(time)" ng-if="time._id != jogo.mandante._id" ng-repeat="time in times track by time._id">
                     <img jog-escudo="time.escudo" jog-size="small">
                     <h2>{{time.nome}}</h2>
-                    <p>{{time.cidade.nomeCompleto || 'Cidade não informada'}}</p>
+                    <p>{{time.cidade.nomeCompleto || 'Cadastro provisório'}}</p>
                 </ion-item>
                 <ion-item class="item-avatar item" ng-click="cadastrarTime(search.query)">
                     <img ng-src="img/escudo.svg" style="border-radius: 0">

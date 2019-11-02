@@ -44,7 +44,7 @@ angular
     }
 
     $scope.editavel = function(){
-      return $scope.usuarioArbitro() ||  $scope.usuarioLiga();
+      return $scope.usuarioArbitro() || $scope.usuarioLiga();
     }
 
     $scope.usuarioArbitro = function(){
@@ -56,7 +56,7 @@ angular
     }
 
     $scope.editarPerfil = function(){
-      if($scope.editavel()){
+      if($scope.usuarioArbitro()){
         $state.go('editarArbitro', {id: $scope.arbitro._id});
       } else {
         // $scope.exibirModalTime($scope.time);

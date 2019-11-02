@@ -239,6 +239,12 @@ angular.module('app.routes', [])
       templateUrl: 'templates/ligaAmistosos/configuracao.html',
       controller: 'ligaConfiguracaoController'
     })
+
+    .state('liga_novoJogo', {
+      url: '/liga/:id/novoJogo',
+      cache: false,
+      templateUrl: 'templates/jogos/novoJogoLiga.html'
+    })    
     
 
     .state('ranking_cadastrar', { //cadastrarRanking

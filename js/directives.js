@@ -67,6 +67,7 @@ angular.module('app.directives', [])
   return {
     restrict: 'A',
     link: function(scope, el, attr) {
+      var imagemDefault = 'img/escudo.svg';
       function getUrlImg(urlImg, size){
         var mapSize = {'small': '48x48', 'mid': '80x80', 'large': '300x300'};
         var dimensions = (mapSize[size]? mapSize[size] : '300x300');
@@ -85,8 +86,13 @@ angular.module('app.directives', [])
           el.attr('src', getUrlImg(urlImg, el.attr('jog-size')));
         } else {
           el.css({'background-image': 'none'});
-          el.attr('src', 'img/escudo.svg');
+          el.attr('src', imagemDefault);
         }
+        el.bind('error', function() {
+          if (el.attr('src') != imagemDefault) {
+            el.attr('src', imagemDefault);
+          }
+        });
       });
     }
   };
@@ -95,6 +101,8 @@ angular.module('app.directives', [])
   return {
     restrict: 'A',
     link: function(scope, el, attr) {
+      var imagemDefault = 'img/jogador.svg';
+
       function getUrlImg(urlImg, size){
         var mapSize = {'small': '48x48', 'mid': '80x80', 'large': '300x300'};
         var dimensions = (mapSize[size]? mapSize[size] : '300x300');
@@ -112,9 +120,14 @@ angular.module('app.directives', [])
           el.attr('src', getUrlImg(urlImg, el.attr('jog-size')));
         } else {
           el.css({'background-image': 'none'});
-          el.attr('src', 'img/jogador.svg');
+          el.attr('src', imagemDefault);
         }
         el.addClass('foto-jogador');
+        el.bind('error', function() {
+          if (el.attr('src') != imagemDefault) {
+            el.attr('src', imagemDefault);
+          }
+        });
       })
     }
   };

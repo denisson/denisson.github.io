@@ -45,13 +45,13 @@
       </a>
   </ion-item>
   <div ng-if="jogo.ranking" ng-click="verRanking()" class="item background-cinza">
-    <p class="cancel-nowrap" >Jogo válido pelo ranking {{jogo.ranking.nome}} - {{jogo.arbitragem.solicitacao.liga.nome}}</p>
+    <p class="cancel-nowrap" >Jogo válido pelo {{jogo.ranking.nome}} - {{jogo.arbitragem.solicitacao.liga.nome}}</p>
   </div>
 </div>
 
 <div ng-if="jogo.arbitragem.arbitro && !permissaoArbitragem()" class="list card">
   <ion-item class="item-avatar item" ng-class="{'item-button-right': podeCancelarSolicitacaoArbitragem()}">
-      <div ver-arbitro="jogo.arbitragem.arbitro" liga="jogo.arbitragem.solicitacao.liga" mostrar-telefone="true">
+      <div ver-arbitro="jogo.arbitragem.arbitro" liga="jogo.arbitragem.solicitacao.liga" mostrar-telefone="usuarioDeUmDosTimes()">
         <img class="item-image" jog-jogador="designacao.arbitro.foto" jog-size="small" />
         <h2>{{designacao.arbitro.nome}} • {{jogo.arbitragem.solicitacao.liga.nome}}</h2>
         <p ng-if="jogo.aguardandoPlacar" class="cancel-nowrap">
@@ -64,7 +64,7 @@
       </a>
   </ion-item>
   <div ng-if="jogo.ranking" ng-click="verRanking()" class="item background-cinza">
-    <p class="cancel-nowrap" >Jogo válido pelo ranking {{jogo.ranking.nome}} - {{jogo.arbitragem.solicitacao.liga.nome}}</p>
+    <p class="cancel-nowrap" >Jogo válido pelo {{jogo.ranking.nome}} - {{jogo.arbitragem.solicitacao.liga.nome}}</p>
   </div>
 </div>
 

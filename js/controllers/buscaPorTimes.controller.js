@@ -11,6 +11,7 @@ angular
       $scope.todosTimes = [];
       $scope.todosTimesInicio = [];
       $scope.regiao = AuthService.getRegiao();
+      $scope.ligaId = AuthService.getLiga();
       $scope.search = {query: ''};
       var timesTmp = [];
 
@@ -20,6 +21,8 @@ angular
       $scope.temMaisResultadosSemCidade = true;
       $scope.todosTimesSemCidade = [];
       var timesSemCidadeTmp= [];
+
+
 
 	    // DataService.times().then(function(times){
 	    //   $scope.times = times;
@@ -62,16 +65,16 @@ angular
         $scope.$broadcast('scroll.infiniteScrollComplete');
       }
       
-
       function carregarTimes(){
         if($scope.regiao){
-          return DataService.times($scope.regiao).then(function(times){
+          return DataService.times($scope.regiao, $scope.ligaId).then(function(times){
             var timesDaRegiao = [];
             var timesSemCidade = [];
             // DataService.blockPopup();
             for (var i = 0; i < times.length; i++) {
               times[i]['nomeSemAcento'] = _.deburr(times[i]['nome']);
-              if(_.get(times[i], 'cidade._id')){
+
+              if(_.get(times[i], 'cidade._id') || times[i]['cadastradoPelaLiga'] == $scope.ligaId){
                 timesDaRegiao.push(times[i]);
               } else {
                 timesSemCidade.push(times[i]);
@@ -90,7 +93,6 @@ angular
               keys: ['nomeSemAcento'],
               threshold: 0.3,
             });
-
             
           });
         }

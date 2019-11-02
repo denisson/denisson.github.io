@@ -51,7 +51,8 @@
         <b ng-if="ranking.descricao">Informações</b><br/>
         <p ng-if="ranking.descricao" class="dark" style="white-space: pre-wrap;">{{ranking.descricao}}</p>
 
-        <a ng-if="ranking.numeros.jogos" ng-click="verJogos(false)" class="pull-right" style="text-decoration: none">Ver todos os jogos</a>
+        <a ng-if="ranking.numeros.jogos" ng-click="verJogos(false)" style="text-decoration: none">Ver todos os jogos</a>
+        <a ng-click="compartilharLink(ranking)" style="float: right;">Compartilhar</a>
       </div>
 
       <ion-item class="item-divider">Classificação</ion-item>

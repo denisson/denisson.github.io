@@ -1,0 +1,39 @@
+<ion-view title="Cadastrar jogo" ng-controller="novoJogoLigaController" hide-back-button="false">
+  <ion-nav-buttons side="left">
+      <button class="button" ng-click="cancelar()">
+        Cancelar
+      </button>
+  </ion-nav-buttons>
+    <ion-content>
+        <form class="list padding">
+            <label class="item item-input">
+                <span class="input-label">Mandante</span>
+                <input ng-model="jogo.mandante.nome" ng-focus="exibirModalTime('mandante')" type="text" placeholder="Time mandante">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Visitante</span>
+                <input ng-model="jogo.visitante.nome" ng-focus="exibirModalTime('visitante')" type="text" placeholder="Time visitante">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Quando?</span>
+                <input ng-model="jogo.data" type="date" placeholder="Data">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Que horas?</span>
+                <input ng-model="jogo.hora" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+<!--                 <input ng-if="!compativelComInputTime()" ng-model="jogo.hhmm" type="text" placeholder="HH:MM" ui-time-mask="short"> -->
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Onde?</span>
+                <input ng-model="jogo.local.nome" type="text" ng-focus="modalLocal.show()" placeholder="Local do jogo">
+            </label>
+            <ion-item ng-if="podeExibirSolicitante()" class="item-divider">Qual time solicitou arbitragem?</ion-item>
+            <ion-list ng-if="podeExibirSolicitante()">
+              <ion-radio ng-model="jogo.tipoTimeSolicitante" value="mandante">{{jogo.mandante.nome}}</ion-radio>
+              <ion-radio ng-model="jogo.tipoTimeSolicitante" value="visitante">{{jogo.visitante.nome}}</ion-radio>
+            </ion-list>
+
+            <button ng-disabled="!podeSalvar()" ng-click="salvarJogo()" class="button button-positive button-block">Salvar</button>
+        </form>
+    </ion-content>
+</ion-view>

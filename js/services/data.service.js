@@ -109,8 +109,9 @@ angular.module('app.services')
 			temporada = temporada || moment().year();
 			return request('time/' + id + '?jogadores=true&jogos=true&temporada=' + temporada);
 		},
-		times: function(regiao){
-			return request('times?regiao='+ regiao);
+		times: function(regiao, ligaId){
+			ligaId = ligaId || '';
+			return request('times?regiao='+ regiao + '&ligaId=' + ligaId);
 		},
 		// timesComPaginacao: function(pag, porPag){
 		// 	return request('times/pagina?pag=' + pag + '&porPag=' + porPag);
@@ -143,6 +144,9 @@ angular.module('app.services')
 			var escudoVisitante = jogo.visitante.id ? null : jogo.visitante.escudo; //só envia o escudo se for de um visitante sem cadastro
 			return upload('jogo', escudoVisitante, jogo);
 		},
+		salvarJogoLiga: function(jogo, ligaId){
+			return post('jogo/liga/'+ligaId, jogo);
+		},
 		confirmarJogo: function(jogoId, visitanteId){
 			return post('jogo/confirmar/' + jogoId, {visitanteId: visitanteId});
 		},
@@ -172,6 +176,9 @@ angular.module('app.services')
 	    },
 		salvarTime: function(time){
 			return upload('time', time.escudo, time);
+		},
+		salvarTimeLiga: function(time, ligaId){
+			return upload('time/liga/'+ligaId, time.escudo, time);
 		},
 		editarTime: function(time){
 			return upload('time/' + time._id, time.escudo, time);

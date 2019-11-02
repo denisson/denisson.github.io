@@ -1,5 +1,5 @@
 <ion-view ng-controller="arbitroController">
-  <ion-nav-title ng-click="selecionarPerfil()">{{arbitro.nome}} <i ng-if="editavel()" class="icon ion-arrow-down-b dark"></i></ion-nav-title>
+  <ion-nav-title ng-click="selecionarPerfil()">{{arbitro.nome}} <i ng-if="usuarioArbitro()" class="icon ion-arrow-down-b dark"></i></ion-nav-title>
   <ion-nav-buttons side="right">
       <button ng-if="editavel()" class="button" ng-click="exibirMenu()">
         <i class="icon ion-android-more-vertical"></i>

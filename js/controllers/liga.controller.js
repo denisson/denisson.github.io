@@ -42,6 +42,10 @@ angular
       $scope.irParaUrl('https://www.instagram.com/' + time.instagram);
     }
 
+    $scope.cadastrarJogoAvulso = function(){
+      $state.go('liga_novoJogo', {id: $scope.ligaId});
+    }
+
     $scope.atualizar = function(){
       $scope.ligaId = $stateParams.id || AuthService.getLiga();
       
