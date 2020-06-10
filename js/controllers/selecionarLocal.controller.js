@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('selecionarLocalController', ['$scope', '$stateParams', 'DataService', 'AuthService', function ($scope, $stateParams, DataService, AuthService) {
+  .controller('selecionarLocalController', ['$scope', '$rootScope', '$stateParams', 'DataService', 'AuthService', function ($scope, $rootScope, $stateParams, DataService, AuthService) {
     var fuseLocais;
     $scope.regiao = AuthService.getRegiao();
     $scope.search = {query: ''};
@@ -37,8 +37,8 @@ angular
 
     carregarLocais();
 
-    $scope.$on('alterarRegiao', function(event, estado){
-      $scope.regiao = estado.uf;
+    $rootScope.$on('alterarRegiao', function(event, uf){
+      $scope.regiao = uf;
       carregarLocais().then(function(){
         $scope.buscarLocal($scope.search.query);
       });

@@ -3,7 +3,7 @@ angular.module('app.directives', [])
 .directive('jogPartida', ['$ionicModal','AuthService', function($ionicModal, AuthService){
   return {
   	restrict: 'E',
-  	scope: {jogo: '=', informarPlacar: '@'},
+  	scope: {jogo: '=', informarPlacar: '@', mostrarDetalhes: '@'},
     templateUrl: 'templates/directives/jog-partida.html',
     controller: function($scope, $state){
     	$scope.irParaTime = function(time){
@@ -13,8 +13,6 @@ angular.module('app.directives', [])
           $scope.verTimeSemCadastro(time);
         }
     	};
-
-
 
       $scope.formatarData = function(jogo){
         var timezone = _.get(jogo, 'local.cidade.timezone', 'America/Fortaleza'); //caso não tenha no cadastro do jogo, utilizar o timezone compatível com Maceió
@@ -165,20 +163,36 @@ angular.module('app.directives', [])
     restrict: 'A',
     // scope: {mostrarBr: '=', temTime: '=', temJogos: '='},
     link: function(scope, el, attr) {
-
       var fuseEstados;
       scope.estados = [];
-      scope.regiao = scope.ufTimeLogado = attr.regiao || AuthService.getRegiao();
-      scope.modalRegiao;
-      scope.mostrarBr = attr.mostrarBr == undefined ? true : scope.$eval(attr.mostrarBr);
-      scope.temTime = attr.temTime == undefined ? false : scope.$eval(attr.temTime);
-      scope.temJogos = attr.temJogos == undefined ? false : scope.$eval(attr.temJogos);
-      scope.ocultarCancelar = attr.ocultarCancelar == undefined ? false : (scope.$eval(attr.ocultarCancelar) && !scope.regiao);
 
+      function inicializar(){
+      
+        if(scope.efootball){
+          scope.titulo = 'Selecionar plataforma'
+          scope.perfilFiltro.chaveEsporte = _.get(scope.perfilFiltro, 'esporte.chave');
+          scope.perfilFiltro.chavePlataforma = _.get(scope.perfilFiltro, 'plataforma.chave');
+        } else {
+          scope.regiao = scope.ufTimeLogado = attr.regiao || scope.perfilFiltro.regiao;
+          scope.titulo = 'Selecionar região'
+        }
+        
+        scope.modalRegiao;
+        scope.mostrarBr = attr.mostrarBr == undefined ? true : scope.$eval(attr.mostrarBr);
+        scope.mostrarOutrosEsportes = attr.mostrarOutrosEsportes == undefined ? true : scope.$eval(attr.mostrarOutrosEsportes);
+        // scope.filtro = attr.filtro == undefined ? null : scope.$eval(attr.filtro);
+        scope.temTime = attr.temTime == undefined ? false : scope.$eval(attr.temTime);
+        scope.temJogos = attr.temJogos == undefined ? false : scope.$eval(attr.temJogos);
+        scope.ocultarCancelar = attr.ocultarCancelar == undefined ? false : (scope.$eval(attr.ocultarCancelar) && !scope.regiao);
+      }
 
-      scope.alterarRegiao = function(estado){
-        scope.regiao = estado.uf;
-        $rootScope.$broadcast('alterarRegiao', estado);
+      scope.perfilFiltro = scope.perfilFiltro || AuthService.getPerfilFiltro();
+      scope.efootball = _.get(scope.perfilFiltro, 'esporte.efootball');
+      inicializar();
+
+      scope.alterarPerfilFiltro = function(estado){
+        $rootScope.$broadcast('alterarRegiao', scope.perfilFiltro);
+        scope.modalRegiao.hide();
       }
 
       
@@ -188,6 +202,14 @@ angular.module('app.directives', [])
           keys: ['nomeSemAcento'],
           threshold: 0.3,
         });
+      });
+
+      DataService.esportes().then(function(esportes){
+        scope.esportes = esportes;
+      });
+    
+      DataService.plataformas().then(function(plataformas){
+        scope.plataformas = plataformas;
       });
 
       scope.buscarEstado = function(query){
@@ -204,14 +226,33 @@ angular.module('app.directives', [])
         scope: scope,
       }).then(function(modal){
         scope.modalRegiao = modal;
-        if(scope.$eval(attr.abrirModal) && !scope.regiao){
+        if(scope.$eval(attr.abrirModal) && !scope.regiao && !scope.efootball){
           modal.show();
         }
       });
 
       scope.regiaoSelecionada = function(estado){
-        scope.alterarRegiao(estado);
-        scope.modalRegiao.hide();
+        scope.perfilFiltro.esporte = _.find(scope.esportes, {chave: 'FUT'});
+        scope.perfilFiltro.plataforma = null;
+        scope.perfilFiltro.regiao = estado.uf || estado;
+        scope.alterarPerfilFiltro();
+      }
+
+      scope.esporteSelecionado = function(esporte){
+        scope.perfilFiltro.esporte = esporte;
+        scope.perfilFiltro.plataforma = null;
+        scope.perfilFiltro.chavePlataforma = null;
+        scope.alterarPerfilFiltro();
+      }
+
+      scope.plataformaSelecionada = function(plataforma){
+        scope.perfilFiltro.plataforma = plataforma;
+        scope.alterarPerfilFiltro();
+      }
+
+      scope.alternarEfootball = function(efootball){
+        scope.efootball = efootball;
+        inicializar();
       }
 
       scope.mostrarEstado = function(estado){
@@ -559,8 +600,8 @@ angular.module('app.directives', [])
 
       carregarLocais();
 
-      scope.$on('alterarRegiao', function(event, estado){
-        scope.regiao = estado.uf;
+      scope.$on('alterarRegiao', function(event, uf){
+        scope.regiao = uf;
         carregarLocais().then(function(){
           scope.buscarLocal(scope.search.query);
         });

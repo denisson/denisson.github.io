@@ -49,6 +49,11 @@ angular
     $scope.atualizar = function(){
       $scope.ligaId = $stateParams.id || AuthService.getLiga();
       
+      if(!$scope.ligaId){
+        mostrarAlerta('Não foi possível carregar as informações desta liga');
+        return;
+      }
+
       DataService.ligaCompleto($scope.ligaId).then(function(liga){
         if(!liga){
             mostrarAlerta('Essa liga não existe mais');
@@ -63,7 +68,6 @@ angular
       }).catch(function(){
           mostrarAlerta('Não foi possível carregar as informações desta liga');
       });
-      //Todo: checar quando falhar a consulta ao banco e exibir um erro
     }
 
     $scope.$on('jogadorAdicionado', function(events, jogador){
@@ -242,7 +246,7 @@ angular
     });
 
     $scope.adicionarAdmin = function(){
-    $scope.administrador = {};
+      $scope.administrador = {};
       $scope.modalAddAdmin.show();
     }
 

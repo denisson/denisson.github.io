@@ -13,21 +13,21 @@
       margin: -1px;
     }
 
-    .perfil-jogador .nome{
+    .perfil-destacado .nome{
       margin-top: 10px;
     }
   </style>
 
   <div ng-if="ranking">
 
-    <div class="image-background img-jogador perfil-jogador" style="padding-top: 15px;text-align: center;">
+    <div class="image-background img-jogador perfil-destacado" style="padding-top: 15px;text-align: center;">
       <img ng-click="verLiga(ranking.liga._id)" jog-escudo="ranking.liga.escudo" jog-size="mid" style="max-width: 80px; max-height: 80px;">
       <h3 class="nome">{{ranking.nome}}</h1>
       <p ng-click="verLiga(ranking.liga._id)" class="posicao">
           {{ranking.liga.nome}}
       </p>
 
-      <ion-item class="row numeros">
+      <ion-item class="row numeros item-transparente">
           <div class="col">
               <h5 class="valor">{{ranking.numeros.times || 0}}</h5>
               <p class="campo">{{pluralize(ranking.numeros.times, 'Time')}}</p>

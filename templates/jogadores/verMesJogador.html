@@ -11,8 +11,8 @@
     <ion-content class="image-background img-jogador mapa-jogador-visao-mensal"> 
 
 
-        <div class="item topo" style="overflow-x: auto; border: 0;">
-            <div class="mapa-jogador-ano-jogo jogo" ng-click="verDetalhesJogo(dadosJogo, mesClicadoMapa, jogosMesClicadoMapa)" ng-repeat="dadosJogo in jogosMesClicadoMapa"  ng-class="{presente: dadosJogo.numeros, gols: dadosJogo.numeros.gols > 0, assistencias: dadosJogo.numeros.assistencias > 0, clicado:jogoClicadoMapa.jogo.id == dadosJogo.jogo.id}">
+        <div class="item item-transparente topo" style="overflow-x: auto; border: 0;">
+            <div class="mapa-jogador-ano-jogo jogo" ng-click="verDetalhesJogo(dadosJogo, mesClicadoMapa, jogosMesClicadoMapa)" ng-repeat="dadosJogo in jogosMesClicadoMapa"  ng-class="{presente: dadosJogo.numeros, gols: dadosJogo.numeros.gols > 0, assistencias: dadosJogo.numeros.assistencias > 0, clicado:jogoClicadoMapa.jogo._id == dadosJogo.jogo._id}">
                 <h4 class="dia-semana">{{formatarDiaSemana(dadosJogo.jogo.dataHora)}}</h4>
                 <h2 class="data">{{formatarDataMapa(dadosJogo.jogo.dataHora)}}</h3>
             </div>
@@ -21,7 +21,7 @@
 
 
         <div class="mapa-detalhes-jogo" ng-if="jogoClicadoMapa" style="background-color: #fff">
-            <ion-item  class="item-avatar" style="border-top-color: #aaa;   border-bottom: dotted 2px #dddddd;">
+            <ion-item  class="item-transparente item-avatar" style="border-top-color: #aaa;   border-bottom: dotted 2px #dddddd;">
                 <img jog-jogador="jogadorModal.foto" jog-size="small">
                 {{jogadorModal.nome}}
                 <p ng-if="!jogoClicadoMapa.numeros">Não jogou nessa partida</p>

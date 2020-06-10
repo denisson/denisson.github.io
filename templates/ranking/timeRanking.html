@@ -8,7 +8,7 @@
         margin: -1px;
       }
 
-      .perfil-jogador .nome{
+      .perfil-destacado .nome{
         margin-top: 10px;
       }
 
@@ -17,14 +17,14 @@
       }
     </style>
 
-    <div class="image-background img-jogador perfil-jogador" style="padding-top: 15px;text-align: center;">
+    <div class="image-background img-jogador perfil-destacado" style="padding-top: 15px;text-align: center;">
       <img ng-click="verTime(timeRanking.time)" jog-escudo="timeRanking.time.escudo" jog-size="mid" style="width: 80px;height: 80px;">
       <h3 ng-click="verTime(timeRanking.time)" class="nome">{{timeRanking.time.nome}}</h1>
 <!--       <p ng-click="verLiga(ranking.liga._id)" class="posicao">
           1º Lugar
       </p> -->
 
-      <ion-item class="row numeros">
+      <ion-item class="row numeros item-transparente">
           <div class="col">
               <h5 class="valor">{{timeRanking.numeros.pontos || 0}}</h5>
               <p class="campo">{{pluralize(timeRanking.numeros.pontos, 'Ponto')}}</p>
@@ -42,7 +42,7 @@
               <p class="campo">{{pluralize(timeRanking.numeros.empates, 'Empate')}}</p>
           </div>
       </ion-item>
-      <ion-item class="row numeros">
+      <ion-item class="row numeros item-transparente">
           <div class="col">
               <h5 class="valor">{{timeRanking.numeros.derrotas || 0}}</h5>
               <p class="campo">{{pluralize(timeRanking.numeros.derrotas, 'Derrota')}}</p>
@@ -63,7 +63,7 @@
     </div>
 
     <ion-list>
-      <ion-item class="item-divider">Jogos</ion-item>
+      <ion-item class="item-divider">Jogos pelo ranking</ion-item>
       <jog-partidas partidas="timeRanking.jogos"></jog-partidas>
 	</ion-list>
   </div>

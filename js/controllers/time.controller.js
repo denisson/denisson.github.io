@@ -1,12 +1,37 @@
 angular
   .module('app.controllers')
-  .controller('timeController', ['$rootScope', '$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicActionSheet', '$ionicHistory', '$ionicPopup', '$ionicModal' , 'config', function ($rootScope, $scope, $state, $stateParams, DataService, AuthService, $ionicActionSheet,$ionicHistory, $ionicPopup, $ionicModal, config) {
+  .controller('timeController', 
+  ['$rootScope', '$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicActionSheet', '$ionicHistory', '$ionicPopup', '$ionicModal' , 'config',
+  function ($rootScope, $scope, $state, $stateParams, DataService, AuthService, $ionicActionSheet,$ionicHistory, $ionicPopup, $ionicModal, config) {
     var diasExtenso = ['','Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
     $scope.jogadoresOrdem = 'ARTILHARIA';
-    $scope.jogosAnteriores = [];
-    $scope.exibindoJogosAnteriores = false;
     $rootScope.$emit('loading.init');
     $scope.temporada = $stateParams.temporada;
+
+    
+    // if(window.store) {
+    //   store.verbosity = store.DEBUG
+    //   // store.ready(function(){
+    //     store.register({
+    //       id: "assinatura.mensal",
+    //       type: store.PAID_SUBSCRIPTION
+    //     });
+    //     store.refresh();
+  
+    //     render();
+    //     store.when("assinatura.mensal").updated(render);
+    //   // });
+    // }
+
+    // function render(){
+    //   var product = store.get("assinatura.mensal");
+    //   console.log(product);
+    //   $scope.assinaturaMensal = product;
+    // }
+
+    $scope.usuarioPro = function(){
+      return AuthService.isUsuarioPro() && $scope.time.pro;
+    }
 
     function mostrarAlerta(mensagem){
       $ionicPopup.alert({
@@ -19,7 +44,7 @@ angular
 
     function checarCidade(){
       //não está cadastrada a cidade e não foi alertado ainda
-      if(!$scope.time.cidade && $scope.editavel() && !window.localStorage.getItem('alerta_cidade')){
+      if(!AuthService.isPerfilEfootball() && !$scope.time.cidade && $scope.editavel() && !window.localStorage.getItem('alerta_cidade')){
         window.localStorage.setItem('alerta_cidade', true);
         $ionicPopup.confirm({
           title: 'Informar cidade',
@@ -69,14 +94,29 @@ angular
             AuthService.logout();
             return;
         }
-        
-        if(time.jogos.encerrados && !$scope.exibindoJogosAnteriores){
-          $scope.jogosAnteriores = time.jogos.encerrados.slice(0); //clona o array
-          var primeirosJogos = $scope.jogosAnteriores.splice(0, 3);
-          time.jogos.encerrados = primeirosJogos;
-        }
+
+        // if(time.jogos.encerrados && !$scope.exibindoJogosAnteriores){
+        //   $scope.jogosAnteriores = time.jogos.encerradossplice(0, 3);
+        //   var primeirosJogos = $scope.jogosAnteriores.splice(0, 3);
+          time.jogos.encerrados = time.jogos.encerrados.splice(0, 3);
+          time.jogos.proximos = time.jogos.proximos.splice(0, 3);
+        // }
 
         $scope.time = time;
+
+
+
+        $scope.paginacao = {
+          QTD_POR_PAGINA: 10,
+          proximos: {
+            page: 1,
+            maisJogos:  time.jogos.maisJogos.proximos
+          },
+          encerrados: {
+            page: 1,
+            maisJogos: time.jogos.maisJogos.encerrados
+          }
+        };
 
         // $scope.setTemporada();
         $scope.ordenarPor($scope.jogadoresOrdem);
@@ -182,6 +222,7 @@ angular
           if(res) {
             DataService.excluirTime($scope.time._id).then(function(resposta){
               AuthService.atualizarPerfil(null, resposta.token);
+              $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
               $state.go('abasInicio.inicio');
             });
          }
@@ -205,10 +246,23 @@ angular
     }
 
     $scope.verJogosAnteriores = function(){
-      $scope.time.jogos.encerrados = $scope.time.jogos.encerrados.concat($scope.jogosAnteriores);
-      $scope.jogosAnteriores = [];
-      $scope.exibindoJogosAnteriores = true;
+
+      result = DataService.jogosEncerradosTime($scope.time._id, $scope.temporada, $scope.paginacao.encerrados.page, $scope.paginacao.QTD_POR_PAGINA).then(function(jogos){
+        $scope.time.jogos.encerrados.push.apply($scope.time.jogos.encerrados, jogos);
+        $scope.paginacao.encerrados.page++;
+        $scope.paginacao.encerrados.maisJogos = (jogos.length == $scope.paginacao.QTD_POR_PAGINA);
+      });
     }
+
+    $scope.verJogosAgendados = function(){
+
+      result = DataService.jogosAgendadosTime($scope.time._id, $scope.temporada, $scope.paginacao.proximos.page, $scope.paginacao.QTD_POR_PAGINA).then(function(jogos){
+        $scope.time.jogos.proximos.push.apply($scope.time.jogos.proximos, jogos);
+        $scope.paginacao.proximos.page++;
+        $scope.paginacao.proximos.maisJogos = (jogos.length == $scope.paginacao.QTD_POR_PAGINA);
+      });
+    }
+    
 
     $scope.exibirMenuTime = function(){
       var i=0;
@@ -285,11 +339,125 @@ angular
     }
 
     $scope.podeSelecionarPerfil = function(){
-      return $scope.editavel() && AuthService.temMaisPerfis();
+      return $scope.editavel();
     }
 
     $scope.verRankingsAnteriores = function(){
       $scope.mostrarTodosRankings = true;
+    }
+
+
+    $ionicModal.fromTemplateUrl('templates/ligaAmistosos/adicionarAdmin.html', {
+      scope: $scope,
+      animation: 'fade-in'
+    }).then(function(modal){
+      $scope.modalAddAdmin = modal;
+    });
+
+    $scope.adicionarAdmin = function(){
+      $scope.administrador = {};
+      $scope.modalAddAdmin.show();
+    }
+
+    $scope.enviarConviteAdmin = function(){
+      DataService.timeEnviarConviteAdmin($scope.time._id, {email: $scope.administrador.email}).then(function(resposta){
+        if(resposta.convite){
+          $scope.time.convitesAdmin.push(resposta.convite); 
+        } else if(resposta.administrador){
+          $scope.time.administradores.push(resposta.administrador); 
+        }
+        
+        $scope.modalAddAdmin.hide();
+      });
+    }
+
+    $scope.excluirAdmin = function(administradorId){
+
+        var confirmPopup = $ionicPopup.confirm({
+          title: 'Confirmar exclusão',
+          content: 'Deseja realmente remover este administrador?'
+        });
+       confirmPopup.then(function(res) {
+         if(res) {
+           DataService.timeExcluirAdmin($scope.time._id, administradorId).then(function(){
+              _.remove($scope.time.administradores, {_id: administradorId});
+           }, function(err){
+              $ionicPopup.alert({
+                title: 'Erro',
+                content: err.data.erro
+              });
+           });
+         }
+       });
+
+    }
+
+    $scope.excluirConviteAdmin = function(conviteId){
+
+        var confirmPopup = $ionicPopup.confirm({
+          title: 'Confirmar exclusão',
+          content: 'Deseja realmente remover este administrador?'
+        });
+       confirmPopup.then(function(res) {
+         if(res) {
+           DataService.timeExcluirConviteEmail(conviteId).then(function(){
+              _.remove($scope.time.convitesAdmin, {_id: conviteId});
+           }, function(err){
+              $ionicPopup.alert({
+                title: 'Erro',
+                content: err.data.erro
+              });
+           });
+         }
+       });
+
+    }
+
+    $scope.numerosGraficoDesempenho = function(){
+      var numeros = $scope.time.numeros;
+      if (numeros.vitorias + numeros.empates + numeros.derrotas) {
+        return numeros;
+      } else {
+        return {
+          vitorias: 10,
+          empates: 2,
+          derrotas: 4
+        }
+      }
+    }
+
+    $scope.verEstatisticas = function(){
+
+      $state.go('time_estatisticas', {id: $scope.time._id, temporada: $scope.temporada});
+
+      // $jgModalAssinatura.confirmarAssinatura().then(function(){
+      //   // console.log('sim');
+      //   $state.go('time_estatisticas', {id: $scope.time._id, temporada: $scope.temporada});
+      // }).catch(function(){
+      //   console.log('No!');
+      // });
+      
+    }
+
+    $scope.modosFormatados = function(){
+      var modos = _.get($scope.time, 'efootball.modos', []);
+      var texto = '';
+
+      if(modos.length) {
+        texto = modos.length > 1 ? 'Modos ' : 'Modo ';
+        texto += (modos[0] == 'CLUBS') ? 'Pro Clubs' : modos[0];
+        for (var i = 1; i < modos.length; i++) {
+          var modo = (modos[i] == 'CLUBS') ? 'Pro Clubs' : modos[i];
+          if(i == modos.length - 1){ //ultimo modo
+            texto += ' e '
+          } else {
+            texto += ', '
+          }
+          texto += modo;
+        }
+      }
+
+      return texto;
     }
 
 }])

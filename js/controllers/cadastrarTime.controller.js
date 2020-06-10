@@ -1,18 +1,28 @@
 angular
   .module('app.controllers')
-  .controller('cadastrarTimeController', ['$scope', '$state', '$stateParams', 'DataService', 'CameraService', 'AuthService','$ionicModal', '$ionicPopup',  function ($scope, $state, $stateParams, DataService, CameraService, AuthService, $ionicModal, $ionicPopup) {
+  .controller('cadastrarTimeController', ['$scope', '$rootScope', '$state', '$stateParams', 'DataService', 'CameraService', 'AuthService','$ionicModal', '$ionicPopup',  function ($scope, $rootScope,  $state, $stateParams, DataService, CameraService, AuthService, $ionicModal, $ionicPopup) {
   var imagePath = '';
   $scope.modalidade = {};
+  $scope.modo = {};
   $scope.telefone = {ddi: '55', whatsapp: true};
 
   DataService.estados().then(function(estados){
     $scope.estados = estados;
   });
 
+  DataService.esportes().then(function(esportes){
+    $scope.esportes = esportes;
+  });
+
+  DataService.plataformas().then(function(plataformas){
+    $scope.plataformas = plataformas;
+  });
+
   if(editando()){
     DataService.time(AuthService.getTime()).then(function(time){
       $scope.time = time;
       tratarModalidadeParaMostrar();
+      tratarModoParaMostrar();
       tratarTelefone();
     });
 
@@ -21,7 +31,7 @@ angular
   } else if (AuthService.getTime()) {
     AuthService.redirectClean('abasInicio.time-aba-time', null, {id: AuthService.getTime()});
   } else {
-    $scope.time = {nome: '', escudo: ''};
+    $scope.time = {nome: '', escudo: '', efootball: {}};
     $scope.titulo = 'Cadastrar time';
     $scope.labelBotao = 'Cadastrar time';
   }
@@ -48,6 +58,18 @@ angular
       }
     }
 
+    
+    $ionicModal.fromTemplateUrl('templates/times/selecionarEsporte.html', {
+      scope: $scope
+    }).then(function(modal){
+      $scope.modalEsporte = modal;
+    });
+
+    $ionicModal.fromTemplateUrl('templates/times/selecionarPlataforma.html', {
+      scope: $scope
+    }).then(function(modal){
+      $scope.modalPlataforma = modal;
+    });
 
     $ionicModal.fromTemplateUrl('templates/jogos/selecionarEstado.html', {
       scope: $scope,
@@ -99,6 +121,16 @@ angular
     $scope.modalCidade.hide();
   }
 
+  $scope.esporteSelecionado = function(esporte){
+    $scope.time.esporte = esporte;
+    $scope.modalEsporte.hide();
+  }
+
+  $scope.plataformaSelecionada = function(plataforma){
+    $scope.time.efootball.plataforma = plataforma;
+    $scope.modalPlataforma.hide();
+  }
+
   $scope.capturarFoto = function(){
     CameraService.getPicture().then(function(imagePath){
       $scope.time.escudo = imagePath;
@@ -109,6 +141,7 @@ angular
 
   $scope.enviar = function(){
     tratarModalidadeParaEnvio();
+    tratarModoParaEnvio();
     if(editando()){
       var timeSalvar = angular.copy($scope.time);
       if(!$scope.fotoAlterada) {
@@ -116,13 +149,16 @@ angular
       }
       
       DataService.editarTime(timeSalvar).then(function(time){
-        AuthService.atualizarCidade(time.cidade);
+        AuthService.atualizarPerfilTime({cidade: time.cidade, esporte: time.esporte, efootball: time.efootball});
+        $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
         AuthService.redirectClean('abasInicio.time-aba-time', null, {id: time._id});
       });
     } else {
       $scope.time.dono = AuthService.getUsuarioId();
+      $scope.time.esporte = _.find($scope.esportes, {chave: _.get($scope.time, 'esporteChave')});
       DataService.salvarTime($scope.time).then(function(resposta){
         AuthService.atualizarPerfil(resposta.perfil, resposta.token);
+        $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
         AuthService.redirectClean('abasInicio.editarTime', null, {id: resposta.perfil.perfil});
       });
     }
@@ -147,12 +183,39 @@ angular
     }
   }
 
+  function tratarModoParaEnvio(){
+    $scope.time.efootball.modos = [];
+    if($scope.modo.x11){
+      $scope.time.efootball.modos.push('X11');
+    }
+    if($scope.modo.clubs){
+      $scope.time.efootball.modos.push('CLUBS');
+    }
+    if($scope.modo.coop){
+      $scope.time.efootball.modos.push('COOP');
+    }
+    if($scope.modo.x1){
+      $scope.time.efootball.modos.push('1x1');
+    }
+  }
+
   function tratarModalidadeParaMostrar(){
     $scope.modalidade.society = _.includes($scope.time.modalidades, 'SOCIETY');
     $scope.modalidade.salao = _.includes($scope.time.modalidades, 'SALAO');
     $scope.modalidade.grama = _.includes($scope.time.modalidades, 'GRAMA');
     $scope.modalidade.terra = _.includes($scope.time.modalidades, 'TERRA');
     $scope.modalidade.areia = _.includes($scope.time.modalidades, 'AREIA');
+  }
+
+  function tratarModoParaMostrar(){
+    $scope.modo.x11 = _.includes($scope.time.efootball.modos, 'X11');
+    $scope.modo.clubs = _.includes($scope.time.efootball.modos, 'CLUBS');
+    $scope.modo.coop = _.includes($scope.time.efootball.modos, 'COOP');
+    $scope.modo.x1 = _.includes($scope.time.efootball.modos, '1x1');
+  }
+
+  $scope.fifa = function(){
+    return _.get($scope.time, 'esporte.chave') == 'FIFA';
   }
 
   function tratarTelefone(){
@@ -197,4 +260,26 @@ angular
   $scope.sair = function(){
     AuthService.logout();
   }
+
+  $scope.efootball = function(){
+    var esporte = _.find($scope.esportes, {chave: _.get($scope.time, 'esporteChave')})
+    return esporte && esporte.efootball;
+  }
+
+  $scope.cadastroCompleto = function(){
+    if($scope.efootball()){
+      return $scope.time.nome && _.get($scope.time, 'efootball.plataforma');
+    } else {
+      return $scope.time.nome && _.get($scope.time, 'cidade.nomeCompleto');
+    }
+  }
+
+  $scope.primeiroTime = function(){
+    return !AuthService.temMaisPerfis();
+  }
+
+  $scope.selecionarPerfil = function(){
+    $state.go('selecionarPerfil');
+  }
+  
 }])

@@ -55,7 +55,13 @@ angular
     $ionicModal.fromTemplateUrl('templates/jogos/cadastrarTimeAdversario.html', {
       scope: $scope,
     }).then(function(modal){
-      $scope.modalCadastrarTime = modal;
+      $scope.modalCadastrarTimeMandante = modal;
+    });
+
+    $ionicModal.fromTemplateUrl('templates/jogos/cadastrarTimeAdversario.html', {
+      scope: $scope,
+    }).then(function(modal){
+      $scope.modalCadastrarTimeVisitante = modal;
     });
 
     $ionicModal.fromTemplateUrl('templates/jogos/cadastrarLocal.html', {
@@ -87,8 +93,10 @@ angular
       modalTimeAberto = tipoTime;
       if(modalTimeAberto == 'mandante'){
         $scope.modalTime = $scope.modalTimeMandante;
+        $scope.modalCadastrarTime = $scope.modalCadastrarTimeMandante;
       } else {
         $scope.modalTime = $scope.modalTimeVisitante;
+        $scope.modalCadastrarTime = $scope.modalCadastrarTimeVisitante;
       }
       $scope.modalTime.show();
     }

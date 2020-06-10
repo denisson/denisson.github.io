@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('inicioController', ['$scope', '$stateParams', 'DataService', 'AuthService', '$ionicPopup', '$attrs', function ($scope, $stateParams, DataService, AuthService, $ionicPopup, $attrs) {
+  .controller('inicioController', ['$scope', '$rootScope', '$stateParams', 'DataService', 'AuthService', '$ionicPopup', '$attrs', function ($scope, $rootScope, $stateParams, DataService, AuthService, $ionicPopup, $attrs) {
     var QTD_POR_PAGINA = 10;
     $scope.jogos = [];
     $scope.page = 0;
@@ -9,9 +9,18 @@ angular
     $scope.proximos = $attrs.proximosJogos;
     
 
-    $scope.$on('alterarRegiao', function(event, estado){
+    $rootScope.$on('alterarRegiao', function(event, uf){
       $scope.atualizar();
     });
+
+    $scope.irParaUrl = function(url){
+      window.open(url, '_system');
+      return false;
+    }
+
+    $scope.irParaAnuncio = function(url){
+      $scope.irParaUrl('http://refpa.top/L?tag=d_363483m_5437c_&site=363483&ad=5437');
+    }
 
     var processaJogos = function(jogos){
       if($scope.zerar){ // Quando o parâmetro zerar é passado, ao invés de trazer mais jogos, os jogos atuais irão sobrepor os atuais. É o refresh da tela
@@ -33,10 +42,13 @@ angular
       if($scope.dadosCarregados){//primeiro carregamento
         DataService.blockPopup();
       }
+      var esporte = _.get($scope, 'perfilFiltro.esporte.chave');
+      var regiao = _.get($scope, 'perfilFiltro.regiao');
+      var plataforma = _.get($scope, 'perfilFiltro.plataforma.chave');
       if($scope.proximos){
-        result = DataService.jogosFuturos($scope.page, QTD_POR_PAGINA, $scope.regiao);
+        result = DataService.jogosFuturos($scope.page, QTD_POR_PAGINA, esporte, regiao, plataforma);
       } else {
-        result = DataService.jogosEncerrados($scope.page, QTD_POR_PAGINA, $scope.regiao);
+        result = DataService.jogosEncerrados($scope.page, QTD_POR_PAGINA, esporte, regiao, plataforma);
       }
 
       result.then(processaJogos).catch(function(){

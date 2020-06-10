@@ -1,0 +1,32 @@
+<ion-modal-view>
+    <!-- <ion-header-bar align-title="center" class="bar bar-header bar-positive">
+        <div class="buttons">
+            <button class="button button-clear button-primary" ng-click="modalCadastrarCompeticao.hide()">Cancelar</button>
+        </div>
+        <h1 class="title">Cadastrar competição</h1>
+    </ion-header-bar> -->
+    <ion-nav-bar class="bar-positive">
+        <ion-nav-buttons side="left">
+            <button class="button button-clear button-primary" ng-click="modalCadastrarCompeticao.hide()">Cancelar</button>
+        </ion-nav-buttons>    
+        <ion-nav-title>Cadastrar competição</ion-nav-title>
+    </ion-nav-bar>
+    <ion-content padding="true" class="has-header">
+        <form class="list padding" ng-submit="salvarCompeticao()">
+            <label class="item item-input">
+                <span class="input-label">Nome</span>
+                <input ng-model="jogo.novaCompeticao.nome" type="text" placeholder="Nome da competição">
+            </label>
+
+            <ion-item ng-if="jogo.esporte.efootball" class="item-divider">Modo</ion-item>
+            <ion-list ng-if="jogo.esporte.efootball" class="jog-radio">
+                <ion-radio name="modo" ng-model="jogo.novaCompeticao.modo" value="X11" ng-if="!fifa()">X11</ion-radio>
+                <ion-radio name="modo" ng-model="jogo.novaCompeticao.modo" value="CLUBS" ng-if="fifa()">Pro Clubs</ion-radio>
+                <ion-radio name="modo" ng-model="jogo.novaCompeticao.modo" value="COOP">Coop</ion-radio>
+                <ion-radio name="modo" ng-model="jogo.novaCompeticao.modo" value="1x1">1x1</ion-radio>
+            </ion-list>
+            <button type="submit" class="button button-positive button-block">Cadastrar</button>
+
+        </form>
+    </ion-content>
+</ion-modal-view>

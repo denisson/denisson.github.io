@@ -195,6 +195,8 @@ angular
                   setNotificationToken(notificationTokenAntesLogin, notificationTokenTypeAntesLogin);
                 }
                 redirectAfterLogin(usuario.perfis, options.loginTelaArbitro);
+              }).catch(function(err){
+                DataService.logError(err);
               });
             },
             function (msg) {
@@ -202,7 +204,7 @@ angular
                 title: 'Erro',
                 content: 'Não foi possível efetuar o login. Favor, tentar novamente.'
               });
-              console.log(msg);
+              DataService.logError(msg);
             }
           );
         } else {
@@ -222,6 +224,8 @@ angular
 
     function atualizarPerfilCompleto(perfilCompleto){
       perfilCompleto.cidade = perfilCompleto.perfil.cidade;
+      perfilCompleto.esporte = perfilCompleto.perfil.esporte;
+      perfilCompleto.efootball = perfilCompleto.perfil.efootball;
       perfilCompleto.perfil = perfilCompleto.perfil._id;
       atualizarPerfil(perfilCompleto, perfilCompleto.token);
     }
@@ -236,7 +240,7 @@ angular
     }
 
     function setUserData(user){
-      usuarioLogado = _.pick(user, ['id', 'token', 'perfil', 'perfis', 'convite']);
+      usuarioLogado = _.pick(user, ['id', 'token', 'perfil', 'perfis', 'convite', 'pro']);
       window.localStorage.setItem('user_data', JSON.stringify(usuarioLogado));
     }
 
@@ -244,23 +248,46 @@ angular
       var perfis = perfisCompletos;
 
       var user = getUsuarioLogado();
-      user.perfis = perfis;
+      if(user) user.perfis = perfis;
       setUserData(user);
     }
 
     function atualizarPerfisUsuario(){
       if(isAuthenticated()) {
-        return DataService.usuarioPerfis().then(function(perfis){
-          setPerfisUsuario(perfis);
+        return DataService.usuarioPerfis().then(function(usuario){
+          setPerfisUsuario(usuario.perfis);
+          atualizarTokenPerfilAtivo(usuario);
         });        
       } else {
         return Promise.resolve([]);
       }
     }
 
-    function atualizarCidade(cidade){
+    function atualizarTokenPerfilAtivo(usuario){
+      var perfilAtivo = getPerfilAtivo();
+      if(perfilAtivo){
+        var perfil = _.find(usuario.perfis, function(p){
+          return p.perfil._id ==  perfilAtivo.perfil
+        });//encontra o perfil na lista que veio do server para ter acesso ao novo token
+        atualizarPerfilCompleto(perfil);
+        setUserPro(usuario.pro);
+      }
+    }
+
+    function setUserPro(pro){
+      var user = getUsuarioLogado();
+      
+      if(user.pro !== pro) {
+        user.pro = pro;
+        setUserData(user);
+      }
+    }
+
+    function atualizarPerfilTime(alteracoes){
       var perfil = getPerfilAtivo();
-      perfil.cidade = cidade;
+      perfil.cidade = alteracoes.cidade;
+      perfil.esporte = alteracoes.esporte;
+      perfil.efootball = alteracoes.efootball;
       atualizarPerfil(perfil);
     }
     
@@ -269,7 +296,7 @@ angular
       if(getTime() && !getCidade()){
         DataService.time(getTime()).then(function(time){
           if(time.cidade){
-            atualizarCidade(time.cidade);
+            atualizarPerfilTime({cidade: time.cidade});
           } else {
             //caso a cidade não esteja cadastrada, pedir para ele cadastrar
           }
@@ -330,6 +357,31 @@ angular
       }
     }
 
+    function getRegiao(){
+      return _.get(getPerfilAtivo(), 'cidade.uf');
+    }
+
+    function getPerfilFiltro(){
+      var perfil = getPerfilAtivo();
+      return {
+        esporte: _.get(perfil, 'esporte'),
+        regiao: getRegiao(),
+        plataforma: _.get(perfil, 'efootball.plataforma'),
+        modos: _.get(perfil, 'efootball.modos')
+      }
+    }
+
+    function isPerfilEfootball(){
+      var perfil = getPerfilAtivo();
+      return _.get(perfil, 'esporte.efootball');
+    }
+
+    function isUsuarioPro(){
+      var user = getUsuarioLogado();
+      return user.pro;
+    }
+    
+
     return {
       login: login,
       logout: logout,
@@ -338,11 +390,11 @@ angular
       getTime: getTime,
       getArbitro: getArbitro,
       getLiga: getLiga,
-      getRegiao: function() { return _.get(getPerfilAtivo(), 'cidade.uf') },
+      getRegiao: getRegiao,
       getCidade: getCidade,
       atualizarPerfil: atualizarPerfil,
       atualizarPerfilCompleto: atualizarPerfilCompleto,
-      atualizarCidade: atualizarCidade,
+      atualizarPerfilTime: atualizarPerfilTime,
       setPerfisUsuario: setPerfisUsuario,
       atualizarPerfisUsuario: atualizarPerfisUsuario,
       temMaisPerfis: temMaisPerfis,
@@ -359,5 +411,8 @@ angular
       limparConvite: limparConvite,
       salvarConvite: salvarConvite,
       redirectClean: redirectClean,
+      getPerfilFiltro: getPerfilFiltro,
+      isPerfilEfootball: isPerfilEfootball,
+      isUsuarioPro: isUsuarioPro,
     };
 });

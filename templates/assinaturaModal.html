@@ -1,0 +1,38 @@
+<ion-modal-view>
+    <!-- ng-controller="assinaturaController" -->
+    <ion-content class="image-background img-login">
+    	<style type="text/css">
+    		.banner-interstitial{
+    			width: 100%
+    		}
+
+    		.banner-interstitial-container{
+			    position: absolute;
+			    top: 50%;
+			    transform: translateY(-50%);
+			    width: 100%;
+			}
+    	</style>
+
+
+		<div class="banner-interstitial-container padding">
+            <h3 class="dark padding" style="text-align: center;">Torne-se um Jogueiro PRO</h3>
+            <p>
+                Plano Mensal: R$ 5,90
+                Plano Anual: R$ 49,90 (30% OFF)
+            </p>
+			<ul>
+                <li>Livre de propagandas</li>
+                <li>Estatísticas e gráficos completos</li>
+                <li>Gerencie vários times</li>
+                <li>Adicione outros adminis para dividir a responsabilidade</li>
+            </ul>
+            <button type="submit" class="button button-positive button-block">Assinar</button>
+            <p style="text-align: center">
+                ou <br/>
+                <a href="#" ng-click="sair()">Não, obrigado</a>
+            </p>
+		    <!-- <a ng-click="pularAnuncio()" style="text-decoration: none; float: right; background: transparent;color: #387ef5;" class="button">Pular anúncio</a> -->
+		</div>
+    </ion-content>
+</ion-modal-view>

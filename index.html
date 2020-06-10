@@ -27,7 +27,7 @@
     <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
     
-    <!-- <script src="lib/chart.js/dist/Chart.min.js"></script>  -->
+    <script src="lib/chart.js/dist/Chart.min.js"></script> 
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
@@ -35,6 +35,9 @@
 
     <link href="lib/ion.rangeSlider/css/ion.rangeSlider.min.css" rel="stylesheet">
     <link href="css/ionic.app.css" rel="stylesheet">
+    <link href="css/card-grafico.css" rel="stylesheet">
+    <!-- <link rel="prefetch" href="https://jogueiros-fc-uploads.s3-sa-east-1.amazonaws.com/banner/658_720.gif">
+    <link rel="prefetch" href="https://jogueiros-fc-uploads.s3-sa-east-1.amazonaws.com/banner/658_130.gif"> -->
 
 
 
@@ -447,7 +450,7 @@
     background-image:    url(img/background-rodada.jpg);
   }
 
-  .image-background .item{
+  .image-background .item-transparente{
     background-color: rgba(255, 255, 255, 0.7);
   }
 
@@ -874,37 +877,37 @@
     border-top: 0;
   }
 
-  .perfil-jogador .nome{
+  .perfil-destacado .nome{
     text-align: center;
     font-size: 24px;
     color: #333;
   }
 
-  .perfil-jogador .posicao{
+  .perfil-destacado .posicao{
     text-align: center;
     color: #666;
   }
 
-  .perfil-jogador .numeros{
+  .perfil-destacado .numeros{
     text-align: center;
     border: 0;
   }
 
-  .perfil-jogador .numeros .valor{
+  .perfil-destacado .numeros .valor{
     font-size: 16px; font-weight: bold;
   }
 
-  .perfil-jogador .numeros .label{
+  .perfil-destacado .numeros .label{
     color: #666;
   }
 
-  .perfil-jogador .jogos-temporada{
+  .perfil-destacado .jogos-temporada{
     padding: 5px 12px;
     background-color: #fff;
     padding-bottom: 25px;
   }
 
-  .perfil-jogador .jogos-temporada .titulo{
+  .perfil-destacado .titulo-secao{
     margin: 20px 0 10px 0;
     color: #666;
     text-align: center;
@@ -1263,7 +1266,43 @@
       transform: translateY(-50%) !important;
     }
 
-    
+    .jg-badge{
+      margin-left: 5px;
+      color: #fff;
+      display: inline-block;
+      padding: .25em .4em;
+      font-size: 75%;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: text-bottom;
+      border-radius: .25rem;
+    }
+
+    .jg-badge-pro{
+      background-color: #4285f4;
+    }
+
+    .jg-badge-competicao {
+      background-color: #4285f4;
+      text-transform: uppercase;
+      padding: .25em .8em;
+    }
+
+    .jog-radio .item-radio input:checked + .radio-content .item-content {
+      background: #fff;
+      color: #387ef5;
+      border-left: solid 3px #387ef5;
+      margin-left: -1px;
+      padding-left: 14px;
+    }
+
+    .jog-radio .item-radio .radio-icon {
+      color: #387ef5;
+      line-height: 24px;
+    }
+      
     </style>
 
     <script src="js/app.js"></script>
@@ -1271,6 +1310,7 @@
     <script src="js/controllers/inicio.controller.js"></script>
     <script src="js/controllers/login.controller.js"></script>
     <script src="js/controllers/time.controller.js"></script>
+    <script src="js/controllers/time.estatisticas.controller.js"></script>
     <script src="js/controllers/novoJogo.controller.js"></script>
     <script src="js/controllers/novoJogoLiga.controller.js"></script>
     <script src="js/controllers/informarPlacar.controller.js"></script>
@@ -1280,6 +1320,7 @@
     <script src="js/controllers/cadastrarTime.controller.js"></script>
     <script src="js/controllers/buscaPorTimes.controller.js"></script>
     <script src="js/controllers/selecionarLocal.controller.js"></script>
+    <script src="js/controllers/selecionarCompeticao.controller.js"></script>
     <script src="js/controllers/solicitarArbitragem.controller.js"></script>
     <script src="js/controllers/cadastrarArbitro.controller.js"></script>
     <script src="js/controllers/selecionarArbitro.controller.js"></script>
@@ -1296,6 +1337,7 @@
     <script src="js/controllers/selecionarPerfil.controller.js"></script>
     <script src="js/controllers/conviteArbitroLiga.controller.js"></script>
     <script src="js/controllers/buscarAmistosos.controller.js"></script>
+    <script src="js/controllers/interstitial.controller.js"></script>
 <!--     <script src="js/controllers/propostaJogo.controller.js"></script>
     <script src="js/controllers/mandoCampo.controller.js"></script> -->
     
@@ -1305,6 +1347,7 @@
     <script src="js/directives.js"></script>
     <script src="js/directives/arbitragem.directive.js"></script>
     <script src="js/directives/telefone.directive.js"></script>
+    <script src="js/directives/graficos.directive.js"></script>
     <script src="js/components.js"></script>
     <script src="js/services/auth.service.js"></script>
     <script src="js/services/data.service.js"></script>

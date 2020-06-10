@@ -4,28 +4,33 @@ angular.module('app.directives')
   	restrict: 'E',
   	scope: {telefone: '='},
     templateUrl: 'templates/directives/telefone-botao.html',
-    controller: function($scope, $state){
+    controller: function($scope){
 	    $scope.formatarTelefone = formatarTelefone;
 
 	    $scope.irParaWhatsapp = function(telefone){
 	      window.open('https://api.whatsapp.com/send?phone=' + telefone.ddi + '' + telefone.numero, '_system'); 
 	      return false;
-	    }
+		}
     }
   }
 }])
 .directive('telefoneLink', [function(){
   return {
   	restrict: 'E',
-  	scope: {telefone: '=', editavel: '@'},
+  	scope: {telefone: '=', editavel: '@', aoClicarCadastrarTelefone: '&'},
     templateUrl: 'templates/directives/telefone-link.html',
-    controller: function($scope, $state){
+    controller: function($scope){
 	    $scope.formatarTelefone = formatarTelefone;
 
 	    $scope.irParaWhatsapp = function(telefone){
 	      window.open('https://api.whatsapp.com/send?phone=' + telefone.ddi + '' + telefone.numero, '_system'); 
 	      return false;
-	    }
+		}
+		
+	    $scope.cadastrarTelefone = function(){
+			$scope.aoClicarCadastrarTelefone();
+			return false;
+		}
     }
   }
 }])

@@ -1,0 +1,14 @@
+<ion-modal-view>
+    <ion-header-bar align-title="center" class="bar bar-header bar-positive">
+        <button class="button button-clear button-primary" ng-click="modalEsporte.hide()">Cancelar</button>
+        <h1 class="title">Selecionar esporte</h1>
+    </ion-header-bar>
+    <ion-content class="padding">
+        <ion-list>
+            <ion-item ng-click="esporteSelecionado(esporte)" ng-repeat="esporte in esportes" class="item">
+                <h2>{{esporte.nome}}</h2>
+            </ion-item>
+        </ion-list>
+        <br/>
+    </ion-content>
+</ion-modal-view>

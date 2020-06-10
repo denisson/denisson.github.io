@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('solicitarArbitragemController', ['$scope', '$stateParams', '$state', 'DataService', '$ionicPopup', function ($scope, $stateParams, $state, DataService, $ionicPopup) {
+  .controller('solicitarArbitragemController', ['$scope', '$stateParams', '$state', 'DataService', 'AuthService', '$ionicPopup', function ($scope, $stateParams, $state, DataService, AuthService, $ionicPopup) {
     
     $scope.ligaSelecionada = null;
 
@@ -38,7 +38,7 @@ angular
     $scope.solicitarArbitragem = function(){
       if(temLigaSelecionada()){
         DataService.solicitarArbitragem($scope.jogo._id, $scope.ligaSelecionada._id).then(function(retorno){
-          $state.go('abasInicio.jogo-aba-time', {id: $scope.jogo._id}, {location:'replace'});
+          AuthService.redirectClean('abasInicio.jogo-aba-time', null, {id: $scope.jogo._id});
         });        
       }
     };
@@ -58,6 +58,6 @@ angular
     } 
     
     $scope.naoSolicitar = function(){
-      $state.go('abasInicio.jogo-aba-time', {id: $scope.jogo._id});
+      AuthService.redirectClean('abasInicio.jogo-aba-time', null, {id: $scope.jogo._id});
     }
   }])

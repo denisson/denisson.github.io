@@ -1,8 +1,11 @@
 <ion-item ng-if="jogo" ng-class="{'ranking-nao-computado': jogo.rankingNaoComputado}">
     <div ng-if="jogo.rankingNaoComputado" class="msg-destacada">Não contabilizado</div>
+    <div style="text-align: center; margin-top: -8px; margin-bottom: 3px;">
+        <span ng-if="mostrarDetalhes && jogo.competicao && jogo.local" class="jg-badge jg-badge-competicao">{{jogo.competicao.nome}}</span>
+    </div>
     <p ng-click="acaoJogo(jogo)" class="resultado-data-hora">
         <b>{{formatarData(jogo)}}</b>
-        <span class="resultado-local">{{jogo.local.nome}}</span>
+        <span class="resultado-local">{{ jogo.local.nome || jogo.competicao.nome }}</span>
         <b>{{formatarHora(jogo)}}</b>
         <i ng-if="jogoValido(jogo)" class="icone-confirmado ion-checkmark-circled"></i>
     </p>

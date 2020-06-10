@@ -1,4 +1,5 @@
-<ion-view title="Informar placar" ng-controller="placarController">
+<ion-view ng-controller="placarController">
+    <ion-nav-title>{{titulo}}</ion-nav-title>
     <ion-content padding="true" >
         <form ng-if="jogo" id="informarPlacar-form">
 
@@ -28,7 +29,7 @@
                 </div>
             </ion-item>
             <button ng-click="salvarPlacar()" class="button button-positive button-block">Salvar</button>
-            <button ng-click="informarDepois()" class="button button-block">Informar Depois</button>
+            <button ng-click="informarDepois()" class="button button-block">{{botaoVoltar}}</button>
         </form>
     </ion-content>
 </ion-view>

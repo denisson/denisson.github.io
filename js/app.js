@@ -5,19 +5,21 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'app.routes', 'app.directives', 'app.components', 'app.services', 'ui.utils.masks'])
+var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'app.routes', 'app.directives', 'app.components', 'app.services', 'ui.utils.masks'])
 .constant('config', {
   // URL_S3:  'http://jogueiros-fc-uploads.s3-website-sa-east-1.amazonaws.com/',
   URL_IMAGEBOSS:  'https://img.imageboss.me/',
   URL_S3:  'https://s3-sa-east-1.amazonaws.com/jogueiros-fc-uploads/',
   URL_API: 'https://jogueiros-fc-api.herokuapp.com/',
   // URL_API: 'http://localhost:3000/',
-  // URL_API: 'http://10.0.0.104:3000/',
+  // URL_API: 'http://10.0.0.103:3000/',//10.0.2.2
   // TIPO_APP: 'ARBITRAGEM', //TIPO_APP: 'TIME'
   URL_SITE: 'https://jogueirosfc.com/'
 
 })
-.run(function($ionicPlatform, AuthService, LoadingService, $state, DataService, $location, $timeout, $ionicHistory) {
+.run(function($ionicPlatform, AuthService, LoadingService, $state, DataService, $location, $timeout, $ionicHistory, $locale) {
+
+  $locale.NUMBER_FORMATS.DECIMAL_SEP = ',';
 
   window.dataService = DataService;
 
@@ -117,6 +119,26 @@ angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'a
     if(window.cordova && cordova.InAppBrowser.open){
       window.open = cordova.InAppBrowser.open;    
     }
+    // if(window.store) {
+    //   store.ready(function(){
+        
+    //       store.register({
+    //         id: "assinatura.mensal",
+    //         type: store.PAID_SUBSCRIPTION
+    //       });
+    //       store.refresh();
+    
+    //       render();
+    //       store.when("assinatura.mensal").updated(render);
+    //     }
+    //   );
+    
+    //   function render(){
+    //     var product = store.get("assinatura.mensal");
+    //     console.log(product);
+    //   }
+
+    // }
 
   });
 })
@@ -150,3 +172,36 @@ angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'a
 
 angular.module('app.controllers', ['angular.filter']);
 angular.module('app.services', ['angular-cache']);
+
+// app.factory('$jgModalAssinatura', [
+//   '$q',
+//   '$ionicModal',
+// function($q, $ionicModal) {
+
+//   return {
+//     confirmarAssinatura: action
+//   };
+
+//   function action() {
+//     var modalAssinatura;
+//     var deferred = $q.defer();
+
+//     $ionicModal.fromTemplateUrl('templates/assinaturaModal.html', {
+//       // scope: $scope,
+//       animation: 'fade-in'
+//     }).then(function(modal){
+//       modalAssinatura = modal;
+//       modalAssinatura.show();
+//       deferred.resolve();
+//     });
+
+//     // $ionicPopup.alert({
+//     //   title: 'Ops!',
+//     //   content: 'Consegui'
+//     // }).then(function(){
+//     //   // deferred.resolve();
+//     //   deferred.reject();
+//     // });
+//     return deferred.promise;
+//   }
+// }]);

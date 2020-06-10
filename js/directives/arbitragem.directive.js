@@ -71,8 +71,10 @@ angular.module('app.directives')
           return 'Aguardando árbitro informar o placar do jogo';
         } else if ($scope.designacao && $scope.designacao.arbitro) {
           return 'Um árbitro já foi escalado. Aguardando confirmação.';
+        } else if ($scope.jogo.encerrado) {
+          return 'O nome do árbiitro não foi informado';
         } else {
-          return `Um árbitro será escalado ${$scope.diasAntesJogo()} antes da partida.`;
+          return 'Um árbitro será escalado ' + $scope.diasAntesJogo() + ' antes da partida.';
         }
       }
 
@@ -154,6 +156,34 @@ angular.module('app.directives')
          }
        });
 
+      }
+
+      $scope.descreverTipoEscalacao = function(designacao){
+        if(designacao.usuarioCadastro){
+          return 'manualmente';
+        }
+      }
+
+      $scope.descreverTipoSolicitacao = function(jogo){
+        if(jogo.cadastradoPelaLiga){
+          return ' - Cadastro avulso';
+        }
+      }
+      
+      $scope.mostrarSolicitacaoTime = function(){
+        return $scope.jogo.arbitragem.solicitacao && !$scope.jogo.arbitragem.solicitacao.importadaPelaLiga && $scope.editavel('liga');
+      }
+
+      $scope.mostrarImportadaPelaLiga = function(){
+        return $scope.jogo.arbitragem.solicitacao && $scope.jogo.arbitragem.solicitacao.importadaPelaLiga && $scope.editavel('liga');
+      }
+
+      $scope.mostrarQuemInformouPlacar = function(){
+        return !_.get($scope.jogo, 'arbitragem.solicitacao.importadaPelaLiga') && $scope.jogo.encerrado && $scope.permissaoArbitragem();
+      }
+
+      $scope.alterarPlacar = function(){
+        $state.go('informarPlacar', {id: $scope.jogo._id});
       }
 
     }

@@ -90,28 +90,70 @@ angular.module('app.services')
 		login: function(userData){
 			return post('login/google', userData);
 		},
-		jogosEncerrados: function(pag, porPag, regiao){
-			return request('jogos/encerrados?pag=' + pag + '&porPag=' + porPag + '&regiao=' + regiao);
+		jogosEncerrados: function(pag, porPag, esporte, regiao, plataforma){
+			esporte = esporte || '';
+			regiao = regiao || '';
+			plataforma = plataforma || '';
+			return request('jogos/encerrados?pag=' + pag + '&porPag=' + porPag + '&esporte=' + esporte + '&regiao=' + regiao + '&plataforma=' + plataforma);
 		},
-		jogosFuturos: function(pag, porPag, regiao){
-			return request('jogos/proximos?pag=' + pag + '&porPag=' + porPag + '&regiao=' + regiao);
+		jogosFuturos: function(pag, porPag, esporte, regiao, plataforma){
+			esporte = esporte || '';
+			regiao = regiao || '';
+			plataforma = plataforma || '';
+			return request('jogos/proximos?pag=' + pag + '&porPag=' + porPag + '&esporte=' + esporte + '&regiao=' + regiao + '&plataforma=' + plataforma);
 		},
 		jogosRodada: function(pag, porPag){
 			return request('jogos/rodada?pag=' + pag + '&porPag=' + porPag);
+		},
+		jogosEncerradosTime: function(timeId, temporada, pag, porPag){
+			return request('jogos/' + timeId + '/' + temporada + '/encerrados?pag=' + pag + '&porPag=' + porPag);
+		},
+		jogosAgendadosTime: function(timeId, temporada, pag, porPag){
+			return request('jogos/' + timeId + '/' + temporada +  '/proximos?pag=' + pag + '&porPag=' + porPag);
 		},
 		time: function(id){
 			return request('time/' + id + '?jogadores=false&jogos=false');
 		},
 		timeJogadores: function(id){
-			return request('time/' + id + '?jogadores=true');
+			return request('time/' + id + '/jogadores');
 		},
 		timeJogos: function(id, temporada){
 			temporada = temporada || moment().year();
 			return request('time/' + id + '?jogadores=true&jogos=true&temporada=' + temporada);
 		},
-		times: function(regiao, ligaId){
+		timeEstatisticas: function(id, temporada){
+			temporada = temporada || moment().year();
+			return request('time/' + id + '/estatisticas?temporada=' + temporada);
+		},
+		times: function(esporte, regiao, plataforma, ligaId){
+			esporte = esporte || '';
+			regiao = regiao || '';
+			plataforma = plataforma || '';
 			ligaId = ligaId || '';
-			return request('times?regiao='+ regiao + '&ligaId=' + ligaId);
+			return request('times?esporte='+ esporte + '&regiao=' + regiao + '&plataforma=' + plataforma + '&ligaId=' + ligaId);
+		},
+		esportes: function(){
+			var deferred = $q.defer();
+
+			  deferred.resolve([
+				{ "chave" : "FUT", "nome" : "Futebol", "efootball" : false },
+				{ "chave" : "PES", "nome" : "PES", "efootball" : true },
+				{ "chave" : "FIFA", "nome" : "FIFA", "efootball" : true }
+			]);
+
+			return deferred.promise;
+		},
+		plataformas: function(){
+			var deferred = $q.defer();
+
+			  deferred.resolve([
+				{ "chave" : "PS","nome" : "PS" },
+				{ "chave" : "XBOX","nome" : "Xbox" },
+				{ "chave" : "PC","nome" : "PC" },
+				{ "chave" : "MOBILE","nome" : "Mobile" }
+			]);
+
+			return deferred.promise;
 		},
 		// timesComPaginacao: function(pag, porPag){
 		// 	return request('times/pagina?pag=' + pag + '&porPag=' + porPag);
@@ -124,6 +166,18 @@ angular.module('app.services')
 		},
 		salvarLocalJogo: function(localJogo){
 			return post('localJogo', localJogo);
+		},
+		salvarCompeticao: function(competicao){
+			return post('competicao', competicao);
+		},
+		competicoes: function( esporte, regiao, plataforma){
+			esporte = esporte || '';
+			regiao = regiao || '';
+			plataforma = plataforma || '';
+			return request('competicao/lista?esporte=' + esporte + '&regiao=' + regiao + '&plataforma=' + plataforma);
+		},
+		competicoesSugeridas: function(timeId){
+			return request('competicao/sugeridas/' + timeId);
 		},
 		estados: function(){
 			return request('estados');
@@ -140,12 +194,19 @@ angular.module('app.services')
 		jogadorPosicoes: function(){
 			return request('jogador/posicoes');
 		},
+		jogadorEstatisticas: function(id, timeId, temporada){
+			temporada = temporada || moment().year();
+			return request('jogador/' + id + '/' + timeId + '/estatisticas?temporada=' + temporada);
+		},
 		salvarJogo: function(jogo){
 			var escudoVisitante = jogo.visitante.id ? null : jogo.visitante.escudo; //só envia o escudo se for de um visitante sem cadastro
 			return upload('jogo', escudoVisitante, jogo);
 		},
 		salvarJogoLiga: function(jogo, ligaId){
 			return post('jogo/liga/'+ligaId, jogo);
+		},
+		importarJogoParaLiga: function(jogoId){
+			return post('jogo/importar/' + jogoId);
 		},
 		confirmarJogo: function(jogoId, visitanteId){
 			return post('jogo/confirmar/' + jogoId, {visitanteId: visitanteId});
@@ -188,6 +249,15 @@ angular.module('app.services')
 		},
 		excluirTime: function(timeId){
 			return deleteRequest('time/' + timeId);
+		},
+		timeEnviarConviteAdmin: function(timeId, dados){
+			return post('time/' + timeId + '/admin/convite', dados);
+		},
+		timeExcluirAdmin: function(timeId, administradorId){
+			return deleteRequest('time/' + timeId + '/admin/' + administradorId);
+		},
+		timeExcluirConviteEmail: function(conviteId){
+			return deleteRequest('time/convite/' + conviteId);
 		},
 		salvarJogador: function(jogador){
 			return upload('jogador', jogador.foto, jogador);
@@ -243,6 +313,9 @@ angular.module('app.services')
 		},
 		ligaConfiguracao: function(id){
 			return request('liga/' + id + '?arbitros=false&admins=true');
+		},
+		ligaFaturas: function(id){
+			return request('liga/' + id + '/faturas');
 		},
 		enviarConviteArbitroLiga: function(ligaId, dados){
 			return post('liga/' + ligaId + '/arbitro/convite', dados);
@@ -325,7 +398,7 @@ angular.module('app.services')
 	    },
 
 		usuarioPerfis: function(){
-			return request('usuario/perfis');
+			return request('usuario/perfis?v=2');
 		},
 		setNotificationToken: function(usuarioId, oldNotificationToken, newNotificationToken, registrationType){
 			return post('usuario/'+ usuarioId +'/setNotificationToken', {oldNotificationToken: oldNotificationToken, newNotificationToken: newNotificationToken, registrationType: registrationType});

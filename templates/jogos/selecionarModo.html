@@ -1,0 +1,20 @@
+<ion-modal-view class="modal-minimo">
+    <ion-header-bar class="bar bar-header bar-positive">
+        <!-- <button class="button button-clear button-primary" ng-click="modalModo.hide()">Cancelar</button> -->
+        <h1 class="title">Selecionar modo</h1>
+        <button class="button button-clear button-primary" ng-click="modalModo.hide()">
+            <i class="icon ion-android-close"></i>
+        </button>
+    </ion-header-bar>
+    <ion-content class="padding">
+        <br/>
+        <br/>
+        <ion-list class="jog-radio">
+            <ion-radio ng-click="modalModo.hide()" name="modo" ng-model="jogo.efootball.modo" value="X11" ng-if="!fifa()">X11</ion-radio>
+            <ion-radio ng-click="modalModo.hide()" name="modo" ng-model="jogo.efootball.modo" value="CLUBS" ng-if="fifa()">Pro Clubs</ion-radio>
+            <ion-radio ng-click="modalModo.hide()" name="modo" ng-model="jogo.efootball.modo" value="COOP">Coop</ion-radio>
+            <ion-radio ng-click="modalModo.hide()" name="modo" ng-model="jogo.efootball.modo" value="1x1">1x1</ion-radio>
+        </ion-list>
+        <br/>
+    </ion-content>
+</ion-modal-view>

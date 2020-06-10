@@ -1,0 +1,26 @@
+<ion-view title="Login" hide-nav-bar="true" ng-controller="interstitialController">
+    <ion-content class="image-background img-login">
+    	<style type="text/css">
+    		.banner-interstitial{
+    			width: 100%
+    		}
+
+    		.banner-interstitial-container{
+			    position: absolute;
+			    top: 50%;
+			    transform: translateY(-50%);
+			    width: 100%;
+			}
+    	</style>
+
+
+		<div class="banner-interstitial-container">
+			<p class="dark padding" style="text-align: center;">Este anúncio ajuda a manter o Jogueiros em constante evolução.</p>
+			<a ng-click="irParaAnuncio()" style="text-align: center;">
+		      <img class="banner-interstitial" src="https://jogueiros-fc-uploads.s3-sa-east-1.amazonaws.com/banner/658_720.gif">
+		    </a>
+
+		    <a ng-click="pularAnuncio()" style="text-decoration: none; float: right; background: transparent;color: #387ef5;" class="button">Pular anúncio</a>
+		</div>
+    </ion-content>
+</ion-view>

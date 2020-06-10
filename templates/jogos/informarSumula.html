@@ -29,6 +29,21 @@
                   </label>
                 </div>
               <div class="opcoes-informar" ion-stop-event="click">
+                <div ng-if="jogadorGol.jogador.ehGoleiro" class="opcao">
+                <!-- <div class="opcao"> -->
+                  
+                  <small class="titulo">GOLS SOFRIDOS</small>
+                  <span class="botoes">
+                    <button class="button button-outline button-positive ion-minus button-stepper button-stepper-sm" ng-disabled="jogadorGol.golsSofridos <= 0" type="button" ng-click="decrementGolSofrido(jogadorGol)"></button>
+                    
+                    <span>
+                        <input class="input-stepper" type="number" min="0" step="1" ng-model="jogadorGol.golsSofridos">
+                    </span>
+                        
+                    <button class="button ion-plus button-positive button-outline button-stepper button-stepper-sm" ng-disabled="golsSofridosRestantes <= 0" type="button" ng-click="incrementGolSofrido(jogadorGol)"></button>
+                  </span>                  
+
+                </div>
                 <div class="opcao">
                   
                   <small class="titulo">GOLS</small>
@@ -75,9 +90,9 @@
             </div>
 
             <div class="padding">
-              <button ng-controller="jogadoresController" ng-click="adicionarJogador(jogo[time]._id, true)" class="button button-stable button-block icon ion-person-add" href="#"> Adicionar Jogador</button>
+              <button ng-controller="jogadoresController" ng-click="adicionarJogador(jogo[time]._id, true)" class="button button-stable button-block icon ion-person-add" href="#"> Adicionar jogador</button>
 
-              <button ng-click="informarDepois()" class="button button-block">Informar Depois</button>
+              <button ng-click="informarDepois()" class="button button-block">Informar depois</button>
             </div>
             
             <br/>

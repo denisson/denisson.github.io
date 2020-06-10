@@ -1,28 +1,31 @@
 angular
   .module('app.controllers')
-  .controller('selecionarPerfilController', ['$scope', '$state', '$stateParams', 'DataService', 'AuthService', function ($scope, $state, $stateParams, DataService, AuthService) {
+  .controller('selecionarPerfilController', ['$scope', '$rootScope',  '$state', '$stateParams', 'DataService', 'AuthService', function ($scope, $rootScope, $state, $stateParams, DataService, AuthService) {
 
     $scope.selecionarPerfil = function(perfilCompleto){
       AuthService.atualizarPerfilCompleto(perfilCompleto);
       AuthService.goToInicioPerfil(perfilCompleto);
+      $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
     }
     
     if(!$scope.perfis || $scope.perfis.length == 0){
-      DataService.usuarioPerfis().then(function(perfis){
-        AuthService.setPerfisUsuario(perfis);
-        if(!perfis || perfis.length == 0){
+      DataService.usuarioPerfis().then(function(usuario){
+        AuthService.setPerfisUsuario(usuario.perfis);
+        if(!usuario.perfis || usuario.perfis.length == 0){
           AuthService.goToCadastro();
         } else {
-          $scope.perfis = perfis;
+          $scope.perfis = usuario.perfis;
         }
       });
     }
 
-    $scope.podeCadastrarTime = function(){
-      return !_.some($scope.perfis, {tipo: 'Time'});
+    $scope.jaTemTimeCadastrado = function(){
+      return _.some($scope.perfis, {tipo: 'Time'});
     }
 
     $scope.cadastrarTime = function(){
+      AuthService.atualizarPerfil(null);
+      $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
       $state.go('abasInicio.cadastrarTime');
     }
 
@@ -38,6 +41,10 @@ angular
 
     $scope.sair = function(){
       AuthService.logout();
+    }
+
+    $scope.usuarioPro = function(){
+      return AuthService.isUsuarioPro();
     }
 
   }])

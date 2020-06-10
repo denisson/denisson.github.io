@@ -1,0 +1,259 @@
+<ion-view ng-controller="timeEstatisticasController">
+    <ion-nav-title>Gráficos e Estatísticas</ion-nav-title>
+    <ion-content style="    background-color: #fafafa;;">
+        <style type="text/css">
+            .perfil-destacado{
+                padding-top: 15px;
+                text-align: center; 
+            }
+
+            .perfil-destacado .nome{
+                margin-top: 10px;
+            }
+
+            .perfil-destacado .imagem-destacada{
+                width: 80px;
+                height: 80px;
+            }
+
+            .perfil-destacado .numeros .detalhes{
+                white-space: normal;
+                font-size: 80%;
+                font-weight: 400;
+                color: #6f6f6f;
+            }
+
+            .numeros .col{
+                min-width: 0;
+            }
+        </style>
+        <div ng-if="estatisticas" class="image-background img-jogador perfil-destacado">
+            <img class="imagem-destacada" jog-escudo="time.escudo" jog-size="mid">
+            <h1 class="nome">{{time.nome}}</h1>
+            <p class="posicao">
+                Temporada {{temporada}}
+            </p>
+
+            <ion-item class="row numeros item-transparente">
+                <div class="col">
+                    <h5 class="valor">{{estatisticas.totais.jogos}}</h5>
+                    <p class="campo">Jogos</p>
+                </div>
+                <div class="col">
+                    <h5 class="valor">{{estatisticas.percentuais.aproveitamento | number:0 }}%</h5>
+                    <p class="campo">Aproveitamento</p>
+                </div>
+            </ion-item>
+        </div>
+
+        <div class="card card-grafico" style="margin-top: 10px;">
+            <h4 class="titulo-secao"> Desempenho</h4>
+            <div class="row">
+                <div class="col col-66">
+                    <canvas ng-if="estatisticas" grafico-time-desempenho dados="estatisticas.totais" ></canvas>
+                </div>
+                <div class="col col-33">
+                    <div class="legenda-nome">
+                        <div class="legenda-cor vitorias"></div>
+                        <span>Vitórias</span>
+                    </div>
+                    <p class="legenda-numero">
+                        {{estatisticas.totais.vitorias }}
+                    </p>
+                    <div class="legenda-nome">
+                        <div class="legenda-cor empates"></div>
+                        <span>Empates</span>
+                    </div>
+                    <p class="legenda-numero">
+                        {{estatisticas.totais.empates}}
+                    </p>
+                    <div class="legenda-nome">
+                        <div class="legenda-cor derrotas"></div>
+                        <span>Derrotas</span>
+                    </div>
+                    <p class="legenda-numero">
+                        {{estatisticas.totais.derrotas}}
+                    </p>
+                </div>
+            </div>
+            <div class="tabela-numeros padding">
+                <div class="row">
+                    <div class="col col-80 descricao">Maior sequência de vitórias</div>
+                    <div class="col col-20 numero">{{estatisticas.sequencias.vitorias}}</div>
+                </div>
+                <div class="row even">
+                    <div class="col col-80 descricao">Maior sequência de invencibilidade</div>
+                    <div class="col col-20 numero">{{estatisticas.sequencias.semPerder}}</div>
+                </div>
+                <div class="row">
+                    <div class="col col-80 descricao">Maior sequência de derrotas</div>
+                    <div class="col col-20 numero">{{estatisticas.sequencias.derrotas}}</div>
+                </div>
+                <div class="row even">
+                    <div class="col col-80 descricao">Maior sequência de jogos sem ganhar</div>
+                    <div class="col col-20 numero">{{estatisticas.sequencias.semGanhar}}</div>
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="card card-grafico">
+            <h4 class="titulo-secao"> Gols</h4>
+            <div class="padding">
+                <canvas ng-if="saldoGolsDados" grafico-time-saldo-gols dados="saldoGolsDados" show-zero="true" ></canvas>
+            </div>
+            <h6 class="descricao-grafico">Cada barra representa um jogo e a altura da barra mostra o <b>saldo de gols</b> naquela partida. Toque em um ponto do  gráfico para saber a data.</h6>
+
+            <div class="tabela-numeros padding">
+                <div class="row">
+                    <div class="col col-80 descricao">Gols pró</div>
+                    <div class="col col-20 numero">{{estatisticas.totais.golsPro}}</div>
+                </div>
+                <div class="row">
+                    <div class="col col-80 descricao">Gols sofridos</div>
+                    <div class="col col-20 numero">{{estatisticas.totais.golsContra}}</div>
+                </div>
+                <div class="row">
+                    <div class="col col-80 descricao">Saldo de gols</div>
+                    <div class="col col-20 numero">{{estatisticas.totais.saldoGols}}</div>
+                </div>
+
+                <div class="row even">
+                    <div class="col col-80 descricao">Média de gols</div>
+                    <div class="col col-20 numero">{{estatisticas.medias.golsPro | number : 2}}</div>
+                </div>
+                <div class="row even">
+                    <div class="col col-80 descricao">Média de gols sofridos</div>
+                    <div class="col col-20 numero">{{estatisticas.medias.golsContra | number : 2}}</div>
+                </div>
+                <!-- <div class="row even">
+                    <div class="col col-80 descricao">Média de saldo de gols</div>
+                    <div class="col col-20 numero">{{estatisticas.medias.saldoGols | number : 2}}</div>
+                </div> -->
+
+                <div class="row">
+                    <div class="col col-80 descricao">Jogos sem sofrer gols</div>
+                    <div class="col col-20 numero">{{estatisticas.totais.semLevarGols}}</div>
+                </div>
+                <div class="row">
+                    <div class="col col-80 descricao">Jogos sem marcar gols</div>
+                    <div class="col col-20 numero">{{estatisticas.totais.semFazerGols}}</div>
+                </div>
+
+                <div class="row even">
+                    <div class="col col-80 descricao">Maior sequência sem sofrer gols</div>
+                    <div class="col col-20 numero">{{estatisticas.sequencias.semLevarGols}}</div>
+                </div>
+                <div class="row even">
+                    <div class="col col-80 descricao">Maior sequência sem marcar gols</div>
+                    <div class="col col-20 numero">{{estatisticas.sequencias.semFazerGols}}</div>
+                </div>
+
+                <div class="row">
+                    <div class="col col-80 descricao">Goleadas aplicadas</div>
+                    <div class="col col-20 numero">{{estatisticas.totais.goleadasAplicadas}}</div>
+                </div>
+                <div class="row">
+                    <div class="col col-80 descricao">Goleadas sofridas</div>
+                    <div class="col col-20 numero">{{estatisticas.totais.goleadasSofridas}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-grafico">
+            <h4 class="titulo-secao"> Jogadores</h4>
+            <div class="padding">
+                <canvas ng-if="jogadoresDados" grafico-time-saldo-gols dados="jogadoresDados" positive-color="#4285f4" ></canvas>
+            </div>
+            <h6 class="descricao-grafico">Cada barra representa um jogo e a altura da barra mostra o <b>número de jogadores</b> naquela partida. Toque em um ponto do  gráfico para saber a data.</h6>
+            <div class="tabela-numeros padding">
+                <div class="row">
+                    <div class="col col-80 descricao" >Média de jogadores por partida</div>
+                    <div class="col col-20 numero">{{estatisticas.medias.jogadores | number:2}}</div>
+                </div>
+                <div class="row even">
+                    <div class="col col-80 descricao">Total de jogadores na temporada</div>
+                    <div class="col col-20 numero">{{estatisticas.totaisUnicos.jogadores}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-grafico cartoes">
+            <h4 class="titulo-secao"> Cartões</h4>
+            <div class="row padding-horizontal">
+                <div class="col col-25">
+                    <div class="legenda-nome">
+                        <div class="legenda-cor amarelo"></div>
+                        <span class="legenda-nome-texto">Amarelo</span>
+                    </div>
+                    <p class="legenda-numero">
+                        {{estatisticas.totais.cartoes.amarelo}}
+                    </p>
+                    <p ng-if="estatisticas.medias.cartoes.amarelo < 1  && estatisticas.medias.cartoes.amarelo > 0" class="media">Média de 1 a cada {{(1 / estatisticas.medias.cartoes.amarelo) | number: 0 }} jogos</p>
+                    <p ng-if="estatisticas.medias.cartoes.amarelo >= 1" class="media">Em média {{estatisticas.medias.cartoes.amarelo | number: 0 }} por jogo</p>
+                </div>
+                <div class="col col-50" style="display: flex; align-items: center;">
+                    <canvas style="width:100%" ng-if="estatisticas" grafico-time-cartoes dados="estatisticas.totais" ></canvas>
+                </div>
+                <div class="col col-25">
+                    <div class="legenda-nome">
+                        <div class="legenda-cor vermelho"></div>
+                        <span class="legenda-nome-texto">Vermelho</span>
+                    </div>
+                    <p class="legenda-numero">
+                        {{estatisticas.totais.cartoes.vermelho}}
+                    </p>
+                    <p ng-if="estatisticas.medias.cartoes.vermelho < 1 && estatisticas.medias.cartoes.vermelho > 0" class="media">Média de 1 a cada {{(1 / estatisticas.medias.cartoes.vermelho) | number: 0 }} jogos</p>
+                    <p ng-if="estatisticas.medias.cartoes.vermelho >= 1" class="media">Em média {{estatisticas.medias.cartoes.vermelho | number: 0 }} por jogo</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-grafico">
+            <h4 class="titulo-secao"> Mando de campo</h4>
+            <div class="row">
+                <div class="col col-66">
+                    <canvas style="width:100%" ng-if="estatisticas" grafico-time-mando dados="estatisticas.totais" ></canvas>
+                </div>
+                <div class="col col-33">
+                    <div class="legenda-nome">
+                        <div class="legenda-cor mandante"></div>
+                        <span>Mandante</span>
+                    </div>
+                    <p class="legenda-numero">
+                        {{estatisticas.totais.mandante / estatisticas.totais.jogos * 100 | number: 0 }}%
+                    </p>
+                    <div class="legenda-nome">
+                        <div class="legenda-cor visitante"></div>
+                        <span>Visitante</span>
+                    </div>
+                    <p class="legenda-numero">
+                        {{estatisticas.totais.visitante / estatisticas.totais.jogos * 100 | number: 0 }}%
+                    </p>
+                </div>
+            </div>
+            <div class="tabela-numeros padding">
+                <div class="row">
+                    <div class="col col-80 descricao">Cidades</div>
+                    <div class="col col-20 numero">{{estatisticas.totaisUnicos.cidades}}</div>
+                </div>
+                <div class="row even">
+                    <div class="col col-80 descricao" >Locais</div>
+                    <div class="col col-20 numero">{{estatisticas.totaisUnicos.locaisJogos}}</div>
+                </div>
+                <div class="row">
+                    <div class="col col-80 descricao">Adversários</div>
+                    <div class="col col-20 numero">{{estatisticas.totaisUnicos.adversarios}}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Maiores sequências: de vitórias, derrotas, empates, sem perder, sem ganhar, sem fazer gols, sem levar gols -->
+        <!-- Totais da temporada: Jogos, Gols pró, gols contra, saldo de gols, cartões amarelos, cartões vermelhos, jogos sem levar gols, jogos sem fazer gols, goleadas (>3 gols) sofridas, goleadas aplicadas -->
+        <!-- Quantidades de X diferentes: locais de jogos, cidades, adversários, jogadores -->
+        <!-- Médias por jogo: gols pró, gols contra, jogadores, saldo de gols médio, cartão vermelho, cartão amarelo -->
+        <!-- Médias por mês: jogos por mês -->
+        <!-- Percentuais: aproveitamento ( (vitorias * 3 + empates) / numJogos * 3 ), vitórias, empates, derrotas, jogos como mandante, jogos como visitante -->
+        <!-- Mais frequentes: local de jogo, dia da semana, horário, adversário -->
+    </ion-content>
+</ion-view>

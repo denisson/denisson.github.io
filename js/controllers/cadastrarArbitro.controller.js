@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('cadastrarArbitroController', ['$scope', '$state', '$stateParams', 'DataService', 'CameraService', 'AuthService','$ionicModal', '$ionicPopup',  function ($scope, $state, $stateParams, DataService, CameraService, AuthService, $ionicModal, $ionicPopup) {
+  .controller('cadastrarArbitroController', ['$scope', '$rootScope', '$state', '$stateParams', 'DataService', 'CameraService', 'AuthService','$ionicModal', '$ionicPopup',  function ($scope, $rootScope, $state, $stateParams, DataService, CameraService, AuthService, $ionicModal, $ionicPopup) {
     var imagePath = '';
     $scope.arbitro = null;
 
@@ -51,7 +51,8 @@ angular
       $scope.arbitro.liga = $scope.conviteDaLiga ? $scope.conviteDaLiga.ligaId : null;
       $scope.arbitro.token = $scope.conviteDaLiga ? $scope.conviteDaLiga.token : null;
       DataService.salvarArbitro($scope.arbitro).then(function(resposta){
-        AuthService.atualizarPerfil(resposta.perfil, resposta.token)
+        AuthService.atualizarPerfil(resposta.perfil, resposta.token);
+        $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
         AuthService.limparConvite('Arbitro');
         $state.go('arbitro');
       });

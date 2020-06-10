@@ -9,8 +9,8 @@
 		style="text-decoration: none">
 		{{formatarTelefone(telefone.numero)}}
 	</a>
-	<a 	ng-if="!telefone.numero && editavel == 'true'"
-		ng-click="editarTime()"
+	<a  ng-if="!telefone.numero && editavel == 'true'"
+		ng-click="cadastrarTelefone(); $event.stopPropagation()"
 		style="text-decoration: none">
 		Cadastrar telefone
 	</a>

@@ -1,27 +1,44 @@
 <ion-modal-view class="modal-minimo" style="height: 70%">
     <ion-header-bar class="bar bar-header bar-positive">
-        <h1 class="title">Selecionar região</h1>
+        <h1 class="title">{{titulo}}</h1>
         <button ng-if="!ocultarCancelar" class="button button-clear button-primary" ng-click="modalRegiao.hide()">
             <i class="icon ion-android-close"></i>
         </button>
     </ion-header-bar>
-    <!-- <ion-content class="padding"> -->
     <ion-scroll direction="y" style="right: 0;bottom: 0;left: 0;position: absolute;" class="has-header padding">
-        <form class="list">
-            <label class="item item-input">
-                <i class="icon ion-search placeholder-icon"></i>
-                <input ng-model="query"  ng-change="buscarEstado(query)" type="search" placeholder="Digite o nome do estado" />
-            </label>
-        </form>
-        <div class="spacer" style="width: 300px; height: 1px;"></div>
-        <ion-list>
-            <ion-item ng-if="mostrarBr" class="item" ng-click="regiaoSelecionada('BR')">
-                <h2>Todo o Brasil</h2>
-            </ion-item>
-            <ion-item ng-if="mostrarEstado(estado)" class="item" ng-click="regiaoSelecionada(estado)" ng-repeat="estado in estados">
-                <h2>{{estado.nome}}</h2>
-            </ion-item>
-        </ion-list>
+        <div ng-if="!efootball">
+            <form class="list">
+                <label class="item item-input">
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input ng-model="query"  ng-change="buscarEstado(query)" type="search" placeholder="Digite o nome do estado" />
+                </label>
+            </form>
+            <div class="spacer" style="width: 300px; height: 1px;"></div>
+            <ion-list>
+                <ion-item ng-if="mostrarBr" class="item" ng-click="regiaoSelecionada('BR')">
+                    <h2>Todo o Brasil</h2>
+                </ion-item>
+                <ion-item ng-if="mostrarEstado(estado)" class="item" ng-click="regiaoSelecionada(estado)" ng-repeat="estado in estados">
+                    <h2>{{estado.nome}}</h2>
+                </ion-item>
+            </ion-list>
+        </div>
+
+        <div ng-if="efootball">
+            <ion-list class="jog-radio">
+                <ion-radio ng-if="esporte.efootball" ng-repeat="esporte in esportes" name="esporte" ng-model="perfilFiltro.chaveEsporte" ng-click="esporteSelecionado(esporte)" ng-value="esporte.chave">{{esporte.nome}}</ion-radio>
+            </ion-list>
+            <p></p>
+            <ion-item class="item-divider">Plataformas</ion-item>
+            <ion-list class="jog-radio">
+                <ion-radio ng-repeat="plataforma in plataformas" name="plataforma" ng-model="perfilFiltro.chavePlataforma" ng-click="plataformaSelecionada(plataforma)" ng-value="plataforma.chave">{{plataforma.nome}}</ion-radio>
+            </ion-list>
+        </div>
         <br/>
+        <p ng-if="mostrarOutrosEsportes" style="text-align: center;">
+            <a ng-if="efootball" ng-click="alternarEfootball(false)">Ver times de Futebol</a>
+            <a ng-if="!efootball" ng-click="alternarEfootball(true)">Ver times de PES ou FIFA</a>
+        </p>
+
     </ion-scroll>
 </ion-modal-view>

@@ -61,31 +61,10 @@ angular
       }
       $scope.jogadorModal.numerosTemporada = numerosTemporada;
 
-
-      DataService.timeJogos(jogador.time, temporada).then(function(time){
-        var jogos = time.jogos.encerrados;
-        if(jogos) {
-          var jogosPorMes = {};
-          var ultimoMes = ( temporada == moment().year() ) ? ( moment().month() ) : 11; 
-          for (var i = 11; i >= 0; i--) {
-            jogosPorMes[i] = {jogos: [], mes: moment().month(i).format('MMM'), mesFuturo: (i > ultimoMes)};
-          }
-          
-          for (var i = jogos.length - 1; i >= 0; i--) {
-            var jogo = jogos[i];
-            var numerosJogador = _.find(jogo.jogadores.mandante, {jogador: jogador._id}) || _.find(jogo.jogadores.visitante, {jogador: jogador._id});
-            var mes = moment(jogo.dataHora).month();
-
-            jogosPorMes[mes].jogos.push({
-              jogo: jogo,
-              numeros: numerosJogador
-            });
-            
-          }
-
-          $scope.jogadorModal.jogosPorMes = jogosPorMes;
-        }
-
+      DataService.jogadorEstatisticas(jogador._id, jogador.time, temporada).then(function(estatisticas){
+        $scope.jogadorModal.pro = estatisticas.pro;
+        $scope.jogadorModal.estatisticas = estatisticas;
+        $scope.jogadorModal.jogosPorMes = estatisticas.jogosPorMes;
       });
     }
 
@@ -104,6 +83,7 @@ angular
     $scope.mesExtenso = function(mes){
       return moment(mes, 'MMM').format('MMMM');
     }
+
 
     $scope.verDetalhesMes = function(mes, jogos){
       $scope.jogoClicadoMapa = jogos[0] || null;
@@ -180,7 +160,7 @@ angular
       }
       DataService.salvarJogador(jogadorSalvar).then(function(registroSalvo){
         if(!jogadorSalvar._id) { // Caso não esteja editando, mas incluindo novo jogador
-            $scope.$emit('jogadorAdicionado', {_id: registroSalvo.id, time: $scope.jogador.time, foto: $scope.jogador.foto, nome: $scope.jogador.nome, posicao: $scope.jogador.posicao})
+            $scope.$emit('jogadorAdicionado', {_id: registroSalvo.id, time: $scope.jogador.time, foto: $scope.jogador.foto, nome: $scope.jogador.nome, posicao: $scope.jogador.posicao, ehGoleiro: registroSalvo.ehGoleiro})
         }
         inicializarJogador();
         $scope.modalFormJogador.hide();
@@ -220,4 +200,22 @@ angular
       $scope.jogador.posicao = '';
       $scope.jogador.fotoAlterada = false;
     }
+
+    $scope.timeUsuarioPro = function(){
+      return AuthService.isUsuarioPro() && $scope.jogadorModal.pro;
+    }
+
+    $scope.numerosGraficoDesempenhoJogador = function(){
+      var numeros = $scope.jogadorModal.estatisticas.jogador;
+      if (numeros.vitorias + numeros.empates + numeros.derrotas) {
+        return numeros;
+      } else {
+        return {
+          vitorias: 10,
+          empates: 2,
+          derrotas: 4
+        }
+      }
+    }
+
 }])

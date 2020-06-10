@@ -26,6 +26,13 @@ angular
         && _.get($scope.jogo[time], ['_id']) === AuthService.getTime();
     }
 
+    $scope.editavelLiga = function(){
+      return $scope.jogo 
+        && AuthService.getLiga() 
+        && $scope.jogo.temSolicitacaoArbitragem
+        && _.get($scope.jogo, 'arbitragem.solicitacao.liga._id') === AuthService.getLiga();
+    }    
+
     $scope.permissaoArbitragem = function(){
       return $scope.jogo && 
         (AuthService.getArbitro() && _.get($scope.jogo, 'arbitragem.arbitro._id') === AuthService.getArbitro())
@@ -52,7 +59,7 @@ angular
     }
 
     $scope.informarSumula = function(){
-      $state.go('informarSumula', {id:$scope.jogo._id, jogo: $scope.jogo, time: $scope.timeDoUsuario()});
+      $state.go('informarSumula', {id:$scope.jogo._id, time: $scope.timeDoUsuario()});
     }
 
     $scope.podeInformarPlacar = function(){
@@ -61,6 +68,14 @@ angular
               ||
               ($scope.temArbitragem() && $scope.permissaoArbitragem()));
     }
+
+    $scope.podeCorrigirPlacar = function(){
+      return $scope.jogo.encerrado && 
+              ((!$scope.temArbitragem() && $scope.editavel('mandante'))
+              ||
+              ($scope.temArbitragem() && $scope.permissaoArbitragem()));
+    }
+    
 
     $scope.informarPlacar = function(){
       $state.go('informarPlacar', {id: $scope.jogo._id, jogo: $scope.jogo});
@@ -112,7 +127,15 @@ angular
        confirmPopup.then(function(res) {
          if(res) {
            DataService.removerJogo($scope.jogo._id).then(function(){
+            if($scope.editavelLiga()){
+              if($ionicHistory.backView()){
+                $ionicHistory.goBack();
+              } else {
+                $state.go('liga');
+              }
+            } else {
               $state.go('time');
+            }
            }, function(err){
               $ionicPopup.alert({
                 title: 'Erro',
@@ -137,7 +160,15 @@ angular
     });
 
     $scope.deveExibirMenu = function(){
-      return $scope.editavel('mandante') || ( $scope.editavel('visitante') &&  ($scope.jogo.situacao == 'placarConfirmado' ||  $scope.jogo.situacao == 'jogoConfirmado'));
+      return  $scope.editavelLiga() || 
+              $scope.podeImportarJogoParaRanking() || 
+              $scope.editavel('mandante') ||
+              ( 
+                $scope.editavel('visitante') &&
+                (
+                  $scope.jogo.situacao == 'placarConfirmado' ||
+                  $scope.jogo.situacao == 'jogoConfirmado')
+              );
     }
 
     $scope.exibirMenu = function(){
@@ -159,6 +190,16 @@ angular
         buttons[i++] = { text: 'Solicitar Arbitragem' };
       }
 
+      if($scope.podeImportarJogoParaRanking()){
+        indicesBotoes['importar'] = i;
+        buttons[i++] = { text: 'Importar para ranking' };
+      }
+
+      if($scope.podeCorrigirPlacar()){
+        indicesBotoes['placar'] = i;
+        buttons[i++] = { text: 'Corrigir Placar' };
+      }
+
       var params = {
          buttons: buttons,
          cancelText: 'Cancelar',
@@ -174,12 +215,18 @@ angular
               case indicesBotoes['arbitragem']:
                 $scope.solicitarArbitragem();
                 break;
+              case indicesBotoes['importar']:
+                $scope.importarJogoParaRanking();
+                break;
+              case indicesBotoes['placar']:
+                $scope.informarPlacar();
+                break;
             }
            return true;
          }
        }
 
-       if($scope.timeDoUsuario()){
+       if($scope.timeDoUsuario() || $scope.editavelLiga()){
         params.destructiveText ='Remover Jogo';
        }
 
@@ -187,7 +234,7 @@ angular
     }
 
     $scope.podeSolicitarArbitragem = function(){
-      var agora = moment.tz($scope.jogo.local.cidade.timezone);
+      var agora = moment.tz(_.get($scope.jogo, 'local.cidade.timezone'));
       return $scope.deveExibirMenu() && !$scope.jogo.temSolicitacaoArbitragem && existeLigaDisponivel() && agora.isBefore($scope.jogo.dataHora);
     }
 
@@ -195,6 +242,15 @@ angular
       $state.go('solicitarArbitragem', {id: $scope.jogo._id, jogo: $scope.jogo});
     }
 
+    $scope.podeImportarJogoParaRanking = function (){
+      return AuthService.getLiga() && $scope.jogo && !$scope.jogo.temSolicitacaoArbitragem;
+    }
+
+    $scope.importarJogoParaRanking = function(){
+      DataService.importarJogoParaLiga($scope.jogo._id).then(function(jogoImportado){
+        $state.reload();
+      });
+    }
 
     function existeLigaDisponivel(){
       return $scope.jogo.temLigasDisponiveis;
@@ -207,6 +263,10 @@ angular
       }).then(function(){
         $ionicHistory.goBack();
       });
+    }
+
+    $scope.temporadaJogo = function(jogo){
+      return moment(jogo.dataHora).year();
     }
 
 }]);

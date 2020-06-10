@@ -24,6 +24,7 @@ angular
       if(result.perfil){
         $scope.usuarioJaTemPerfil = true;
         AuthService.atualizarPerfil(result.perfil, result.tokenPerfil);
+        $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
       }
     }).catch(function(){
         mostrarAlerta('Este convite não é mais válido... Que tal pedir um link atualizado?');

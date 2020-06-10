@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('buscaPorTimesController', ['$scope', '$stateParams', 'DataService', 'AuthService', function ($scope, $stateParams, DataService, AuthService) {
+  .controller('buscaPorTimesController', ['$scope', '$rootScope', '$stateParams', 'DataService', 'AuthService', function ($scope, $rootScope, $stateParams, DataService, AuthService) {
 
       var QTD_POR_PAGINA = 10;
       var fuse;
@@ -10,7 +10,7 @@ angular
       $scope.dadosCarregados = false; // Flag utilizada para saber se já retornou o resultado do banco de dados
       $scope.todosTimes = [];
       $scope.todosTimesInicio = [];
-      $scope.regiao = AuthService.getRegiao();
+      $scope.perfilFiltro = AuthService.getPerfilFiltro();
       $scope.ligaId = AuthService.getLiga();
       $scope.search = {query: ''};
       var timesTmp = [];
@@ -35,11 +35,15 @@ angular
         // }        
       // });
 
-    $scope.$on('alterarRegiao', function(event, estado){
-      $scope.regiao = estado.uf;
-      carregarTimes().then(function(){
-        $scope.buscarTime($scope.search.query);
-      });
+      $rootScope.$on('alterarRegiao', function(event, filtro){
+      $scope.perfilFiltro = filtro;
+      var timesCarregados = carregarTimes();
+      if(timesCarregados){
+        timesCarregados.then(function(){
+          $scope.buscarTime($scope.search.query);
+        });
+      }
+
     });
 
 
@@ -66,8 +70,11 @@ angular
       }
       
       function carregarTimes(){
-        if($scope.regiao){
-          return DataService.times($scope.regiao, $scope.ligaId).then(function(times){
+        var esporte = _.get($scope.perfilFiltro, 'esporte.chave');
+        var regiao = $scope.perfilFiltro.regiao;
+        var plataforma = _.get($scope.perfilFiltro, 'plataforma.chave');
+        if(regiao || _.get($scope.perfilFiltro, 'esporte.efootball')){
+          return DataService.times(esporte, regiao, plataforma, $scope.ligaId).then(function(times){
             var timesDaRegiao = [];
             var timesSemCidade = [];
             // DataService.blockPopup();
@@ -116,6 +123,15 @@ angular
           $scope.carregarResultados();
           $scope.carregarResultadosSemCidade();
         }          
+      }
+
+      $scope.formatarFiltro = function(filtro){
+        if(_.get(filtro, 'esporte.efootball')){
+          var nomePlataforma = _.get(filtro, 'plataforma.nome');
+          return filtro.esporte.nome + (nomePlataforma ? " • " + nomePlataforma : "");
+        } else {
+          return filtro.regiao || 'BR';
+        }
       }
 
       var retornoTimes =  false;

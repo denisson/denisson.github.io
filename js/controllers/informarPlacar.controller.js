@@ -1,7 +1,6 @@
 angular
   .module('app.controllers')
   .controller('placarController', ['$scope', '$stateParams', '$state', 'DataService', '$ionicPopup', '$ionicHistory', 'AuthService',   function ($scope, $stateParams, $state, DataService, $ionicPopup, $ionicHistory, AuthService) {
-
     $scope.jogo = $stateParams.jogo;
     if(!$scope.jogo){
       DataService.jogo($stateParams.id).then(function(jogo){
@@ -10,10 +9,24 @@ angular
             return;
         }
         $scope.jogo = jogo;
-        $scope.jogo.placar = $scope.jogo.placar || {mandante: 0, visitante: 0};
+        checarEditando();
       });
     } else {
-      $scope.jogo.placar = {mandante: 0, visitante: 0};
+      checarEditando();
+    }
+
+    function checarEditando(){
+      if($scope.jogo.encerrado){
+        $scope.titulo = 'Corrigir placar';
+        $scope.botaoVoltar = 'Cancelar';
+        $scope.editando = true;
+        $scope.jogo.placar = $scope.jogo.placar || {mandante: 0, visitante: 0};
+      } else {
+        $scope.jogo.placar = {mandante: 0, visitante: 0};
+        $scope.editando = false;
+        $scope.titulo = 'Informar placar';
+        $scope.botaoVoltar = 'Informar depois';
+      }
     }
     
     $scope.increment = function(time) {
@@ -35,7 +48,12 @@ angular
     };
 
     $scope.informarDepois = function(){
-      AuthService.redirectClean('jogo', null, {id: $scope.jogo._id});
+      if(AuthService.isUsuarioPro()){
+        AuthService.redirectClean('jogo', null, {id: $scope.jogo._id});
+      } else {
+        AuthService.redirectClean('interstitial', null, {rota: 'jogo', parametros: {id: $scope.jogo._id}}).then(configurarJogoVazio);
+      }
+      
     }
 
 

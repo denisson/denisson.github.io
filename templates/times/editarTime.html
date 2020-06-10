@@ -10,23 +10,38 @@
                 <span class="input-label">Nome</span>
                 <input ng-model="time.nome" type="text" placeholder="Nome do seu time" required />
             </label>
-
             <label class="item item-input">
+                <span class="input-label">Esporte</span>
+                <input ng-model="time.esporte.nome" ng-click="modalEsporte.show()" type="text" placeholder="Esporte que seu time joga" />
+            </label>
+            <label ng-if="!time.esporte.efootball" class="item item-input">
                 <span class="input-label">Cidade</span>
                 <input ng-model="time.cidade.nomeCompleto" ng-click="modalEstado.show()" type="text" placeholder="Cidade do seu time" />
             </label>
+
 
 <!--             <label class="item item-input">
                 <span class="input-label">Modalidades</span>
                 <input ng-click="modalModalidades.show()" type="text" placeholder="Society, salão, grama..." value="{{modalidadesFormatada()}}">
             </label> -->
-            <ion-item class="item-divider">Modalidades</ion-item>
-            <ion-list>
+            <ion-item ng-if="!time.esporte.efootball" class="item-divider">Modalidades</ion-item>
+            <ion-list ng-if="!time.esporte.efootball">
                 <ion-toggle ng-model="modalidade.society" toggle-class="toggle-positive">Society</ion-toggle>
                 <ion-toggle ng-model="modalidade.salao" toggle-class="toggle-positive">Salão</ion-toggle>
                 <ion-toggle ng-model="modalidade.grama" toggle-class="toggle-positive">Grama</ion-toggle>
                 <ion-toggle ng-model="modalidade.terra" toggle-class="toggle-positive">Terra</ion-toggle>
                 <ion-toggle ng-model="modalidade.areia" toggle-class="toggle-positive">Areia</ion-toggle>
+            </ion-list>
+            <label ng-if="time.esporte.efootball" class="item item-input">
+                <span class="input-label">Plataforma</span>
+                <input ng-model="time.efootball.plataforma.nome" ng-click="modalPlataforma.show()" type="text" placeholder="Plataforma utilizada" />
+            </label>
+            <ion-item ng-if="time.esporte.efootball" class="item-divider">Modo</ion-item>
+            <ion-list ng-if="time.esporte.efootball">
+                <ion-toggle ng-model="modo.x11" toggle-class="toggle-positive" ng-if="!fifa()">X11</ion-toggle>
+                <ion-toggle ng-model="modo.clubs" toggle-class="toggle-positive" ng-if="fifa()">Pro Clubs</ion-toggle>
+                <ion-toggle ng-model="modo.coop" toggle-class="toggle-positive">Coop</ion-toggle>
+                <ion-toggle ng-model="modo.x1" toggle-class="toggle-positive">1x1</ion-toggle>
             </ion-list>
             <ion-item class="item-divider">Informações adicionais</ion-item>
 

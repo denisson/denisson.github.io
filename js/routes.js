@@ -33,6 +33,13 @@ angular.module('app.routes', [])
       }
     })
 
+    .state('interstitial', {
+      url: '/interstitial',
+      cache: true,
+      templateUrl: 'templates/interstitial.html',
+      params: {rota: null, parametros: null}
+    })
+
     .state('selecionarPerfil', {
       url: '/selecionarPerfil',
       cache: false,
@@ -258,12 +265,22 @@ angular.module('app.routes', [])
       templateUrl: 'templates/ranking/cadastrarRanking.html',
       cache: false
     })
-;
+
+  //   .state('buscarAmistosos', {
+  //     url: '/amistosos',
+  //     cache: false,
+  //     templateUrl: 'templates/times/buscarAmistosos.html'
+  //   })
+  // ;
 
   var statesCoringa = {
     'time': {
       url: '/time/:id/:temporada',
       templateUrl: 'templates/times/time.html'
+    },
+    'time_estatisticas': {
+      url: '/time/:id/:temporada/estatisticas',
+      templateUrl: 'templates/times/estatisticas.html'
     },
     'jogo': {
       url: '/jogo/:id',
@@ -347,12 +364,6 @@ angular.module('app.routes', [])
       $stateProvider.state(novoState, novoParams);
     }
   });
-
-    // .state('buscarAmistosos', {
-    //   url: '/amistosos',
-    //   cache: false,
-    //   templateUrl: 'templates/times/buscarAmistosos.html'
-    // });
 
 
   // if none of the above states are matched, use this as the fallback

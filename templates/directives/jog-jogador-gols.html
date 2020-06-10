@@ -1,5 +1,6 @@
 <p ng-if="mostrarSeJogou && jogador && !jogador.gols && !jogador.assistencias && !jogador.cartoes.amarelo && !jogador.cartoes.vermelho && !jogador.cartoes.azul">Jogou nessa partida</p>
 <i class="icon ion-ios-football" ng-if="jogador.gols" ng-repeat="n in [].constructor(jogador.gols) track by $index"></i>
+<i class="icon ion-ios-football" style="color: #B71C1C" ng-if="jogador.golsSofridos" ng-repeat="n in [].constructor(jogador.golsSofridos) track by $index"></i>
 <span ng-if="jogador.assistencias"  ng-repeat="n in [].constructor(jogador.assistencias) track by $index">
   <img src="img/chuteira.svg" width="16px" />
 </span>

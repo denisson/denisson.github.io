@@ -10,20 +10,32 @@
             <img class="captura-foto-img" ng-click="capturarFoto()" id="logotipo" jog-escudo="time.escudo"></img>
             <i ng-click="capturarFoto()" class="icon ion-image captura-foto-icon"></i>
         </div>
-            <label class="item item-input" id="cadastrarTime-input6">
+            <label class="item item-input">
                 <span class="input-label">Nome</span>
                 <input ng-model="time.nome" type="text" placeholder="Nome do seu time" required>
             </label>
-            <label class="item item-input">
+            <ion-item class="item-divider">Esporte</ion-item>
+            <ion-list class="jog-radio">
+                <ion-radio ng-repeat="esporte in esportes" name="esporte" ng-model="time.esporteChave" value="{{esporte.chave}}">{{esporte.nome}}</ion-radio>
+            </ion-list>
+            <ion-item ng-if="time.esporteChave && !efootball()" class="item-divider">Cidade</ion-item>
+            <label ng-if="time.esporteChave && !efootball()" class="item item-input">
                 <span class="input-label">Cidade</span>
-                <input ng-model="time.cidade.nomeCompleto" ng-click="modalEstado.show()" type="text" placeholder="Cidade do seu time" />
+                <input ng-model="time.cidade.nomeCompleto" ng-focus="modalEstado.show()" type="text" placeholder="Cidade do seu time" />
             </label>
+            <ion-item ng-if="efootball()" class="item-divider">Plataforma</ion-item>
+            <ion-list ng-if="efootball()" class="jog-radio">
+                <ion-radio name="plataforma" ng-model="time.efootball.plataforma" ng-repeat="plataforma in plataformas" ng-value="plataforma">{{plataforma.nome}}</ion-radio>
+            </ion-list>
             
-            <button ng-disabled="!time.nome || !time.cidade.nomeCompleto" type="submit" class="button button-positive button-block">{{labelBotao}}</button>
+            <button ng-disabled="!cadastroCompleto()" type="submit" class="button button-positive button-block">{{labelBotao}}</button>
             <p style="text-align: center">
                 ou <br/>
-                <a href="#" ng-click="sair()">Utilizar outra conta</a>
+                <a ng-if="primeiroTime()" href="#" ng-click="sair()">Utilizar outra conta</a>
+                <a ng-if="!primeiroTime()" href="#" ng-click="selecionarPerfil()">Voltar para lista de perfis</a>
+
             </p>
+            <br/>
         </form>
     </ion-content>
 </ion-view>
