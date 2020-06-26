@@ -18,9 +18,9 @@ angular
       return false;
     }
 
-    $scope.irParaAnuncio = function(url){
-      $scope.irParaUrl('http://refpa.top/L?tag=d_363483m_5437c_&site=363483&ad=5437');
-    }
+    // $scope.irParaAnuncio = function(url){
+    //   $scope.irParaUrl('http://refpa.top/L?tag=d_363483m_5437c_&site=363483&ad=5437');
+    // }
 
     var processaJogos = function(jogos){
       if($scope.zerar){ // Quando o parâmetro zerar é passado, ao invés de trazer mais jogos, os jogos atuais irão sobrepor os atuais. É o refresh da tela

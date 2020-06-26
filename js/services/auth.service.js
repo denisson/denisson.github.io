@@ -378,7 +378,7 @@ angular
 
     function isUsuarioPro(){
       var user = getUsuarioLogado();
-      return user.pro;
+      return user && user.pro;
     }
     
 

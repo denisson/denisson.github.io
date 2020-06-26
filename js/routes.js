@@ -115,6 +115,10 @@ angular.module('app.routes', [])
         }
       }
     })
+    .state('rankingTimes', {
+      url: '/times/ranking',
+      templateUrl: 'templates/times/rankingTimes.html'
+    })
 
 
     .state('abasInicio.meuPerfil', {

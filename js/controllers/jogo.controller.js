@@ -155,9 +155,17 @@ angular
         $scope.jogo = jogo;
         $scope.jogo.jogadores.mandante = _.orderBy($scope.jogo.jogadores.mandante, ['gols', 'assistencias', 'cartoes.vermelho', 'cartoes.amarelo', 'cartoes.azul', 'jogador.nome'], ['desc', 'desc', 'asc', 'asc', 'asc', 'asc']);
         $scope.jogo.jogadores.visitante = _.orderBy($scope.jogo.jogadores.visitante, ['gols', 'assistencias', 'cartoes.vermelho', 'cartoes.amarelo', 'cartoes.azul', 'jogador.nome'], ['desc', 'desc', 'asc', 'asc', 'asc', 'asc']);
-
+        $scope.carregarHistoricoConfrontos();
       });
     });
+
+    $scope.carregarHistoricoConfrontos = function(){
+      if($scope.jogo.visitante._id){
+        DataService.jogoHistoricoConfrontos($scope.jogo.mandante._id, $scope.jogo.visitante._id).then(function(jogos){
+          $scope.jogo.historicoConfrontos = jogos;
+        });
+      }
+    }
 
     $scope.deveExibirMenu = function(){
       return  $scope.editavelLiga() || 

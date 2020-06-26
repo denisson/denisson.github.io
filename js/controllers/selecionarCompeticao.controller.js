@@ -44,8 +44,8 @@ angular
 
     carregarCompeticoes();
 
-    $rootScope.$on('alterarRegiao', function(event, uf){
-      $scope.regiao = uf;
+    $rootScope.$on('alterarRegiao', function(event, filtro){
+      $scope.perfilFiltro = filtro;
       carregarCompeticoes().then(function(){
         $scope.buscarCompeticoes($scope.search.query);
       });

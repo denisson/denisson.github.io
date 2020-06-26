@@ -36,8 +36,12 @@
     <link href="lib/ion.rangeSlider/css/ion.rangeSlider.min.css" rel="stylesheet">
     <link href="css/ionic.app.css" rel="stylesheet">
     <link href="css/card-grafico.css" rel="stylesheet">
-    <!-- <link rel="prefetch" href="https://jogueiros-fc-uploads.s3-sa-east-1.amazonaws.com/banner/658_720.gif">
-    <link rel="prefetch" href="https://jogueiros-fc-uploads.s3-sa-east-1.amazonaws.com/banner/658_130.gif"> -->
+    <!-- <link rel="prefetch" href="https://jogueiros-fc-uploads.s3-sa-east-1.amazonaws.com/banner/658_720.gif">-->
+    <!-- <link rel="prefetch" href="https://jogueiros-fc-uploads.s3-sa-east-1.amazonaws.com/banner/658_130.gif">  -->
+
+    <link rel="prefetch" jog-banner="interstitial">
+    <link rel="prefetch" jog-banner="horizontal">
+    <!-- <link rel="prefetch" jog-banner-load> -->
 
 
 
@@ -1301,8 +1305,24 @@
     .jog-radio .item-radio .radio-icon {
       color: #387ef5;
       line-height: 24px;
+      visibility: visible;
     }
       
+    .jog-radio .ion-checkmark:before {
+      content: "";
+      border: solid 2px #dddddd;
+      border-radius: 50%;
+      height: 22px;
+      width: 22px;
+    }
+
+    .jog-radio .item-radio input:checked + .radio-content .ion-checkmark:before {
+      content: "";
+      border: none;
+      width: auto;
+      height: auto;
+    }
+
     </style>
 
     <script src="js/app.js"></script>
@@ -1338,6 +1358,7 @@
     <script src="js/controllers/conviteArbitroLiga.controller.js"></script>
     <script src="js/controllers/buscarAmistosos.controller.js"></script>
     <script src="js/controllers/interstitial.controller.js"></script>
+    <script src="js/controllers/rankingTimes.controller.js"></script>
 <!--     <script src="js/controllers/propostaJogo.controller.js"></script>
     <script src="js/controllers/mandoCampo.controller.js"></script> -->
     
@@ -1353,6 +1374,7 @@
     <script src="js/services/data.service.js"></script>
     <script src="js/services/loading.service.js"></script>
     <script src="js/services/camera.service.js"></script>
+    <script src="js/services/banner.service.js"></script>
 
     <!-- Only required for Tab projects w/ pages in multiple tabs
     <script src="lib/ionicuirouter/ionicUIRouter.js"></script>

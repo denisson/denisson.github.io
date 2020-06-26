@@ -7,27 +7,27 @@
         <i class="icon ion-android-arrow-dropdown" style="color:#999"></i>
       </button>
   </ion-nav-buttons>
-  <!-- <style type="text/css">
+  <style type="text/css">
     .banner-jogo-container{
       text-align: center;
       margin-bottom: -5px;
       margin-top: -1px;
-      margin-left: -14%;
-      margin-right: -15%;
+      /* margin-left: -14%;
+      margin-right: -15%; */
       display: block;
     }
 
-    @media only screen and (min-width: 530px) {
+    /* @media only screen and (min-width: 530px) {
       .banner-jogo-container{
         margin-left: -76px;
         margin-right: -80px;
       }
-    }
+    } */
 
     .banner-jogo{
       width: 100%;
     }
-  </style> -->
+  </style>
     <ion-pane>
         <ion-tabs class="tabs-striped tabs-top tabs-stable">
 
@@ -39,9 +39,9 @@
                         pulling-text="Atualizar..."
                         on-refresh="atualizar()">
                       </ion-refresher>
-                        <!-- <a ng-click="irParaAnuncio()" class="banner-jogo-container">
-                          <img  class="banner-jogo" src="https://jogueiros-fc-uploads.s3-sa-east-1.amazonaws.com/banner/658_130.gif">
-                        </a> -->
+                        <a class="banner-jogo-container" jog-banner-link="horizontal">
+                          <img class="banner-jogo" jog-banner="horizontal">
+                        </a>
                         <ion-list>
                             <jog-partidas partidas="jogos"></jog-partidas>
                         </ion-list>
@@ -63,9 +63,10 @@
                         pulling-text="Atualizar..."
                         on-refresh="atualizar()">
                       </ion-refresher>
-                        <!-- <a ng-click="irParaAnuncio()" class="banner-jogo-container">
-                          <img  class="banner-jogo" src="https://jogueiros-fc-uploads.s3-sa-east-1.amazonaws.com/banner/658_130.gif">
-                        </a> -->
+                        <a class="banner-jogo-container" jog-banner-link="horizontal">
+                          <img class="banner-jogo" jog-banner="horizontal">
+                          <!-- <img  class="banner-jogo" src="https://jogueiros-fc-uploads.s3-sa-east-1.amazonaws.com/banner/658_130.gif"> -->
+                        </a>
                          <ion-list> 
                             <jog-partidas partidas="jogos"></jog-partidas>
                         </ion-list>

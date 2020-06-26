@@ -37,8 +37,8 @@ angular
 
     carregarLocais();
 
-    $rootScope.$on('alterarRegiao', function(event, uf){
-      $scope.regiao = uf;
+    $rootScope.$on('alterarRegiao', function(event, filtro){
+      $scope.regiao = filtro.regiao;
       carregarLocais().then(function(){
         $scope.buscarLocal($scope.search.query);
       });

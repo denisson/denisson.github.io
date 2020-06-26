@@ -132,6 +132,12 @@ angular.module('app.services')
 			ligaId = ligaId || '';
 			return request('times?esporte='+ esporte + '&regiao=' + regiao + '&plataforma=' + plataforma + '&ligaId=' + ligaId);
 		},
+		rankingGeralTimes: function(tipoRanking, esporte, regiao, plataforma){
+			esporte = esporte || '';
+			regiao = regiao || '';
+			plataforma = plataforma || '';
+			return request('times/ranking/'+ tipoRanking +'?esporte='+ esporte + '&regiao=' + regiao + '&plataforma=' + plataforma);
+		},
 		esportes: function(){
 			var deferred = $q.defer();
 
@@ -187,6 +193,9 @@ angular.module('app.services')
 		},
 		jogo: function(id){
 			return request('jogo/' + id);
+		},
+		jogoHistoricoConfrontos: function(mandanteId, visitanteId){
+			return request('jogos/confrontos/'+ mandanteId + '/' + visitanteId);
 		},
 		jogadorJogos: function(id, temporada){
 			return request('jogador/' + id + '/jogos?temporada='+temporada);
@@ -399,6 +408,11 @@ angular.module('app.services')
 
 		usuarioPerfis: function(){
 			return request('usuario/perfis?v=2');
+		},
+		banners: function(esporte, regiao){
+			esporte = esporte || '';
+			regiao = regiao || '';
+			return request('banners?esporte=' + esporte + '&regiao=' + regiao);
 		},
 		setNotificationToken: function(usuarioId, oldNotificationToken, newNotificationToken, registrationType){
 			return post('usuario/'+ usuarioId +'/setNotificationToken', {oldNotificationToken: oldNotificationToken, newNotificationToken: newNotificationToken, registrationType: registrationType});

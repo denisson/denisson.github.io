@@ -222,7 +222,7 @@ angular
       dataHora.hour($scope.getHoraJogo()).minutes($scope.getMinutosJogo());
       var timezone = _.get($scope.jogo, 'local.cidade.timezone', 'America/Fortaleza');
       var jogo = {
-        esporte: $scope.jogo.esporte,
+        // esporte: $scope.jogo.esporte, //está sendo feito no backend
         efootball: $scope.jogo.efootball,
         local: $scope.jogo.local,
         competicao: $scope.jogo.competicao,

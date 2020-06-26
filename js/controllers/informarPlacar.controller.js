@@ -51,7 +51,7 @@ angular
       if(AuthService.isUsuarioPro()){
         AuthService.redirectClean('jogo', null, {id: $scope.jogo._id});
       } else {
-        AuthService.redirectClean('interstitial', null, {rota: 'jogo', parametros: {id: $scope.jogo._id}}).then(configurarJogoVazio);
+        AuthService.redirectClean('interstitial', null, {rota: 'jogo', parametros: {id: $scope.jogo._id}});
       }
       
     }

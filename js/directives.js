@@ -646,6 +646,48 @@ angular.module('app.directives', [])
     }
   };
 }])
+.directive('jogBanner', ['BannerService', function(BannerService){
+  return {
+    restrict: 'A',
+    link: function(scope, el, attr) {
+
+      BannerService.getBanners().then(function(banners){
+        var banner = banners[attr.jogBanner];
+        if(!banner){
+          el.remove();
+          return;
+        }
+        if(el[0].tagName == 'LINK'){
+          el.attr('href', banner.imagem);
+        } else {
+          el.attr('src', banner.imagem);
+        }    
+      })
+  
+    }
+  };
+}])
+.directive('jogBannerLink', ['BannerService', function(BannerService){
+  return {
+    restrict: 'A',
+    link: function(scope, el, attr) {
+
+      BannerService.getBanners().then(function(banners){
+        var banner = banners[attr.jogBannerLink];
+        if(!banner){
+          el.remove();
+          return;
+        }
+        el.bind('click', function() {
+          window.open(banner.url, '_system');
+          return false;
+        });
+
+      });
+
+    }
+  };
+}])
 // .directive('jogStepper', [function(){
 //   return {
 //   	restrict: 'E',

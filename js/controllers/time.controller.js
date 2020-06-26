@@ -8,6 +8,17 @@ angular
     $rootScope.$emit('loading.init');
     $scope.temporada = $stateParams.temporada;
 
+
+    // $scope.mostrarAd = function(){
+    //   admob.interstitial.config({
+    //     id: 'ca-app-pub-3179491801494280/5050316088',
+    //     isTesting: true,
+    //     autoShow: false,
+    //   })
+    //   admob.interstitial.prepare();
+    //   admob.interstitial.show();
+    
+    // }
     
     // if(window.store) {
     //   store.verbosity = store.DEBUG
@@ -124,9 +135,10 @@ angular
         $rootScope.$emit('loading.finish');
         checarCidade();
       }).catch(function(){
+          //Checar quando falhar a consulta ao banco e exibir um erro
           mostrarAlerta('Não foi possível carregar as informações do time');
       });
-      //Todo: checar quando falhar a consulta ao banco e exibir um erro
+
     }
 
     $scope.$on('jogadorAdicionado', function(events, jogador){
