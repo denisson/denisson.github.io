@@ -10,8 +10,8 @@ var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.contro
   // URL_S3:  'http://jogueiros-fc-uploads.s3-website-sa-east-1.amazonaws.com/',
   URL_IMAGEBOSS:  'https://img.imageboss.me/',
   URL_S3:  'https://s3-sa-east-1.amazonaws.com/jogueiros-fc-uploads/',
-  // URL_API: 'https://jogueiros-fc-api.herokuapp.com/',
-  URL_API: 'http://localhost:3000/',
+  URL_API: 'https://jogueiros-fc-api.herokuapp.com/',
+  // URL_API: 'http://localhost:3000/',
   // URL_API: 'http://10.0.0.103:3000/',//10.0.2.2
   // TIPO_APP: 'ARBITRAGEM', //TIPO_APP: 'TIME'
   URL_SITE: 'https://jogueirosfc.com/'
