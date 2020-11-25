@@ -42,13 +42,15 @@ angular
         } else {
           result = DataService.ligaJogosEncerrados($stateParams.id, $scope.page, QTD_POR_PAGINA, $stateParams.filtro);
         }
+      } else if($scope.tipo == 'LigaJogosCancelados'){
+          result = DataService.ligaJogosCancelados($stateParams.id, $scope.page, QTD_POR_PAGINA);
       } else if($scope.tipo == 'Ranking'){
         if($scope.proximos){
           result = DataService.rankingJogosFuturos($stateParams.id, $scope.page, QTD_POR_PAGINA);
         } else {
           result = DataService.rankingJogosEncerrados($stateParams.id, $scope.page, QTD_POR_PAGINA);
         }
-      }
+      }      
 
       result.then(processaJogos).catch(function(){
         $scope.temMaisResultados = false;
@@ -76,6 +78,17 @@ angular
       $scope.page = 1;
       $scope.carregarJogos(true);
     }
+
+    $scope.formatarData = function(jogo, campo){
+      var timezone = _.get(jogo, 'local.cidade.timezone', 'America/Fortaleza'); //caso não tenha no cadastro do jogo, utilizar o timezone compatível com Maceió
+       return moment(_.get(jogo, campo)).tz(timezone).format('DD/MM/YYYY');
+    }
+
+    $scope.formatarHora = function(jogo, campo){
+      var timezone = _.get(jogo, 'local.cidade.timezone', 'America/Fortaleza'); //caso não tenha no cadastro do jogo, utilizar o timezone compatível com Maceió
+      return moment(_.get(jogo, campo)).tz(timezone).format('HH:mm');
+    }
+
 
     $scope.inicializar();
 

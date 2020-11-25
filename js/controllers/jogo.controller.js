@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('verJogoController', ['$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicPopup', '$ionicActionSheet', '$ionicHistory', function ($scope, $state, $stateParams, DataService, AuthService, $ionicPopup, $ionicActionSheet, $ionicHistory) {
+  .controller('verJogoController', ['$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicPopup', '$ionicActionSheet', '$ionicHistory', '$jgModalAssinatura', function ($scope, $state, $stateParams, DataService, AuthService, $ionicPopup, $ionicActionSheet, $ionicHistory, $jgModalAssinatura) {
 
     $scope.voltar = function(){
       if($ionicHistory.backView()){
@@ -161,10 +161,20 @@ angular
 
     $scope.carregarHistoricoConfrontos = function(){
       if($scope.jogo.visitante._id){
-        DataService.jogoHistoricoConfrontos($scope.jogo.mandante._id, $scope.jogo.visitante._id).then(function(jogos){
-          $scope.jogo.historicoConfrontos = jogos;
+        DataService.jogoHistoricoConfrontos($scope.jogo.mandante._id, $scope.jogo.visitante._id).then(function(result){
+          $scope.jogo.historicoConfrontos = result;
         });
       }
+    }
+
+    $scope.verHistoricoConfrontos = function(){
+      $jgModalAssinatura.confirmarAssinaturaUmDosTimes('graficos', $scope.jogo.mandante._id, $scope.jogo.visitante._id).then(function(){
+        $state.go('times_confrontos', {idTimeA: $scope.jogo.mandante._id, idTimeB: $scope.jogo.visitante._id});
+      });
+    }
+
+    $scope.usuarioPro = function(){
+      return AuthService.isUsuarioPro();
     }
 
     $scope.deveExibirMenu = function(){
@@ -177,6 +187,13 @@ angular
                   $scope.jogo.situacao == 'placarConfirmado' ||
                   $scope.jogo.situacao == 'jogoConfirmado')
               );
+    }
+
+    $scope.deveMostrarHistoricoConfrontos = function(){
+      return  _.get($scope, 'jogo.historicoConfrontos.totais.jogos')  //tem que ter algum histórico pra mostrar
+              && AuthService.isAuthenticated() // o usuário precisa estar autenticado, senão, não tem como ele assinar o Jogueiros PRO
+              //&& $scope.usuarioPro() // tem que ser usuário PRO
+              //&& ($scope.editavel('mandante') || $scope.editavel('visitante')) // tem que ser admin de um dos times do jogo
     }
 
     $scope.exibirMenu = function(){

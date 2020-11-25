@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        <!-- <div ng-if="!timeUsuarioPro() && jogadorModal.estatisticas" ng-click="assinarJogueirosPro()" class="card">
+        <div ng-if="isAuthenticated() && !timeUsuarioPro() && jogadorModal.estatisticas" ng-click="assinarJogueirosPro()" class="card">
             <ion-item style="padding-right: 72px;" class="item-transparente">
                 <h2>Gráficos e Estatísticas <span class="jg-badge jg-badge-pro">PRO</span></h2>
                 <p>Média de gols, cartões, hat-tricks, garçom, vitórias, derrotas, empates</p>
@@ -89,9 +89,10 @@
                 </div>
                 </div>
             </ion-item>
-        </div> -->
+        </div>
+
         
-        <div ng-if="timeUsuarioPro()">
+        <div ng-if="timeUsuarioPro() && jogadorModal.estatisticas">
             <div ng-if="jogadorModal.ehGoleiro" class="card card-grafico">
                 <h4 class="titulo-secao"> Gols sofridos</h4>
                 <div class="padding">

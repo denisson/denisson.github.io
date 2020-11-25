@@ -87,8 +87,14 @@ angular.module('app.services')
 		blockPopup: function(){
 			blockPopup = true;
 		},
-		login: function(userData){
-			return post('login/google', userData);
+		login: function(provider, userData){
+			return post('login/' + provider, userData);
+		},
+		adminGrafico: function(tipoRanking, esporte, regiao, plataforma){
+			esporte = esporte || '';
+			regiao = regiao || '';
+			plataforma = plataforma || '';
+			return request('jogos/admin/'+ tipoRanking +'?esporte='+ esporte + '&regiao=' + regiao + '&plataforma=' + plataforma);
 		},
 		jogosEncerrados: function(pag, porPag, esporte, regiao, plataforma){
 			esporte = esporte || '';
@@ -197,6 +203,9 @@ angular.module('app.services')
 		jogoHistoricoConfrontos: function(mandanteId, visitanteId){
 			return request('jogos/confrontos/'+ mandanteId + '/' + visitanteId);
 		},
+		jogador: function(id){
+			return request('jogador/' + id);
+		},		
 		jogadorJogos: function(id, temporada){
 			return request('jogador/' + id + '/jogos?temporada='+temporada);
 		},
@@ -314,6 +323,9 @@ angular.module('app.services')
 		ligaJogosEncerrados: function(id, pag, porPag, filtro){
 			return request('liga/' + id + '/jogos/encerrados?pag=' + pag + '&porPag=' + porPag + '&filtro=' + filtro);
 		},
+		ligaJogosCancelados: function(id, pag, porPag){
+			return request('liga/' + id + '/jogos/cancelados?pag=' + pag + '&porPag=' + porPag);
+		},
 		ligaCompleto: function(id){
 			return request('liga/' + id + '?arbitros=true');
 		},
@@ -349,6 +361,9 @@ angular.module('app.services')
 		},
 		editarLiga: function(liga){
 			return upload('liga/' + liga._id, liga.escudo, liga);
+		},
+		editarConfiguracaoLiga: function(liga){
+			return post('liga/' + liga._id + '/configuracao', liga);
 		},
 		designarArbitro: function(jogoId, arbitroId){
 			return post('jogo/designarArbitro/' + jogoId + '/' + arbitroId);
@@ -416,6 +431,12 @@ angular.module('app.services')
 		},
 		setNotificationToken: function(usuarioId, oldNotificationToken, newNotificationToken, registrationType){
 			return post('usuario/'+ usuarioId +'/setNotificationToken', {oldNotificationToken: oldNotificationToken, newNotificationToken: newNotificationToken, registrationType: registrationType});
+		},
+        checarReciboPagamento: function(product){
+			return post('check-purchase', product);
+		},
+		solicitarJogueirosPRO: function(){
+			return post('usuario/solicitarJogueirosPRO');
 		},
 		logError: function(exception){
 			var userData = JSON.parse(window.localStorage.getItem('user_data'));

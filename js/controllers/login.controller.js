@@ -18,5 +18,9 @@ angular
 
     $scope.authenticate = function(provider) {
       AuthService.login(provider, {loginTelaArbitro: $scope.appArbitragem});
-    };
+	};
+	
+	$scope.exibirLoginApple = function(){
+		return _.get(window, 'cordova.plugins.SignInWithApple');
+	}
   }]);

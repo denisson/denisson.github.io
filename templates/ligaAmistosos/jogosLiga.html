@@ -58,7 +58,7 @@
         <div ng-if="jogo.precisaInformarArbitro" class="item info-arbitragem">
           <p ng-if="jogo.arbitragem.designacao.arbitro" class="cancel-nowrap padding-horizontal" >É necessário escalar um novo árbitro para essa partida.</p>
           <p ng-if="!jogo.arbitragem.designacao.arbitro" class="cancel-nowrap padding-horizontal" >É necessário escalar um árbitro para essa partida.</p>
-          <informar-arbitro jogo="jogo" ao-cancelar="cancelarAlteracaoDesignacao()" ao-salvar="jogo.arbitragem.designacao.arbitro = arbitro"></informar-arbitro>
+          <informar-arbitro jogo="jogo" ao-cancelar="cancelarAlteracaoDesignacao()" ao-salvar="aposDesignarArbitro(arbitro)"></informar-arbitro>
         </div>
       </div>
       <jog-partidas ng-if="!editavel" partidas="jogos"></jog-partidas>  

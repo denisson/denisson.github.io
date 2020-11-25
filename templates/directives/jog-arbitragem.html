@@ -79,11 +79,16 @@
 
 
 <div ng-if="jogo.arbitragem.solicitacao.dataHoraCancelamento && permissaoArbitragem()" class="list card">
-  <ion-item class="item-avatar item" ui-sref="time({id: jogo.arbitragem.solicitacao.time._id})">
+  <ion-item ng-if="jogo.arbitragem.situacaoJogo != 'removido'" class="item-avatar item" ui-sref="time({id: jogo.arbitragem.solicitacao.time._id})">
       <img jog-jogador="jogo.arbitragem.solicitacao.time.escudo" jog-size="small">
       <h2>{{jogo.arbitragem.solicitacao.time.nome}}</h2>
       <p class="cancel-nowrap">Cancelou a solicitação de arbitragem em {{formatarData(jogo, 'arbitragem.solicitacao.dataHoraCancelamento')}} às {{formatarHora(jogo, 'arbitragem.solicitacao.dataHoraCancelamento')}}</p>
   </ion-item>
+  <ion-item ng-if="jogo.arbitragem.situacaoJogo == 'removido'" class="item-avatar item" ui-sref="time({id: jogo.arbitragem.solicitacao.time._id})">
+    <img class="item-image" jog-escudo="jogo.arbitragem.solicitacao.liga.escudo" jog-size="small">
+    <h2>{{jogo.arbitragem.solicitacao.liga.nome}}</h2>
+    <p class="cancel-nowrap">Removeu o jogo em {{formatarData(jogo, 'arbitragem.solicitacao.dataHoraCancelamento')}} às {{formatarHora(jogo, 'arbitragem.solicitacao.dataHoraCancelamento')}}</p>
+</ion-item>
 </div>
 
 <div ng-if="mostrarQuemInformouPlacar()" class="list card">

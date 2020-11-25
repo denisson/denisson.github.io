@@ -1,0 +1,26 @@
+<ion-view>
+    <ion-nav-title>{{nomeLiga}} - Jogos cancelados</ion-nav-title>
+  
+    <style type="text/css">
+          .info-arbitragem{
+              background-color: #f8f8f8;
+          }
+    </style>
+    <ion-content ng-controller="jogosController">
+
+        <div class="list card" ng-repeat="jogo in jogos">
+            <jog-partidas partidas="[jogo]"></jog-partidas>  
+            <ion-item ng-if="jogo.arbitragem.situacaoJogo == 'removido'" class="item info-arbitragem">
+                <p>Removido em {{formatarData(jogo, 'arbitragem.solicitacao.dataHoraCancelamento')}} às {{formatarHora(jogo, 'arbitragem.solicitacao.dataHoraCancelamento')}}</p>
+            </ion-item>
+            <ion-item ng-if="jogo.arbitragem.situacaoJogo != 'removido'" class="item info-arbitragem">
+                <p>Cancelado em {{formatarData(jogo, 'arbitragem.solicitacao.dataHoraCancelamento')}} às {{formatarHora(jogo, 'arbitragem.solicitacao.dataHoraCancelamento')}}</p>
+            </ion-item>
+          </div>
+          
+        <div ng-show="!jogos.length && dadosCarregados" class="padding mensagem-destacada">
+            <h3 class="dark">Nenhum jogo</h3>
+        </div>
+
+    </ion-content>
+</ion-view>

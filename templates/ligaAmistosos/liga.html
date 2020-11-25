@@ -95,7 +95,11 @@
         Próximos jogos
         <!-- <span class="item-note">{{arbitro.numeros.proximos}} jogos</span> -->
       </ion-item>
-      <ion-item>        
+      <ion-item ng-if="editavel()" ng-click="verJogosCancelados()" class="item-icon-left">
+        <i class="icon ion-trash-b"></i>
+        Jogos cancelados
+      </ion-item>
+      <ion-item ng-if="editavel()">        
         <button ng-click="cadastrarJogoAvulso()" class="button button-positive button-outline button-block icon ion-plus-circled" href="#"> Cadastrar jogo avulso </button>
       </ion-item>
       <ion-item ng-if="liga.times.length" class="item-divider">

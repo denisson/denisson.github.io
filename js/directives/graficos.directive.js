@@ -599,3 +599,64 @@ angular.module('app.directives')
       }
     };
   }])
+  .directive('graficoAdminJogos', [function(){
+    return {
+      restrict: 'A',
+      scope: {dados: '=', atributo: '@', atributoTime: '@'},
+      link: function(scope, el, attr) {
+
+        var ctx = el[0].getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: scope.dados.map(function(resultado){
+                    return  resultado.data //moment().format('DD/MM/YYYY');
+                }),
+                datasets: [
+                    { 
+                        data: scope.dados.map(function(resultado){
+                            return  resultado.numJogos;
+                        }),               
+                        label: 'Jogos',
+                        // data: scope.dados.map(function(resultado){
+                        //     return  {x: resultado.data, y: resultado.numJogos};
+                        // }),
+                        borderColor: '#4285f4',
+                        backgroundColor: '#4285f461'
+                    }
+                ],
+            },
+            options: {
+                // tooltips: {
+                //     intersect: false,
+                //     mode: 'x'
+                // },
+                // legend: false,
+                animation: {
+                    duration: 0, // general animation time
+                },
+                maintainAspectRatio: true,
+                scales:
+                {
+                    xAxes: [{
+                        // stacked: true,
+                        // display: false,
+                        // type: 'time',
+                        // time: {
+                        //     unit: 'week'
+                        // }
+                    }],
+                    yAxes: [{
+                        // stacked: true,
+                        ticks: {
+                            beginAtZero: true,
+                            precision: 0
+                        }
+                    }]
+                }
+            }
+        });
+
+    }
+};
+}])

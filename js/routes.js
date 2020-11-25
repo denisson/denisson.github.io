@@ -119,7 +119,10 @@ angular.module('app.routes', [])
       url: '/times/ranking',
       templateUrl: 'templates/times/rankingTimes.html'
     })
-
+    .state('adminGraficos', {
+      url: '/admin/graficos',
+      templateUrl: 'templates/admin/graficos.html'
+    })
 
     .state('abasInicio.meuPerfil', {
       url: '/meuPerfil',
@@ -286,6 +289,10 @@ angular.module('app.routes', [])
       url: '/time/:id/:temporada/estatisticas',
       templateUrl: 'templates/times/estatisticas.html'
     },
+    'times_confrontos': {
+      url: '/times/confrontos/:idTimeA/:idTimeB',
+      templateUrl: 'templates/times/historicoConfrontos.html'
+    },
     'jogo': {
       url: '/jogo/:id',
       templateUrl: 'templates/jogos/jogo.html'
@@ -313,6 +320,16 @@ angular.module('app.routes', [])
         $scope.mostrarProximos = function(){
           $scope.proximos = true;
         }
+      }
+    },
+    'liga_jogos_cancelados': {
+      url: '/liga/:id/jogos/cancelados',
+      templateUrl: 'templates/ligaAmistosos/jogosCancelados.html',
+      cache: false,
+      params: {nomeLiga: '', filtro: ''},
+      controller: function($stateParams, $scope){
+        $scope.nomeLiga = $stateParams.nomeLiga;
+        $scope.tipo = 'LigaJogosCancelados';
       }
     },
     'liga_times': {

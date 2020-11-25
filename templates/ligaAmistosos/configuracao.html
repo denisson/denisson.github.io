@@ -17,32 +17,99 @@
     <div ng-if="liga">
 
 	    <form class="list config-arbitragem">
-	    	<ion-item class="item-divider">Solicitação de Arbitragem</ion-item>
-	        <label class="item item-input">
-	            <span class="input-label">Preço por hora</span>
-	            <input ng-model="liga.arbitragem.valorPorHora" type="number" placeholder="0" required />
-	        </label>
-	       	<label class="item item-input">
-	            <span class="input-label">Mínimo de antecedência (horas)</span>
-	            <input ng-model="liga.arbitragem.timeline.solicitacoesAte" type="number" placeholder="0" required />
-	        </label>
-	       	<label class="item item-input">
-	            <span class="input-label">Urgente (horas antes do jogo)</span>
-	            <input ng-model="liga.arbitragem.timeline.urgencia" type="number" placeholder="0" required />
-	        </label>
-	        <ion-item class="item-divider">Escalação do árbitro</ion-item>
-	        <label class="item item-input">
-	            <span class="input-label">Dias antes do jogo</span>
-	            <input ng-model="liga.arbitragem.timeline.designacaoDiasAntes" type="number" placeholder="0" required/>
-	        </label>
-	        <label class="item item-input">
-	            <span class="input-label">Horário do dia</span>
-	            <input ng-model="liga.arbitragem.timeline.designacaoHorario" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
-	        </label>
-	       	<label class="item item-input">
-	            <span class="input-label">Prazo para árbitro confirmar (horas)</span>
-	            <input ng-model="liga.arbitragem.timeline.tempoRespostaArbitro" type="number" placeholder="0" required />
-	        </label>
+			<div class="list">
+				<ion-item class="item-divider">Solicitação de Arbitragem</ion-item>
+				<label class="item item-input">
+					<span class="input-label">Preço por hora</span>
+					<input ng-model="liga.arbitragem.valorPorHora" type="number" placeholder="0" required />
+				</label>
+				<label class="item item-input">
+					<span class="input-label">Mínimo de antecedência (horas)</span>
+					<input ng-model="liga.arbitragem.timeline.solicitacoesAte" type="number" placeholder="0" required />
+				</label>
+				<label class="item item-input">
+					<span class="input-label">Urgente (horas antes do jogo)</span>
+					<input ng-model="liga.arbitragem.timeline.urgencia" type="number" placeholder="0" required />
+				</label>
+				<label class="item item-input">
+					<span class="input-label">Prazo para árbitro confirmar (horas)</span>
+					<input ng-model="liga.arbitragem.timeline.tempoRespostaArbitro" type="number" placeholder="0" required />
+				</label>
+			</div>
+			<h4 style="color: #333;text-align: center;">Horários de escalação</h4>
+			<div class="list">
+				<ion-item class="item-divider">Jogos de Segunda-feira</ion-item>
+				<label class="item item-input">
+					<span class="input-label">Dias antes do jogo</span>
+					<input ng-model="liga.arbitragem.escala.seg.diasAntes" type="number" placeholder="0" required/>
+				</label>
+				<label class="item item-input">
+					<span class="input-label">Horário do dia</span>
+					<input ng-model="liga.arbitragem.escala.seg.horario" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+				</label>
+
+				<ion-item class="item-divider">Jogos de Terça-feira</ion-item>
+				<label class="item item-input">
+					<span class="input-label">Dias antes do jogo</span>
+					<input ng-model="liga.arbitragem.escala.ter.diasAntes" type="number" placeholder="0" required/>
+				</label>
+				<label class="item item-input">
+					<span class="input-label">Horário do dia</span>
+					<input ng-model="liga.arbitragem.escala.ter.horario" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+				</label>
+
+				<ion-item class="item-divider">Jogos de Quarta-feira</ion-item>
+				<label class="item item-input">
+					<span class="input-label">Dias antes do jogo</span>
+					<input ng-model="liga.arbitragem.escala.qua.diasAntes" type="number" placeholder="0" required/>
+				</label>
+				<label class="item item-input">
+					<span class="input-label">Horário do dia</span>
+					<input ng-model="liga.arbitragem.escala.qua.horario" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+				</label>
+
+				<ion-item class="item-divider">Jogos de Quinta-feira</ion-item>
+				<label class="item item-input">
+					<span class="input-label">Dias antes do jogo</span>
+					<input ng-model="liga.arbitragem.escala.qui.diasAntes" type="number" placeholder="0" required/>
+				</label>
+				<label class="item item-input">
+					<span class="input-label">Horário do dia</span>
+					<input ng-model="liga.arbitragem.escala.qui.horario" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+				</label>
+
+
+				<ion-item class="item-divider">Jogos de Sexta-feira</ion-item>
+				<label class="item item-input">
+					<span class="input-label">Dias antes do jogo</span>
+					<input ng-model="liga.arbitragem.escala.sex.diasAntes" type="number" placeholder="0" required/>
+				</label>
+				<label class="item item-input">
+					<span class="input-label">Horário do dia</span>
+					<input ng-model="liga.arbitragem.escala.sex.horario" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+				</label>
+
+				<ion-item class="item-divider">Jogos de Sábado</ion-item>
+				<label class="item item-input">
+					<span class="input-label">Dias antes do jogo</span>
+					<input ng-model="liga.arbitragem.escala.sab.diasAntes" type="number" placeholder="0" required/>
+				</label>
+				<label class="item item-input">
+					<span class="input-label">Horário do dia</span>
+					<input ng-model="liga.arbitragem.escala.sab.horario" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+				</label>
+
+				<ion-item class="item-divider">Jogos de Domingo</ion-item>
+				<label class="item item-input">
+					<span class="input-label">Dias antes do jogo</span>
+					<input ng-model="liga.arbitragem.escala.dom.diasAntes" type="number" placeholder="0" required/>
+				</label>
+				<label class="item item-input">
+					<span class="input-label">Horário do dia</span>
+					<input ng-model="liga.arbitragem.escala.dom.horario" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+				</label>
+
+			</div>
 	        <button ng-click="salvar()" class="button button-positive button-block">Salvar</button>
 	    </form>
   </div>

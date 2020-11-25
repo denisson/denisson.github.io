@@ -10,14 +10,17 @@ var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.contro
   // URL_S3:  'http://jogueiros-fc-uploads.s3-website-sa-east-1.amazonaws.com/',
   URL_IMAGEBOSS:  'https://img.imageboss.me/',
   URL_S3:  'https://s3-sa-east-1.amazonaws.com/jogueiros-fc-uploads/',
+  URL_AWS_CLOUDFRONT: 'https://d1zz32ev1utzz6.cloudfront.net/',
   URL_API: 'https://jogueiros-fc-api.herokuapp.com/',
   // URL_API: 'http://localhost:3000/',
-  // URL_API: 'http://10.0.0.103:3000/',//10.0.2.2
+  // URL_API: 'http://10.0.0.103:3000/',
+  // URL_API: 'http://192.168.15.39:3000/', // IP da máquina quando depurando do próprio dispositivo
+  // URL_API: 'http://10.0.2.2:3000/', // IP da máquina quando usando emulador android. https://stackoverflow.com/questions/5806220/how-to-connect-to-my-http-localhost-web-server-from-android-emulator
   // TIPO_APP: 'ARBITRAGEM', //TIPO_APP: 'TIME'
   URL_SITE: 'https://jogueirosfc.com/'
 
 })
-.run(function($ionicPlatform, AuthService, LoadingService, $state, DataService, $location, $timeout, $ionicHistory, $locale) {
+.run(function($ionicPlatform, AuthService, StoreService, $state, DataService, $location, $timeout, $ionicHistory, $locale, config, LoadingService) {
 
   $locale.NUMBER_FORMATS.DECIMAL_SEP = ',';
 
@@ -105,10 +108,12 @@ var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.contro
     AuthService.checarCidadeDoTimeLogado();
     AuthService.atualizarPerfisUsuario();
 
+    StoreService.initialize();
+
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
       cordova.plugins.Keyboard.disableScroll(true);
     }
     if (window.StatusBar) {
@@ -119,26 +124,6 @@ var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.contro
     if(window.cordova && cordova.InAppBrowser.open){
       window.open = cordova.InAppBrowser.open;    
     }
-    // if(window.store) {
-    //   store.ready(function(){
-        
-    //       store.register({
-    //         id: "assinatura.mensal",
-    //         type: store.PAID_SUBSCRIPTION
-    //       });
-    //       store.refresh();
-    
-    //       render();
-    //       store.when("assinatura.mensal").updated(render);
-    //     }
-    //   );
-    
-    //   function render(){
-    //     var product = store.get("assinatura.mensal");
-    //     console.log(product);
-    //   }
-
-    // }
 
   });
 })
@@ -172,36 +157,3 @@ var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.contro
 
 angular.module('app.controllers', ['angular.filter']);
 angular.module('app.services', ['angular-cache']);
-
-// app.factory('$jgModalAssinatura', [
-//   '$q',
-//   '$ionicModal',
-// function($q, $ionicModal) {
-
-//   return {
-//     confirmarAssinatura: action
-//   };
-
-//   function action() {
-//     var modalAssinatura;
-//     var deferred = $q.defer();
-
-//     $ionicModal.fromTemplateUrl('templates/assinaturaModal.html', {
-//       // scope: $scope,
-//       animation: 'fade-in'
-//     }).then(function(modal){
-//       modalAssinatura = modal;
-//       modalAssinatura.show();
-//       deferred.resolve();
-//     });
-
-//     // $ionicPopup.alert({
-//     //   title: 'Ops!',
-//     //   content: 'Consegui'
-//     // }).then(function(){
-//     //   // deferred.resolve();
-//     //   deferred.reject();
-//     // });
-//     return deferred.promise;
-//   }
-// }]);

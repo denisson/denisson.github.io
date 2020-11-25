@@ -1,0 +1,28 @@
+<ion-view hide-nav-bar="true" ng-controller="adminController">
+      <ion-content padding="true" class="scroll-with-keyboard" style="background-image:    url(img/background-ranking.png); background-size: cover; background-position: center center;">
+        <style>
+            .item-complex .item-content, .item-radio .item-content{
+                background-color: transparent;
+            }
+            .list {
+                left: 50%;
+                width: 86%;
+                transform: translateX(-50%);
+                border-radius: 5px;
+                overflow: hidden;
+            }
+        </style>    
+        <button class="button" id="botao-escolher-regiao" mostrar-br="true" tem-time="true" abrir-modal="true" ocultar-cancelar="true" filtro="perfilFiltro" jog-escolher-regiao>
+            <span ng-if="!perfilFiltro.esporte.efootball" style="display: inline;">Região:</span>
+            <b class="padding-left">{{formatarFiltro(perfilFiltro)}}</b>
+            <i class="icon ion-android-arrow-dropdown" style="color:#999"></i>
+        </button>
+
+        <div class="card card-grafico">
+            <h4 class="titulo-secao"> Gols</h4>
+            <div class="padding">
+                <canvas ng-if="dados" grafico-admin-jogos dados="dados" ></canvas>
+            </div>
+        </div>
+      </ion-content>
+  </ion-view>

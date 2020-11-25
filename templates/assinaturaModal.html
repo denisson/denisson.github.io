@@ -1,38 +1,109 @@
-<ion-modal-view>
-    <!-- ng-controller="assinaturaController" -->
-    <ion-content class="image-background img-login">
-    	<style type="text/css">
-    		.banner-interstitial{
-    			width: 100%
-    		}
+<ion-modal-view ng-controller="assinaturaController">
+    <ion-content class="image-background img-login assinatura-modal">
+        <style type="text/css">
 
-    		.banner-interstitial-container{
-			    position: absolute;
-			    top: 50%;
-			    transform: translateY(-50%);
-			    width: 100%;
-			}
+            .assinatura-modal .titulo {
+                /* text-align: center; */
+                margin-bottom: 36px;
+                margin-top: 6px;
+            }
+
+            .assinatura-modal .titulo .jg-badge-pro{
+                margin-left: 0;
+            }
+
+            .assinatura-modal .logo {
+                width: 175px;
+                height: 175px;
+                margin-top: 25px;
+            }
+
+            .center{
+                text-align: center;
+            }
+
+            .lista-beneficios {
+                margin: 19px 0;
+                border-radius: 10px;
+                font-size: 1.2em;
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+                display: inline-block;
+            }
+
+            .lista-beneficios li {
+                margin-top: 16px;
+            }
+            .lista-beneficios li i {
+                margin-right: 8px;
+            }
+
+            .lista-beneficios .highlight{
+                font-weight: bold;
+            }
+
+            .titulo-opcao-whatsapp{
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 3px;
+                color: #333;
+            }
+
+            .opcao-whatsapp .action-sheet-up{
+                background-color: #fff;
+                max-width: none;
+                padding: 12px 16px 0px 16px;
+            }
+
+            
+
     	</style>
 
 
-		<div class="banner-interstitial-container padding">
-            <h3 class="dark padding" style="text-align: center;">Torne-se um Jogueiro PRO</h3>
-            <p>
-                Plano Mensal: R$ 5,90
-                Plano Anual: R$ 49,90 (30% OFF)
-            </p>
-			<ul>
-                <li>Livre de propagandas</li>
-                <li>Estatísticas e gráficos completos</li>
-                <li>Gerencie vários times</li>
-                <li>Adicione outros adminis para dividir a responsabilidade</li>
-            </ul>
-            <button type="submit" class="button button-positive button-block">Assinar</button>
-            <p style="text-align: center">
-                ou <br/>
-                <a href="#" ng-click="sair()">Não, obrigado</a>
+		<div class="padding dark">
+            <div class="center">
+                <img src="/img/novo-icone.svg" class="logo"/>
+            </div>
+
+            <h2 class="padding titulo center dark">Jogueiros <span class="jg-badge jg-badge-pro">PRO</span></h2>
+            <h3 class="center dark">
+                R$ {{assinatura.preco| number: 2}}
+                <span style="font-weight: 300;">/mês</span>
+            </h3>
+            <div class="center">
+                <span class="badge badge-assertive" style="background-color: #FF9800;">Primeiro mês gratuito!</span>
+            </div>
+            <div class="lista-beneficios">
+                <ul>
+                    <li ng-class="{highlight: destaque('graficos')}"><i class="icon ion-checkmark-round positive"></i> Gráficos e estatísticas detalhadas</li>
+                    <li ng-class="{highlight: destaque('times')}"><i class="icon ion-checkmark-round positive"></i> Gerencie vários times</li>
+                    <li ng-class="{highlight: destaque('admins')}"><i class="icon ion-checkmark-round positive"></i> Adicione outros admins</li>
+                    <li ng-class="{highlight: destaque('propagandas')}"><i class="icon ion-checkmark-round positive"></i> Livre de propagandas</li>
+                    <li ng-class="{highlight: destaque('ajude')}"><i class="icon ion-checkmark-round positive"></i> Ajude a manter o Jogueiros</li>
+                </ul>
+            </div>
+
+            <button ng-click="assinar()" type="submit" class="button button-positive button-block" style="font-weight: bold;">EXPERIMENTAR MÊS GRATUITO</button>
+            <p class="center">
+                <a href="#" ng-click="fecharModal(); $event.stopPropagation();">Agora não</a>
             </p>
 		    <!-- <a ng-click="pularAnuncio()" style="text-decoration: none; float: right; background: transparent;color: #387ef5;" class="button">Pular anúncio</a> -->
-		</div>
+        </div>
+	    <div ng-if="opcaoWhatsapp" class="opcao-whatsapp action-sheet-backdrop active" ng-class="cssClass" buttons="buttons">
+            <div class="action-sheet-wrapper action-sheet-up">
+                <div class="padding-horizontal">
+		    		<div class="titulo-opcao-whatsapp">Sem cartão de crédito?<!-- Não quer utilizar um cartão de crédito? Entre em contato conosco para experimentar o Jogueiros PRO mesmo sem precisar de um cartão de crédito. -->
+		    		</div>
+                    <p style="color: #666;">Não tem problema! Temos uma condição especial para você.</p>
+                </div>
+				<div class="list lista-jogadores">
+			        <div class="padding">
+			        	<button ng-click="solicitarCondicaoEspecial()" class="button button-block button-positive">Solicitar condição especial</button>
+			          	<button ng-click="fecharModal(); $event.stopPropagation();" class="button button-block">Agora não</button>
+			        </div>
+		        </div>
+	    	</div>
+	    </div>
     </ion-content>
 </ion-modal-view>

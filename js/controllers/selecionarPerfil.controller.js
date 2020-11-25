@@ -1,6 +1,7 @@
 angular
   .module('app.controllers')
-  .controller('selecionarPerfilController', ['$scope', '$rootScope',  '$state', '$stateParams', 'DataService', 'AuthService', function ($scope, $rootScope, $state, $stateParams, DataService, AuthService) {
+  .controller('selecionarPerfilController', ['$scope', '$rootScope',  '$state', '$stateParams', 'DataService', 'AuthService', '$jgModalAssinatura',
+  function ($scope, $rootScope, $state, $stateParams, DataService, AuthService, $jgModalAssinatura) {
 
     $scope.selecionarPerfil = function(perfilCompleto){
       AuthService.atualizarPerfilCompleto(perfilCompleto);
@@ -24,6 +25,16 @@ angular
     }
 
     $scope.cadastrarTime = function(){
+      if($scope.jaTemTimeCadastrado()){
+        $jgModalAssinatura.confirmarAssinatura('times').then(function(){
+          irParaCadastroTime();
+        });
+      } else {
+        irParaCadastroTime();
+      }
+    }
+
+    function irParaCadastroTime(){
       AuthService.atualizarPerfil(null);
       $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
       $state.go('abasInicio.cadastrarTime');

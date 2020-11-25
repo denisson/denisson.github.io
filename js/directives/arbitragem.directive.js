@@ -74,16 +74,20 @@ angular.module('app.directives')
         } else if ($scope.jogo.encerrado) {
           return 'O nome do árbiitro não foi informado';
         } else {
-          return 'Um árbitro será escalado ' + $scope.diasAntesJogo() + ' antes da partida.';
+          var infoEscala = $scope.infoEscala();
+          return 'Um árbitro será escalado até ' + infoEscala.horario + ' de ' + infoEscala.data;
         }
       }
 
-      $scope.diasAntesJogo = function(){
-        var diasAntes = $scope.jogo.arbitragem.solicitacao.liga.arbitragem.timeline.designacaoDiasAntes;
-        if(moment($scope.jogo.dataHora).diff(moment(), 'd') < diasAntes) {
-          return '';
+      $scope.infoEscala = function(){
+        var dataJogo = moment($scope.jogo.dataHora).tz($scope.jogo.local.cidade.timezone);
+        var diaSemana = _.deburr(dataJogo.format('ddd').toLowerCase());
+        var escalaDoDia = $scope.jogo.arbitragem.solicitacao.liga.arbitragem.escala[diaSemana];
+        var dataEscala = dataJogo.subtract(escalaDoDia.diasAntes, 'days');
+        return {
+          horario: escalaDoDia.horario,
+          data: dataEscala.format('DD/MM/YYYY')
         }
-        return diasAntes + (diasAntes==1 ? ' dia' : ' dias');
       }
 
       $scope.formatarData = function(jogo, campo){
@@ -270,6 +274,7 @@ angular.module('app.directives')
       $scope.designarArbitro = function(){
         DataService.designarArbitro($scope.jogo._id, $scope.arbitroDesignado._id).then(function(){
           $scope.jogo.arbitragem.designacao = {arbitro: $scope.arbitroDesignado};
+          $scope.jogo.temArbitro = true;//significa que já tem árbitro confirmado. 
           $scope.jogo.precisaInformarArbitro = false;
           // $scope.alterandoDesignacao = false;
           $scope.aoSalvar({arbitro: $scope.arbitroDesignado});

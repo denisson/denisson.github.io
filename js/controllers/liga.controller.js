@@ -234,6 +234,12 @@ angular
       $state.go('liga_jogos', {id: $scope.ligaId, nomeLiga: $scope.liga.nome, proximos: proximos, filtro: filtro, editavel: $scope.editavel()});
     }
 
+    $scope.verJogosCancelados = function(){
+      $state.go('liga_jogos_cancelados', {id: $scope.ligaId, nomeLiga: $scope.liga.nome});
+    }
+
+    
+
     $scope.verTimes = function(){
       $state.go('liga_times', {id: $scope.ligaId, nomeLiga: $scope.liga.nome});
     }

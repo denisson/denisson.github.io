@@ -181,36 +181,61 @@ angular
       return usuarioLogado && usuarioLogado.id;
     }
 
+    function lookupUser(provider, info, options){
+      DataService.login(provider, info).then(function(usuario){
+        if(options.convite) {usuario.convite = options.convite};
+        setUserData(usuario);
+        setPerfisUsuario(usuario.perfis);
+        if(notificationTokenAntesLogin){
+          setNotificationToken(notificationTokenAntesLogin, notificationTokenTypeAntesLogin);
+        }
+        redirectAfterLogin(usuario.perfis, options.loginTelaArbitro);
+      }).catch(function(err){
+        DataService.logError(err);
+      });
+    }
+
+    function erroLogin(msg) {
+      $ionicPopup.alert({
+        title: 'Erro',
+        content: 'Não foi possível efetuar o login. Favor, tentar novamente.'
+      });
+      DataService.logError(msg);
+    }
+
     var login = function(provider, options){
+      if(provider == 'google'){
+        loginGoogle(provider, options);
+      } else if(provider == 'apple') {
+        loginApple(provider, options);
+      }
+    }
+
+    var loginGoogle = function(provider, options){
       $ionicPlatform.ready(function() {
         if(window.plugins && window.plugins.googleplus){
           window.plugins.googleplus.login(
             {'webClientId': '526695492966-sk3hr67mov4mmfp1fb2nrbkdqienhhos.apps.googleusercontent.com'}, // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
             function (user_data) {
-              DataService.login({idToken: user_data.idToken}).then(function(usuario){
-                if(options.convite) {usuario.convite = options.convite};
-                setUserData(usuario);
-                setPerfisUsuario(usuario.perfis);
-                if(notificationTokenAntesLogin){
-                  setNotificationToken(notificationTokenAntesLogin, notificationTokenTypeAntesLogin);
-                }
-                redirectAfterLogin(usuario.perfis, options.loginTelaArbitro);
-              }).catch(function(err){
-                DataService.logError(err);
-              });
+              lookupUser(provider, {idToken: user_data.idToken}, options);
             },
-            function (msg) {
-              $ionicPopup.alert({
-                title: 'Erro',
-                content: 'Não foi possível efetuar o login. Favor, tentar novamente.'
-              });
-              DataService.logError(msg);
-            }
+            erroLogin
           );
         } else {
             DataService.logError("if(window.plugins && window.plugins.googleplus) retornou false");
         }
       });
+    }
+
+    var loginApple = function(provider, options){
+
+      window.cordova.plugins.SignInWithApple.signin(
+        { requestedScopes: [0, 1] },
+        function(userInfo){
+          lookupUser(provider, userInfo, options);
+        },
+        erroLogin
+      )
     }
 
     var logout = function(){
@@ -226,6 +251,7 @@ angular
       perfilCompleto.cidade = perfilCompleto.perfil.cidade;
       perfilCompleto.esporte = perfilCompleto.perfil.esporte;
       perfilCompleto.efootball = perfilCompleto.perfil.efootball;
+      perfilCompleto.pro = perfilCompleto.perfil.pro;
       perfilCompleto.perfil = perfilCompleto.perfil._id;
       atualizarPerfil(perfilCompleto, perfilCompleto.token);
     }
@@ -380,7 +406,15 @@ angular
       var user = getUsuarioLogado();
       return user && user.pro;
     }
+
+    function isTimePro(){
+      var perfil = getPerfilAtivo();
+      return perfil && perfil.tipo == 'Time' && perfil.pro;
+    }
     
+    function adminJogueiros(){
+      return getUsuarioId() == '59a0e025a9e74b00116d322e';
+    }
 
     return {
       login: login,
@@ -414,5 +448,8 @@ angular
       getPerfilFiltro: getPerfilFiltro,
       isPerfilEfootball: isPerfilEfootball,
       isUsuarioPro: isUsuarioPro,
+      setUserPro: setUserPro,
+      isTimePro: isTimePro,
+      adminJogueiros: adminJogueiros,
     };
 });

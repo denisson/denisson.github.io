@@ -1,46 +1,18 @@
 angular
   .module('app.controllers')
   .controller('timeController', 
-  ['$rootScope', '$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicActionSheet', '$ionicHistory', '$ionicPopup', '$ionicModal' , 'config',
-  function ($rootScope, $scope, $state, $stateParams, DataService, AuthService, $ionicActionSheet,$ionicHistory, $ionicPopup, $ionicModal, config) {
+  ['$rootScope', '$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicActionSheet', '$ionicHistory', '$ionicPopup', '$ionicModal' , 'config', '$jgModalAssinatura', 
+  function ($rootScope, $scope, $state, $stateParams, DataService, AuthService, $ionicActionSheet,$ionicHistory, $ionicPopup, $ionicModal, config, $jgModalAssinatura) {
     var diasExtenso = ['','Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
     $scope.jogadoresOrdem = 'ARTILHARIA';
     $rootScope.$emit('loading.init');
     $scope.temporada = $stateParams.temporada;
 
-
-    // $scope.mostrarAd = function(){
-    //   admob.interstitial.config({
-    //     id: 'ca-app-pub-3179491801494280/5050316088',
-    //     isTesting: true,
-    //     autoShow: false,
-    //   })
-    //   admob.interstitial.prepare();
-    //   admob.interstitial.show();
-    
-    // }
-    
-    // if(window.store) {
-    //   store.verbosity = store.DEBUG
-    //   // store.ready(function(){
-    //     store.register({
-    //       id: "assinatura.mensal",
-    //       type: store.PAID_SUBSCRIPTION
-    //     });
-    //     store.refresh();
-  
-    //     render();
-    //     store.when("assinatura.mensal").updated(render);
-    //   // });
-    // }
-
-    // function render(){
-    //   var product = store.get("assinatura.mensal");
-    //   console.log(product);
-    //   $scope.assinaturaMensal = product;
-    // }
-
     $scope.usuarioPro = function(){
+      return AuthService.isUsuarioPro();
+    }
+
+    $scope.timePro = function(){
       return AuthService.isUsuarioPro() && $scope.time.pro;
     }
 
@@ -51,6 +23,31 @@ angular
       }).then(function(){
         // $ionicHistory.goBack();
       });
+    }
+
+    $scope.carregarHistoricoConfrontos = function(){
+      var idTimeA = AuthService.getTime();
+      var idTimeB = $stateParams.id;
+      if(idTimeA && idTimeB && idTimeA != idTimeB){
+        DataService.jogoHistoricoConfrontos(idTimeA, idTimeB).then(function(result){
+          $scope.historicoConfrontos = result;
+        });
+      }
+    }
+
+    $scope.carregarHistoricoConfrontos();
+
+    $scope.verHistoricoConfrontos = function(){
+      $jgModalAssinatura.confirmarAssinaturaTime('graficos', AuthService.getTime(), AuthService.isTimePro()).then(function(){
+        var idTimeA = AuthService.getTime();
+        var idTimeB = $stateParams.id;
+        $state.go('times_confrontos', {idTimeA: idTimeA, idTimeB: idTimeB});
+      });
+    }
+
+    $scope.irParaWhatsapp = function(numeroTelefone){
+      window.open('https://api.whatsapp.com/send?phone=' + numeroTelefone, '_system'); 
+      return false;
     }
 
     function checarCidade(){
@@ -114,8 +111,6 @@ angular
         // }
 
         $scope.time = time;
-
-
 
         $scope.paginacao = {
           QTD_POR_PAGINA: 10,
@@ -205,7 +200,7 @@ angular
     }
 
     $scope.editavel = function(){
-      return $scope.time && AuthService.getTime() && $scope.timeId === AuthService.getTime() && temporadaAtual();
+      return $scope.time && AuthService.getTime() && $scope.timeId === AuthService.getTime();
     }
 
     function temporadaAtual(){
@@ -291,6 +286,11 @@ angular
         buttons[i++] = { text: 'Gerenciar perfis' };
       }
 
+      if(AuthService.adminJogueiros()){
+        indicesBotoes['admin'] = i;
+        buttons[i++] = { text: 'Admin Jogueiros' };
+      }
+
       var params = {
          buttons: buttons,
          destructiveText: 'Sair',
@@ -309,6 +309,9 @@ angular
                 break;
               case indicesBotoes['perfis']:
                 $scope.selecionarPerfil();
+                break;
+              case indicesBotoes['admin']:
+                $state.go('adminGraficos');
                 break;
             }
            return true;
@@ -367,8 +370,10 @@ angular
     });
 
     $scope.adicionarAdmin = function(){
-      $scope.administrador = {};
-      $scope.modalAddAdmin.show();
+      $jgModalAssinatura.confirmarAssinatura('admins').then(function(){
+        $scope.administrador = {};
+        $scope.modalAddAdmin.show();
+      });
     }
 
     $scope.enviarConviteAdmin = function(){
@@ -439,16 +444,9 @@ angular
     }
 
     $scope.verEstatisticas = function(){
-
-      $state.go('time_estatisticas', {id: $scope.time._id, temporada: $scope.temporada});
-
-      // $jgModalAssinatura.confirmarAssinatura().then(function(){
-      //   // console.log('sim');
-      //   $state.go('time_estatisticas', {id: $scope.time._id, temporada: $scope.temporada});
-      // }).catch(function(){
-      //   console.log('No!');
-      // });
-      
+      $jgModalAssinatura.confirmarAssinaturaTime('graficos', $scope.time._id, $scope.time.pro).then(function(){
+        $state.go('time_estatisticas', {id: $scope.time._id, temporada: $scope.temporada});
+      });
     }
 
     $scope.modosFormatados = function(){

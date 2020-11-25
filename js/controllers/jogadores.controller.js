@@ -1,6 +1,7 @@
 angular
   .module('app.controllers')
-  .controller('jogadoresController', ['$scope', '$state', '$stateParams', 'DataService', 'CameraService', '$ionicModal', 'AuthService', '$ionicActionSheet', '$ionicPopup', function ($scope, $state, $stateParams, DataService, CameraService, $ionicModal, AuthService, $ionicActionSheet, $ionicPopup) {
+  .controller('jogadoresController', ['$scope', '$state', '$stateParams', 'DataService', 'CameraService', '$ionicModal', 'AuthService', '$ionicActionSheet', '$ionicPopup', '$jgModalAssinatura',  
+  function ($scope, $state, $stateParams, DataService, CameraService, $ionicModal, AuthService, $ionicActionSheet, $ionicPopup, $jgModalAssinatura) {
     inicializarJogador();
 
     $scope.posicoes = [];
@@ -65,6 +66,12 @@ angular
         $scope.jogadorModal.pro = estatisticas.pro;
         $scope.jogadorModal.estatisticas = estatisticas;
         $scope.jogadorModal.jogosPorMes = estatisticas.jogosPorMes;
+      });
+    }
+
+    $scope.verJogadorPorId = function(jogadorId, temporada){
+      DataService.jogador(jogadorId).then(function(jogador){
+        $scope.verJogador(jogador, temporada);
       });
     }
 
@@ -173,7 +180,7 @@ angular
         $scope.jogador.time = timeId;
         if(opcaoConvidado){
           $scope.opcaoConvidado = true;
-          $scope.jogador.convidado = true;
+          $scope.jogador.convidado = false;
         }
         $scope.modalFormJogador.show();
     }
@@ -202,7 +209,15 @@ angular
     }
 
     $scope.timeUsuarioPro = function(){
-      return AuthService.isUsuarioPro() && $scope.jogadorModal.pro;
+      return $scope.jogadorModal.pro && ($scope.editavel() || AuthService.isUsuarioPro());
+    }
+
+    $scope.isAuthenticated = function(){
+      return AuthService.isAuthenticated();
+    }
+
+    $scope.assinarJogueirosPro = function(){
+      $jgModalAssinatura.confirmarAssinaturaTime('graficos', $scope.jogadorModal.time, $scope.jogadorModal.pro);
     }
 
     $scope.numerosGraficoDesempenhoJogador = function(){

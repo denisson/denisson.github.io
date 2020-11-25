@@ -1,0 +1,260 @@
+<ion-view ng-controller="historicoConfrontosController">
+    <ion-nav-title>Histórico de confrontos</ion-nav-title>
+    <ion-content>
+        <style type="text/css">
+            .perfil-destacado{
+                padding-top: 15px;
+                text-align: center; 
+            }
+
+            .perfil-destacado .nome{
+                margin-top: 10px;
+                font-size: 16px;
+            }
+
+            .perfil-destacado .versus {
+                font-weight: bolder;
+                font-size: 2em;
+                padding-top: 36px;
+            }
+
+            .perfil-destacado .imagem-destacada{
+                width: 80px;
+                height: 80px;
+            }
+
+            .perfil-destacado .numeros .detalhes{
+                white-space: normal;
+                font-size: 80%;
+                font-weight: 400;
+                color: #6f6f6f;
+            }
+
+            .numeros .col{
+                min-width: 0;
+            }
+
+            .estatisticas {
+                margin: 10px 0 0 0;
+            }
+
+            .estatisticas .row{
+                position: relative;
+                align-items: baseline;
+            }
+
+            .estatisticas .col-50 {
+                text-align: center;
+            }
+
+            .estatisticas .barra{
+                height: 4px;
+                position: absolute;
+                left: 0;
+                display: flex;
+                left: 8px;
+                right: 8px;
+                border-radius: 5px;
+                overflow: hidden;
+                bottom: 8px;
+            }
+
+            .estatisticas .barra .timeA{
+                background-color: #4285f4;
+                margin-right: 2px;
+            }
+
+            .estatisticas .barra .timeB {
+                background-color: #f4b142;
+            }
+
+            .estatisticas .barra .timeA,
+            .estatisticas .barra .timeB {
+                height: 100%;
+                display: inline-block;
+                /* min-width: 1%;
+                max-width: 99%; */
+            }
+
+            .estatisticas .col-50 h5{
+                color: #666;
+            }
+
+            h5.nome {
+                font-size: 1.2em;
+                color: #333;
+            }
+
+            .jogador-thumb{
+                border-radius: 50%;
+                margin-left: -15px;
+                border: solid 4px #fff;
+                max-width: 32%;
+                width: 52px;
+                background-color: #fff;
+            }
+
+            .mais-jogadores {
+                display: inline-block;
+                width: 52px;
+                border-radius: 50%;
+                text-align: center;
+                background-color: #f5f5f5;
+                color: #222;
+                margin: 0;
+                margin-left: -15px;
+                border: solid 4px #fff;
+                max-width: 33%;
+                font-weight: bold;
+            }
+
+            .mais-jogadores .qtd-wrapper{
+                padding-top: 100%;
+                position: relative;
+                height: 0;
+            }
+
+            .mais-jogadores .qtd{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .image-background.img-jogador{
+                background-position: center;
+            }
+        </style>
+        <div ng-if="historicoConfrontos">
+            <div class="image-background img-jogador">
+                <div class="perfil-destacado">
+                    <div class="row">
+                        <div class="col" ng-click="irParaTime(historicoConfrontos.timeA.time)">
+                            <img class="imagem-destacada" jog-escudo="historicoConfrontos.timeA.time.escudo" jog-size="mid">
+                            <h1 class="nome">{{historicoConfrontos.timeA.time.nome}}</h1>
+                        </div>
+                        <div class="col col-10 versus">X</div>
+                        <div class="col" ng-click="irParaTime(historicoConfrontos.timeB.time)">
+                            <img class="imagem-destacada" jog-escudo="historicoConfrontos.timeB.time.escudo" jog-size="mid">
+                            <h1 class="nome">{{historicoConfrontos.timeB.time.nome}}</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="estatisticas padding">
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="nome">{{historicoConfrontos.timeA.vitorias}}</h5>
+                        </div>
+                        <div class="col col-50"><h5>Vitórias</h5>
+                            <div class="barra">
+                            <div class="timeA" ng-style="getWidthBar('timeA', 'vitorias')"></div>
+                            <div class="timeB" ng-style="getWidthBar('timeB', 'vitorias')"></div>
+                            </div>
+                        </div>
+                        <div class="col" style="text-align: right;">
+                            <h5 class="nome">{{historicoConfrontos.timeB.vitorias}}</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="nome">{{historicoConfrontos.timeA.empates}}</h5>
+                        </div>
+                        <div class="col col-50"><h5>Empates</h5>
+                            <div class="barra">
+                            <div class="timeA" ng-style="getWidthBar('timeA', 'empates')"></div>
+                            <div class="timeB" ng-style="getWidthBar('timeB', 'empates')"></div>
+                            </div>
+                        </div>
+                        <div class="col" style="text-align: right;">
+                            <h5 class="nome">{{historicoConfrontos.timeB.empates}}</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="nome">{{historicoConfrontos.timeA.golsPro}}</h5>
+                        </div>
+                        <div class="col col-50"><h5>Gols </h5>
+
+                            <div class="barra">
+                                <div class="timeA" ng-style="getWidthBar('timeA', 'golsPro')"></div>
+                                <div class="timeB" ng-style="getWidthBar('timeB', 'golsPro')"></div>
+                            </div>
+                        </div>
+                        <div class="col" style="text-align: right;">
+                            <h5 class="nome">{{historicoConfrontos.timeB.golsPro}}</h5>
+                        </div>
+                    </div>
+                    <!-- <div class="row">
+                        <div class="col">
+                            <h5 class="nome">{{historicoConfrontos.timeA.golsPro - historicoConfrontos.timeA.golsContra}}</h5>
+                        </div>
+                        <div class="col col-50"><h5>Saldo</h5>
+                            <div class="barra">
+                                <div class="timeA" ng-style="getWidthBar('timeA', 'golsPro')"></div>
+                                <div class="timeB" ng-style="getWidthBar('timeB', 'golsPro')"></div>
+                            </div>
+
+                        </div>
+                        <div class="col" style="text-align: right;">
+                            <h5 class="nome">{{historicoConfrontos.timeB.golsPro - historicoConfrontos.timeB.golsContra}}</h5>
+                        </div>
+                    </div> -->
+
+                    <div class="row">
+                        <div class="col">
+                            <h5 class="nome">{{historicoConfrontos.timeA.mandante}}</h5>
+                        </div>
+                        <div class="col col-50"><h5>Mando de campo</h5>
+
+                            <div class="barra">
+                                <div class="timeA" ng-style="getWidthBar('timeA', 'mandante')"></div>
+                                <div class="timeB" ng-style="getWidthBar('timeB', 'mandante')"></div>
+                            </div>
+                        </div>
+                        <div class="col" style="text-align: right;">
+                            <h5 class="nome">{{historicoConfrontos.timeB.mandante}}</h5>
+                        </div>
+                    </div>
+
+                    <h5 style="
+                        color: #666;
+                        margin-bottom: 0;
+                        text-align: center;
+                    ">Artilheiros</h5>
+
+                    <div class="row">
+                        <div class="col">
+                            <img ng-click="verJogadores('timeA')" class="jogador-thumb" jog-jogador="jogador.foto" jog-size="small" ng-repeat="jogador in historicoConfrontos.timeA.jogadores | limitTo:3">
+                            <div ng-click="verJogadores('timeA')" ng-if="historicoConfrontos.timeA.jogadores.length > 3" class="mais-jogadores">
+                                <div class="qtd-wrapper">
+                                    <span class="qtd">+{{historicoConfrontos.timeA.jogadores.length - 3}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col" style="text-align: right;">
+                            <img ng-click="verJogadores('timeB')" class="jogador-thumb" jog-jogador="jogador.foto" jog-size="small" ng-repeat="jogador in historicoConfrontos.timeB.jogadores | limitTo:3">
+                            <div ng-click="verJogadores('timeB')" ng-if="historicoConfrontos.timeB.jogadores.length > 3" class="mais-jogadores">
+                                <div class="qtd-wrapper">
+                                    <span class="qtd">+{{historicoConfrontos.timeB.jogadores.length - 3}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ion-item class="item-divider item">
+                Todos os confrontos 
+                <span class="item-note">{{historicoConfrontos.totais.jogos}} jogos</span>
+            </ion-item>
+            <jog-partidas partidas="historicoConfrontos.jogos"></jog-partidas>        
+        
+        </div>
+
+    </ion-content>
+</ion-view>

@@ -8,7 +8,7 @@ angular
   	});
 
     $scope.salvar = function(){
-        DataService.editarLiga({_id: $scope.liga._id, arbitragem: $scope.liga.arbitragem}).then(function(liga){
+        DataService.editarConfiguracaoLiga({_id: $scope.liga._id, arbitragem: $scope.liga.arbitragem}).then(function(liga){
           $state.go('liga', {id: liga.id});
         });
     }

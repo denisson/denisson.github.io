@@ -23,7 +23,7 @@
                 <ion-item class="item-avatar item" ng-click="timeSelecionado(time)" ng-if="time._id != jogo.mandante._id" ng-repeat="time in times track by time._id">
                     <img jog-escudo="time.escudo" jog-size="small">
                     <h2>{{time.nome}}</h2>
-                    <p>{{time.cidade.nomeCompleto || 'Cadastro provisório'}}</p>
+                    <p>{{time.cidade.nomeCompleto || time.esporte.efootball ? '' : 'Cadastro provisório'}}</p>
                 </ion-item>
                 <ion-item class="item-avatar item" ng-click="cadastrarTime(search.query)">
                     <img ng-src="img/escudo.svg" style="border-radius: 0">

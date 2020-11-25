@@ -24,6 +24,20 @@
     .bar .buttons-left span{
       margin-right: -2px;
     }
+
+    .img-lado-lado{
+      position: absolute;
+      right: 0;
+    }
+
+    .img-lado-lado.esquerda{
+      clip: rect(0, 24px, 48px, 0);
+    }
+
+    .img-lado-lado.direita{
+      clip: rect(0, 48px, 48px, 24px);
+    }
+
   </style>
     <ion-content style="background-color: #fafafa">
       <div ng-if="jogo">
@@ -113,8 +127,16 @@
 
         <jog-arbitragem jogo="jogo"></jog-arbitragem>
 
-        <!-- <h2>Histórico de confrontos</h2>
-        <jog-partidas ng-if="jogo.historicoConfrontos" partidas="jogo.historicoConfrontos"></jog-partidas>         -->
+        <div ng-if="deveMostrarHistoricoConfrontos()" ng-click="verHistoricoConfrontos()" class="card">
+          <ion-item ng-if="jogo.historicoConfrontos.totais.jogos" style="padding-right: 72px;">
+            <h2>Histórico de confrontos <span class="jg-badge jg-badge-pro">PRO</span></h2>
+            <p> Veja todos os jogos e estatísticas </p>
+            <div class="item-col-gols">
+              <img class="img-lado-lado esquerda" jog-escudo="jogo.mandante.escudo" jog-size="small">
+              <img class="img-lado-lado direita" jog-escudo="jogo.visitante.escudo" jog-size="small">
+            </div>
+          </ion-item>
+        </div>
       </div>
     </ion-content>
 </ion-view>

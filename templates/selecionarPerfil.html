@@ -12,7 +12,7 @@
             <h2>{{perfil.perfil.nome}}</h2>
             <p>{{getDescricaoPerfil(perfil.tipo)}}</p>
         </ion-item>
-        <ion-item ng-if="!jaTemTimeCadastrado() || usuarioPro()" ng-click="cadastrarTime()" class="item-transparente item item-avatar">
+        <ion-item ng-click="cadastrarTime()" class="item-transparente item item-avatar">
             <i class="item-image icon ion-plus-circled balanced" style="font-size: 40px"></i>
             <h2>Cadastrar time <span ng-if="jaTemTimeCadastrado()" class="jg-badge jg-badge-pro">PRO</span></h2>
             <p ng-if="!jaTemTimeCadastrado()">Você pode ter um time também!</p>

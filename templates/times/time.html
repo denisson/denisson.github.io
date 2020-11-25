@@ -6,6 +6,20 @@
       </button>
   </ion-nav-buttons>
 <ion-content padding="true">
+  <style>
+    .img-lado-lado{
+      position: absolute;
+      right: 0;
+    }
+
+    .img-lado-lado.esquerda{
+      clip: rect(0, 24px, 48px, 0);
+    }
+
+    .img-lado-lado.direita{
+      clip: rect(0, 48px, 48px, 24px);
+    }
+  </style>
 <!--     <ion-refresher
       pulling-text="Atualizar..."
       on-refresh="atualizar()">
@@ -80,9 +94,20 @@
         <p>Price: {{assinaturaMensal.price}}, description: {{assinaturaMensal.description}}, state: {{assinaturaMensal.state}}, type: {{assinaturaMensal.type}}</p>
     </ion-item> -->
 
+    <div ng-if="historicoConfrontos.totais.jogos" ng-click="verHistoricoConfrontos()" class="card">
+      <ion-item style="padding-right: 72px;">
+        <h2>Histórico de confrontos <span class="jg-badge jg-badge-pro">PRO</span></h2>
+        <p> Veja todos os jogos e estatísticas </p>
+        <div class="item-col-gols">
+          <img class="img-lado-lado esquerda" jog-escudo="historicoConfrontos.timeA.time.escudo" jog-size="small">
+          <img class="img-lado-lado direita" jog-escudo="historicoConfrontos.timeB.time.escudo" jog-size="small">
+        </div>
+      </ion-item>
+    </div>
+
     <ion-list ng-controller="jogadoresController">
-      <ion-item ng-if="usuarioPro()" class="item-divider">Jogueiros <span class="jg-badge jg-badge-pro">PRO</span></ion-item>
-      <ion-item ng-if="usuarioPro()" ng-click="verEstatisticas()" style="padding-right: 72px;">
+      <ion-item ng-if="time.jogos.encerrados.length && (usuarioPro() && time.pro || editavel())" class="item-divider">Jogueiros <span class="jg-badge jg-badge-pro">PRO</span></ion-item>
+      <ion-item ng-if="time.jogos.encerrados.length && (usuarioPro() && time.pro || editavel())" ng-click="verEstatisticas()" style="padding-right: 72px;">
           <h2>Gráficos e Estatísticas </h2>
           <p>Aproveitamento, gols, cartões, médias, sequências, jogadores por jogo, mando de campo</p>
           <div class="item-col-gols">
@@ -169,7 +194,7 @@
       </ion-item>
     </ion-list>
 
-    <ion-list ng-if="editavel() && usuarioPro()">
+    <ion-list ng-if="editavel()">
       <ion-item class="item-divider">Administradores</ion-item>
       <ion-item ng-click="verAdmin(administrador)" class="item-avatar item-button-right" ng-repeat="administrador in time.administradores">
           <img jog-jogador="administrador.foto" jog-size="small">
@@ -196,6 +221,8 @@
     <p style="text-align: center">
       Dúvidas ou sugestões?
       <br/>
+      <a href="#" ng-click="irParaWhatsapp('5582996966288'); $event.stopPropagation();">Whatsapp</a>
+      ou
       <a href="#" ng-click="irParaUrl('mailto:jogueirosfc.inc@gmail.com'); $event.stopPropagation();">jogueirosfc.inc@gmail.com</a>
     </p>
   </div>
