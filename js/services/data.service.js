@@ -278,7 +278,7 @@ angular.module('app.services')
 			return deleteRequest('time/convite/' + conviteId);
 		},
 		salvarJogador: function(jogador){
-			jogador = _.pick(jogador, ['foto', 'nome', 'camisa', 'posicao', 'time', 'convidado']);
+			jogador = _.pick(jogador, ['_id', 'foto', 'nome', 'camisa', 'posicao', 'time', 'convidado']);
 			return upload('jogador', jogador.foto, jogador);
 		},
 		ligasDisponiveis: function(jogo){
