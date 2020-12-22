@@ -1,10 +1,14 @@
 angular
   .module('app.controllers')
-  .controller('novoJogoController', ['$scope', '$state', 'DataService', '$ionicModal', 'AuthService', '$rootScope', 'CameraService', '$ionicHistory', '$ionicPopup', function ($scope, $state, DataService, $ionicModal, AuthService, $rootScope, CameraService, $ionicHistory,  $ionicPopup) {
+  .controller('novoJogoController', ['$scope', '$state', 'DataService', '$ionicModal', 'AuthService', '$stateParams', 'CameraService', '$ionicHistory', '$ionicPopup', function ($scope, $state, DataService, $ionicModal, AuthService, $stateParams, CameraService, $ionicHistory,  $ionicPopup) {
     var fuseCidades, fuseEstados;
 
     DataService.estados().then(function(estados){
       $scope.estados = estados;
+    });
+
+    $scope.$on('$ionicView.enter', function(){
+      $scope.inicializar();
     });
 
     $scope.cidades = [];
@@ -18,14 +22,50 @@ angular
       var modos = _.get(perfil, 'modos', []);
       var modo = modos.length == 1 ? modos[0] : undefined;
       $scope.jogo = {
-        mandante: {},
+        mandante: {
+          _id: AuthService.getTime()
+        },
         esporte: perfil.esporte,
         efootball: {plataforma: perfil.plataforma, modo: modo}
       };
       $scope.selecionarCompeticaoAmistoso();
     };
-    configurarJogoVazio();
 
+    function exibirDadosJogo(jogo){
+      // jogo.visitante.escudo = ''; //limpa o escudo para, na hora de salvar, não mandar o escudo novamente.
+      $scope.jogo = jogo;
+      $scope.jogo.timeAdversario = _.clone(jogo.visitante);
+      $scope.jogo.data = moment(jogo.dataHora).toDate();
+      $scope.jogo.hora = moment(jogo.dataHora).format('HH:mm');
+      $scope.jogo.efootball = jogo.efootball || {};
+      if(!jogo.competicao) $scope.selecionarCompeticaoAmistoso();
+    };
+
+    $scope.inicializar = function(){
+      if(editando()){
+        if($stateParams.jogo) {
+          exibirDadosJogo($stateParams.jogo);
+          inicializarModais();
+        } else {
+          DataService.jogo($stateParams.id).then(function(jogo){
+            exibirDadosJogo(jogo);
+            inicializarModais();
+          });
+        }
+        $scope.titulo = 'Alterar Jogo';
+        $scope.labelBotao = 'Salvar';
+      } else {
+        configurarJogoVazio();
+        inicializarModais();
+        $scope.titulo = 'Cadastrar Jogo';
+        $scope.labelBotao = 'Salvar';
+      }
+    }
+  
+    function editando(){
+      return $stateParams.id;
+    }
+    
     $scope.podeSalvar = function(){
         return  _.get($scope.jogo, 'timeAdversario.nome') &&
                 _.get($scope.jogo, 'data') &&
@@ -33,68 +73,66 @@ angular
                 (_.get($scope.jogo, 'local.nome') || _.get($scope.jogo, 'efootball.modo'));
     }
 
-    $ionicModal.fromTemplateUrl('templates/jogos/selecionarTime.html', {
-      scope: $scope,
-      focusFirstInput: true,
-    }).then(function(modal){
-      $scope.modalTime = modal;
-    });
+    function inicializarModais(){
 
-    $ionicModal.fromTemplateUrl('templates/jogos/selecionarLocal.html', {
-      scope: $scope,
-      focusFirstInput: true,
-    }).then(function(modal){
-      $scope.modalLocal = modal;
-    });
+      $ionicModal.fromTemplateUrl('templates/jogos/selecionarTime.html', {
+        scope: $scope,
+        focusFirstInput: true,
+      }).then(function(modal){
+        $scope.modalTime = modal;
+      });
 
-    $ionicModal.fromTemplateUrl('templates/jogos/cadastrarTimeAdversario.html', {
-      scope: $scope,
-    }).then(function(modal){
-      $scope.modalCadastrarTime = modal;
-    });
+      $ionicModal.fromTemplateUrl('templates/jogos/selecionarLocal.html', {
+        scope: $scope,
+        focusFirstInput: true,
+      }).then(function(modal){
+        $scope.modalLocal = modal;
+      });
 
-    $ionicModal.fromTemplateUrl('templates/jogos/cadastrarLocal.html', {
-      scope: $scope,
-    }).then(function(modal){
-      $scope.modalCadastrarLocal = modal;
-    });
-    $ionicModal.fromTemplateUrl('templates/jogos/cadastrarCompeticao.html', {
-      scope: $scope,
-    }).then(function(modal){
-      $scope.modalCadastrarCompeticao = modal;
-    });
-    $ionicModal.fromTemplateUrl('templates/jogos/selecionarEstado.html', {
-      scope: $scope,
-      focusFirstInput: true,
-    }).then(function(modal){
-      $scope.modalEstado = modal;
-    });
+      $ionicModal.fromTemplateUrl('templates/jogos/cadastrarTimeAdversario.html', {
+        scope: $scope,
+      }).then(function(modal){
+        $scope.modalCadastrarTime = modal;
+      });
 
-    $ionicModal.fromTemplateUrl('templates/jogos/selecionarCidade.html', {
-      scope: $scope,
-      focusFirstInput: true,
-    }).then(function(modal){
-      $scope.modalCidade = modal;
-    });
+      $ionicModal.fromTemplateUrl('templates/jogos/cadastrarLocal.html', {
+        scope: $scope,
+      }).then(function(modal){
+        $scope.modalCadastrarLocal = modal;
+      });
+      $ionicModal.fromTemplateUrl('templates/jogos/cadastrarCompeticao.html', {
+        scope: $scope,
+      }).then(function(modal){
+        $scope.modalCadastrarCompeticao = modal;
+      });
+      $ionicModal.fromTemplateUrl('templates/jogos/selecionarEstado.html', {
+        scope: $scope,
+        focusFirstInput: true,
+      }).then(function(modal){
+        $scope.modalEstado = modal;
+      });
 
-    $ionicModal.fromTemplateUrl('templates/jogos/selecionarCompeticao.html', {
-      scope: $scope,
-      focusFirstInput: true,
-    }).then(function(modal){
-      $scope.modalCompeticao = modal;
-    });
+      $ionicModal.fromTemplateUrl('templates/jogos/selecionarCidade.html', {
+        scope: $scope,
+        focusFirstInput: true,
+      }).then(function(modal){
+        $scope.modalCidade = modal;
+      });
 
-    $ionicModal.fromTemplateUrl('templates/jogos/selecionarModo.html', {
-      scope: $scope,
-    }).then(function(modal){
-      $scope.modalModo = modal;
-    });
+      $ionicModal.fromTemplateUrl('templates/jogos/selecionarCompeticao.html', {
+        scope: $scope,
+        focusFirstInput: true,
+      }).then(function(modal){
+        $scope.modalCompeticao = modal;
+      });
 
-    $scope.jogo.mandante = {
-      _id: AuthService.getTime()
-      // nome: mandante.nome,
-      // escudo: mandante.escudo
-    };
+      $ionicModal.fromTemplateUrl('templates/jogos/selecionarModo.html', {
+        scope: $scope,
+      }).then(function(modal){
+        $scope.modalModo = modal;
+      });
+    }
+
 
     $scope.timeSelecionado = function(time){
       $scope.jogo.timeAdversario = time;
@@ -220,25 +258,28 @@ angular
     $scope.salvarJogo = function(){
       var dataHora = moment($scope.jogo.data);
       dataHora.hour($scope.getHoraJogo()).minutes($scope.getMinutosJogo());
+      
       var timezone = _.get($scope.jogo, 'local.cidade.timezone', 'America/Fortaleza');
       var jogo = {
-        // esporte: $scope.jogo.esporte, //está sendo feito no backend
+        _id: $scope.jogo._id,
         efootball: $scope.jogo.efootball,
         local: $scope.jogo.local,
         competicao: $scope.jogo.competicao,
         dataHora: moment.tz(dataHora.format('YYYY-MM-DD HH:mm'), timezone),
         visitante: $scope.jogo.timeAdversario,
         mandante: $scope.jogo.mandante,
-        encerrado: false
+        encerrado: $scope.jogo.encerrado ? true : false
       }
       var agora = moment.tz(timezone);
-      DataService.salvarJogo(jogo).then(function(retorno){
+      if(!validarDataHora(jogo, agora)) return;
+      var escudoVisitante = jogo.visitante.id || $scope.jogo.timeAdversario.escudo == _.get($scope.jogo, 'visitante.escudo') ? null : jogo.visitante.escudo; //só envia o escudo se for de um visitante sem cadastro e não estiver editando. Para não enviar novamente o mesmo escudo
+      DataService.salvarJogo(jogo, escudoVisitante).then(function(retorno){
         jogo._id = retorno.id;
         $ionicHistory.nextViewOptions({
           // disableAnimate: true,
           disableBack: true
         });
-        if(agora.isAfter(jogo.dataHora)){ //Se já passou a hora do jogo
+        if(agora.isAfter(jogo.dataHora) && !jogo.encerrado){ //Se já passou a hora do jogo
           AuthService.redirectClean('informarPlacar', null, {id: jogo._id}).then(configurarJogoVazio);
         } else if (retorno.ligasDisponiveis && retorno.ligasDisponiveis.length) {
           AuthService.redirectClean('solicitarArbitragem', null, {id: jogo._id, ligas: retorno.ligasDisponiveis}).then(configurarJogoVazio);
@@ -250,6 +291,17 @@ angular
           }          
         }
       });
+    }
+
+    function validarDataHora(jogo, agora){
+      if(jogo.dataHora.isAfter(agora) && jogo.encerrado){ //Se já passou a hora do jogo e ele já está encerrado
+        $ionicPopup.alert({
+          title: 'Jogo já foi encerrado!',
+          content: 'Não é possível informar uma data futura para o jogo que já tem placar informado.'
+        });
+        return false;
+      } 
+      return true;
     }
 
 

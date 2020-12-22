@@ -8,13 +8,13 @@
 var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'app.routes', 'app.directives', 'app.components', 'app.services', 'ui.utils.masks'])
 .constant('config', {
   // URL_S3:  'http://jogueiros-fc-uploads.s3-website-sa-east-1.amazonaws.com/',
-  URL_IMAGEBOSS:  'https://img.imageboss.me/',
+  // URL_IMAGEBOSS:  'https://img.imageboss.me/',
   URL_S3:  'https://s3-sa-east-1.amazonaws.com/jogueiros-fc-uploads/',
   URL_AWS_CLOUDFRONT: 'https://d1zz32ev1utzz6.cloudfront.net/',
   URL_API: 'https://jogueiros-fc-api.herokuapp.com/',
-  // URL_API: 'http://localhost:3000/',
-  // URL_API: 'http://10.0.0.103:3000/',
-  // URL_API: 'http://192.168.15.39:3000/', // IP da máquina quando depurando do próprio dispositivo
+//  URL_API: 'http://localhost:3000/',
+  //  URL_API: 'http://10.0.0.103:3000/',
+//   URL_API: 'http://192.168.15.39:3000/', // IP da máquina quando depurando do próprio dispositivo
   // URL_API: 'http://10.0.2.2:3000/', // IP da máquina quando usando emulador android. https://stackoverflow.com/questions/5806220/how-to-connect-to-my-http-localhost-web-server-from-android-emulator
   // TIPO_APP: 'ARBITRAGEM', //TIPO_APP: 'TIME'
   URL_SITE: 'https://jogueirosfc.com/'
@@ -49,6 +49,9 @@ var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.contro
       push.on('notification', function(data) {
         //Só efetua a ação se o aplicativo não estiver aberto.
         if(!data.additionalData.foreground){
+            if(data.additionalData.notificacaoId){
+              DataService.registrarNotificacaoClicada(data.additionalData.notificacaoId);
+            }
             var params = data.additionalData.redirectParams;
             try{
               params = (typeof params === 'string') ? JSON.parse(params) : params;

@@ -81,6 +81,10 @@ angular
       $state.go('informarPlacar', {id: $scope.jogo._id, jogo: $scope.jogo});
     }
 
+    $scope.editarJogo = function(){
+      $state.go('jogo_editar', {id: $scope.jogo._id, jogo: $scope.jogo});
+    }
+
     $scope.aguardandoConfirmarJogo = function(){
       return $scope.jogo.situacao == 'confirmarJogo' && $scope.editavel('visitante');
     }
@@ -210,6 +214,11 @@ angular
         buttons[i++] = { text: 'Cadastrar Súmula (Gols)' };
       }
 
+      if($scope.podeAlterarJogo()){
+        indicesBotoes['alterar'] = i;
+        buttons[i++] = { text: 'Alterar Jogo' };
+      }
+
       if($scope.podeSolicitarArbitragem()){
         indicesBotoes['arbitragem'] = i;
         buttons[i++] = { text: 'Solicitar Arbitragem' };
@@ -243,6 +252,9 @@ angular
               case indicesBotoes['importar']:
                 $scope.importarJogoParaRanking();
                 break;
+              case indicesBotoes['alterar']:
+                $scope.editarJogo();
+                break;
               case indicesBotoes['placar']:
                 $scope.informarPlacar();
                 break;
@@ -256,6 +268,11 @@ angular
        }
 
        $ionicActionSheet.show(params);
+    }
+
+    $scope.podeAlterarJogo = function(){
+      //se for o mandante e não tiver solicitação de arbitragem      
+      return $scope.editavel('mandante') && !$scope.jogo.temSolicitacaoArbitragem;
     }
 
     $scope.podeSolicitarArbitragem = function(){

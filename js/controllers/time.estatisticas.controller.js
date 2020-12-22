@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('timeEstatisticasController', ['$scope', '$stateParams', 'DataService', 'AuthService', '$locale', function ($scope, $stateParams, DataService, AuthService, $locale) {
+  .controller('timeEstatisticasController', ['$scope', '$stateParams', 'DataService', 'AuthService', '$ionicPopup', function ($scope, $stateParams, DataService, AuthService, $ionicPopup) {
     $scope.temporada = $stateParams.temporada = $stateParams.temporada || moment().year();
     $scope.timeId = $stateParams.id || AuthService.getTime();
     
@@ -28,7 +28,16 @@ angular
         });
         
     }).catch(function(){
-        mostrarAlerta('Não foi possível carregar as informações do time');
+        mostrarAlerta('Não foi possível carregar as estatísticas do time');
     });
+
+    function mostrarAlerta(mensagem){
+        $ionicPopup.alert({
+          title: 'Ops!',
+          content: mensagem
+        }).then(function(){
+          // $ionicHistory.goBack();
+        });
+      }
 
 }])

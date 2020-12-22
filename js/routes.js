@@ -197,7 +197,7 @@ angular.module('app.routes', [])
     .state('novoJogo', {
       url: '/novoJogo',
       cache: false,
-      templateUrl: 'templates/jogos/novoJogo.html',
+      templateUrl: 'templates/jogos/formJogo.html',
       params: {requerLogin: true, requerTime: true}
     })
 
@@ -296,6 +296,10 @@ angular.module('app.routes', [])
     'jogo': {
       url: '/jogo/:id',
       templateUrl: 'templates/jogos/jogo.html'
+    },
+    'jogo_editar': {
+      url: '/jogo/:id/editar',
+      templateUrl: 'templates/jogos/formJogo.html'
     },
     'liga': {
       url: '/liga/:id',

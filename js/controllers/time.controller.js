@@ -7,6 +7,7 @@ angular
     $scope.jogadoresOrdem = 'ARTILHARIA';
     $rootScope.$emit('loading.init');
     $scope.temporada = $stateParams.temporada;
+    $scope.mostrarTodosRankings = true;
 
     $scope.usuarioPro = function(){
       return AuthService.isUsuarioPro();
@@ -230,7 +231,7 @@ angular
             DataService.excluirTime($scope.time._id).then(function(resposta){
               AuthService.atualizarPerfil(null, resposta.token);
               $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
-              $state.go('abasInicio.inicio');
+              $state.go('abasInicio.meuPerfil');
             });
          }
        });

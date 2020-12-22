@@ -216,9 +216,9 @@ angular.module('app.services')
 			temporada = temporada || moment().year();
 			return request('jogador/' + id + '/' + timeId + '/estatisticas?temporada=' + temporada);
 		},
-		salvarJogo: function(jogo){
-			var escudoVisitante = jogo.visitante.id ? null : jogo.visitante.escudo; //só envia o escudo se for de um visitante sem cadastro
-			return upload('jogo', escudoVisitante, jogo);
+		salvarJogo: function(jogo, escudoVisitante){
+			var endpoint = jogo._id ? 'jogo/' + jogo._id : 'jogo';
+			return upload(endpoint, escudoVisitante, jogo);
 		},
 		salvarJogoLiga: function(jogo, ligaId){
 			return post('jogo/liga/'+ligaId, jogo);
@@ -278,6 +278,7 @@ angular.module('app.services')
 			return deleteRequest('time/convite/' + conviteId);
 		},
 		salvarJogador: function(jogador){
+			jogador = _.pick(jogador, ['foto', 'nome', 'camisa', 'posicao', 'time', 'convidado']);
 			return upload('jogador', jogador.foto, jogador);
 		},
 		ligasDisponiveis: function(jogo){
@@ -437,6 +438,9 @@ angular.module('app.services')
 		},
 		solicitarJogueirosPRO: function(){
 			return post('usuario/solicitarJogueirosPRO');
+		},
+		registrarNotificacaoClicada: function(notificacaoId){
+			return post('usuario/notificacaoClicada', {notificacaoId: notificacaoId});
 		},
 		logError: function(exception){
 			var userData = JSON.parse(window.localStorage.getItem('user_data'));
