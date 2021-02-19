@@ -1,15 +1,9 @@
 angular
   .module('app.controllers')
   .controller('novoJogoLigaController', ['$scope', '$state', '$stateParams', 'DataService', '$ionicModal', 'AuthService', '$rootScope', 'CameraService', '$ionicHistory', '$ionicPopup', function ($scope, $state, $stateParams, DataService, $ionicModal, AuthService, $rootScope, CameraService, $ionicHistory,  $ionicPopup) {
-    var fuseCidades, fuseEstados, modalTimeAberto;
+    var modalTimeAberto;
 
     $scope.cadastradoPelaLiga = $stateParams.id;
-
-    DataService.estados().then(function(estados){
-      $scope.estados = estados;
-    });
-
-    $scope.cidades = [];
 
     function configurarJogoVazio(){
       $scope.jogo = {
@@ -64,25 +58,6 @@ angular
       $scope.modalCadastrarTimeVisitante = modal;
     });
 
-    $ionicModal.fromTemplateUrl('templates/jogos/cadastrarLocal.html', {
-      scope: $scope,
-    }).then(function(modal){
-      $scope.modalCadastrarLocal = modal;
-    });
-    $ionicModal.fromTemplateUrl('templates/jogos/selecionarEstado.html', {
-      scope: $scope,
-      focusFirstInput: true,
-    }).then(function(modal){
-      $scope.modalEstado = modal;
-    });
-
-    $ionicModal.fromTemplateUrl('templates/jogos/selecionarCidade.html', {
-      scope: $scope,
-      focusFirstInput: true,
-    }).then(function(modal){
-      $scope.modalCidade = modal;
-    });
-
     // $scope.jogo.mandante = {
     //   _id: AuthService.getTime()
     //   // nome: mandante.nome,
@@ -126,33 +101,10 @@ angular
       // $scope.timeSelecionado({nome:nomeTime});
     }
 
-    $scope.cadastrarLocal = function(nomeLocal){
-      $scope.jogo.novoLocal = {nome: nomeLocal, cidade: AuthService.getCidade()};
-      $scope.modalCadastrarLocal.show();
-      // $scope.timeSelecionado({nome:nomeTime});
-    }
-
     $scope.localSelecionado = function(local){
       $scope.jogo.local = local;
       $scope.modalLocal.hide();
     }
-
-    $scope.estadoSelecionado = function(estado){
-      $scope.jogo.novoLocal.estado = estado;
-      $scope.capital = estado.capital;
-      $scope.cidades = [];
-      DataService.cidadesDaUf(estado.uf).then(function(cidades){
-        $scope.cidades = cidades;
-      });
-      $scope.modalEstado.hide();
-      $scope.modalCidade.show();
-    }
-
-    $scope.cidadeSelecionada = function(cidade){
-      $scope.jogo.novoLocal.cidade = cidade;
-      $scope.modalCidade.hide();
-    }
-
 
     $scope.capturarFoto = function(){
       CameraService.getPicture().then(function(imagePath){
@@ -160,31 +112,6 @@ angular
         $scope.$apply();
       });
     };
-
-    function localEstaCompleto(){
-      var local = $scope.jogo.novoLocal;
-      if(!_.get(local, 'nome') || !_.get(local, 'cidade._id') || !_.get(local, 'tipo') || !_.get(local, 'numJogadores')){
-        $ionicPopup.alert({
-          title: 'Cadastro incompleto',
-          content: 'Preencha todos os campos para concluir o cadastro!'
-        });
-        return false;
-      } else {
-        return true;
-      }
-    }
-
-    $scope.salvarLocal = function(){
-      if(localEstaCompleto()){
-        $scope.jogo.novoLocal.createdBy = AuthService.getUsuarioId();
-        DataService.salvarLocalJogo($scope.jogo.novoLocal).then(function(localSalvo){
-            $scope.jogo.novoLocal._id = localSalvo.id;
-            $scope.jogo.local = $scope.jogo.novoLocal;
-            $scope.modalCadastrarLocal.hide();
-            $scope.modalLocal.hide();
-        });
-      }
-    }
 
     $scope.cancelar = function(){
       if($ionicHistory.backView()){

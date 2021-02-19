@@ -230,6 +230,10 @@ angular
       $state.go('ranking_cadastrar');
     }
 
+    $scope.cadastrarRacha = function(){
+      $state.go('racha_cadastrar');
+    }
+
     $scope.verJogos = function(proximos, filtro){
       $state.go('liga_jogos', {id: $scope.ligaId, nomeLiga: $scope.liga.nome, proximos: proximos, filtro: filtro, editavel: $scope.editavel()});
     }

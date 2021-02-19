@@ -77,8 +77,8 @@
     background-color:#ef7176;
 }
 
-.card-grafico .even {
-    background-color: #f5f5f5;
+.card-grafico .tabela-numeros .row:nth-child(even){
+    background-color: #f5f5f5
 }
 
 .card-grafico .tabela-numeros .descricao{

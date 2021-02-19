@@ -56,6 +56,9 @@ angular
       
     }
 
+    $scope.jogoEmpatado = function(){
+      return $scope.jogo.placar['mandante'] === $scope.jogo.placar['visitante'];
+    }
 
     function mostrarAlerta(mensagem){
       $ionicPopup.alert({

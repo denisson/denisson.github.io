@@ -1,0 +1,28 @@
+<ion-view ng-controller="timeAdversariosController">
+    <ion-nav-title>{{time.nome}} - Adversários - {{temporada}}</ion-nav-title>
+    <ion-content class="padding">
+
+
+
+        <form class="list">
+            <label class="item item-input">
+                <i class="icon ion-search placeholder-icon"></i>
+                <input ng-model="search" type="search" placeholder="Digite um time...">
+            </label>
+        </form>
+        <ion-list class="lista-times">
+            <ion-item 
+            class="item-avatar"
+            ng-click="verHistoricoConfrontos(adversario.time)" 
+            ng-repeat="adversario in adversarios | fuzzyBy:'time.nome':search">
+                <img jog-escudo="adversario.time.escudo" jog-size="small" style="border-radius: 5px">
+                <h2>{{adversario.time.nome}}</h2>
+                <p>{{adversario.jogos}} confrontos, {{adversario.vitorias}} vitórias, {{adversario.empates}}
+                empates e {{adversario.derrotas}} derrotas</p>
+                <!-- <p class="barra-jogador">
+                    <span ng-style="getWidthBarraAdversario(adversario)" class="barra-preenchida"></span>
+                </p> -->
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

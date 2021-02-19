@@ -102,6 +102,16 @@
       <ion-item ng-if="editavel()">        
         <button ng-click="cadastrarJogoAvulso()" class="button button-positive button-outline button-block icon ion-plus-circled" href="#"> Cadastrar jogo avulso </button>
       </ion-item>
+
+      <!-- <ion-item ng-if="liga && editavel()" class="item-divider">Rachas</ion-item>
+      <ion-item ng-click="verRanking(racha)" ng-repeat="racha in liga.rachas">
+          <h2>{{racha.nome}}</h2>
+          <p>{{racha.dia}} às {{racha.hora}}</p>
+      </ion-item>
+      <ion-item ng-if="liga && editavel()" >
+        <button ng-click="cadastrarRacha()" class="button button-positive button-outline button-block icon ion-plus-circled" href="#"> Cadastrar racha </button>
+      </ion-item> -->
+
       <ion-item ng-if="liga.times.length" class="item-divider">
         Times 
         <span class="item-note">
@@ -118,7 +128,6 @@
             </div>
           </div>
       </ion-item>
-
 
       <ion-item ng-if="liga.rankings.length || editavel()" class="item-divider">Rankings</ion-item>
       <ion-item ng-click="verRanking(ranking)" ng-repeat="ranking in liga.rankings">

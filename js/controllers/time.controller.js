@@ -18,11 +18,9 @@ angular
     }
 
     function mostrarAlerta(mensagem){
-      $ionicPopup.alert({
+      return $ionicPopup.alert({
         title: 'Ops!',
         content: mensagem
-      }).then(function(){
-        // $ionicHistory.goBack();
       });
     }
 
@@ -99,8 +97,13 @@ angular
       
       DataService.timeJogos($scope.timeId, $stateParams.temporada).then(function(time){
         if(!time){
-            mostrarAlerta('Esse time não existe mais');
-            AuthService.logout();
+            mostrarAlerta('Esse time não existe mais').then(function(){
+              if($scope.timeId == AuthService.getTime()) {
+                $state.go('selecionarPerfil');
+              } else {
+                $state.go('abasInicio.meuPerfil');
+              }
+            });
             return;
         }
 
@@ -137,9 +140,13 @@ angular
 
     }
 
-    $scope.$on('jogadorAdicionado', function(events, jogador){
-      $scope.time.jogadores.push(jogador);
-    });
+    $scope.verJogador = function(jogador, temporada){
+      $state.go('jogador', {id: jogador._id, jogador: jogador, temporada: temporada});
+    }
+
+    $scope.adicionarJogador = function(timeId){
+      $state.go('jogador_cadastrar', {timeId: timeId, opcaoConvidado: false});
+    }
 
     $scope.$on('$ionicView.enter', function(){
       DataService.blockPopup();
@@ -204,6 +211,10 @@ angular
       return $scope.time && AuthService.getTime() && $scope.timeId === AuthService.getTime();
     }
 
+    $scope.adminJogueiros = function(){
+      return AuthService.adminJogueiros();
+    }
+
     function temporadaAtual(){
       return !$stateParams.temporada || $stateParams.temporada == moment().year();
     }
@@ -255,7 +266,7 @@ angular
 
     $scope.verJogosAnteriores = function(){
 
-      result = DataService.jogosEncerradosTime($scope.time._id, $scope.temporada, $scope.paginacao.encerrados.page, $scope.paginacao.QTD_POR_PAGINA).then(function(jogos){
+      result = DataService.jogosEncerradosTime($scope.time._id, $scope.temporada, {pag: $scope.paginacao.encerrados.page, porPag: $scope.paginacao.QTD_POR_PAGINA, tz: _.get($scope.time, 'cidade.timezone')}).then(function(jogos){
         $scope.time.jogos.encerrados.push.apply($scope.time.jogos.encerrados, jogos);
         $scope.paginacao.encerrados.page++;
         $scope.paginacao.encerrados.maisJogos = (jogos.length == $scope.paginacao.QTD_POR_PAGINA);
@@ -290,6 +301,9 @@ angular
       if(AuthService.adminJogueiros()){
         indicesBotoes['admin'] = i;
         buttons[i++] = { text: 'Admin Jogueiros' };
+
+        indicesBotoes['concederPRO'] = i;
+        buttons[i++] = { text: 'Liberar PRO' };
       }
 
       var params = {
@@ -306,13 +320,16 @@ angular
                 $scope.compartilharLink($scope.time);
                 break;
               case indicesBotoes['jogador']:
-                $scope.$broadcast('adicionarJogador', $scope.time.id);
+                $scope.adicionarJogador($scope.time.id);
                 break;
               case indicesBotoes['perfis']:
                 $scope.selecionarPerfil();
                 break;
               case indicesBotoes['admin']:
                 $state.go('adminGraficos');
+                break;
+              case indicesBotoes['concederPRO']:
+                $scope.concederJogueiroPRO();
                 break;
             }
            return true;
@@ -322,6 +339,23 @@ angular
        $ionicActionSheet.show(params);
     }
 
+    $scope.concederJogueiroPRO = function(){
+      DataService.infoTimeJogueirosPRO($scope.time._id).then(function(info){
+        $ionicPopup.confirm({
+          title: 'Status Atual',
+          content: '<pre>' + JSON.stringify(info, null, 2) + '</pre>',
+          okText: 'Continuar'
+        }).then(function(res){
+          if (res) {
+            $ionicPopup.prompt({
+              title: 'Quantos Meses?',
+            }).then(function(meses) {
+              DataService.concederJogueiroPRO($scope.time._id, meses);
+            });  
+          }
+        });      
+      });
+    }
 
     $scope.selecionarPerfil = function(){
       if($scope.podeSelecionarPerfil()){

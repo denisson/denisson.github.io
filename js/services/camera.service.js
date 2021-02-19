@@ -1,6 +1,6 @@
 angular
   .module('app.services')
-  .service('CameraService', function($cordovaCamera, DataService) {
+  .service('CameraService', function($cordovaCamera, DataService, $ionicPopup, $ionicPlatform) {
 
     function getPicture(){
       return new Promise(function(resolve, reject){
@@ -8,15 +8,39 @@ angular
         
         var permissions = window.cordova.plugins.permissions;
 
-        permissions.requestPermission(permissions.READ_EXTERNAL_STORAGE, function(){
-          abrirGaleria(resolve, reject);
-        }, function(){
+        var error = function(){
+          mostrarErroPermissao();
           reject('Não tem permissão para acessar a galeria de fotos');
           DataService.logError('Não tem permissão para acessar a galeria de fotos');
-        });
+        }
+
+        permissions.requestPermission(permissions.READ_EXTERNAL_STORAGE, function(status){
+          if( !status.hasPermission ) return error();
+          abrirGaleria(resolve, reject);
+        }, error);
         
         
       });
+    }
+
+    function mostrarErroPermissao(){
+      var titulo = 'Configurar permissões';
+      var texto = 'Para conseguir enviar uma imagem você precisa permitir que o Jogueiros acesse os arquivos do seu celular. Para isso altere as configurações do seu aparelho.';
+      if (window.cordova && window.cordova.plugins.settings) {
+          $ionicPopup.confirm({
+            title: titulo,
+            content: texto,
+            okText: 'Configurar'
+          }).then(function(res) {
+            if(res && $ionicPlatform.is('android')) {
+                window.cordova.plugins.settings.open("application_details_storage");
+            } else if(res && $ionicPlatform.is('ios')) {
+              window.cordova.plugins.settings.open("application_details");
+            }
+          });
+      } else {
+        $ionicPopup.alert({title: titulo, content: text});
+      }
     }
 
     function abrirGaleria(resolve, reject){

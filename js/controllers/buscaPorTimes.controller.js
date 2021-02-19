@@ -35,7 +35,7 @@ angular
         // }        
       // });
 
-      $rootScope.$on('alterarRegiao', function(event, filtro){
+    $rootScope.$on('alterarRegiao', function(event, filtro){
       $scope.perfilFiltro = filtro;
       var timesCarregados = carregarTimes();
       if(timesCarregados){

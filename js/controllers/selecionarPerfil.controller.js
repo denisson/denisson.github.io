@@ -11,6 +11,7 @@ angular
     
     if(!$scope.perfis || $scope.perfis.length == 0){
       DataService.usuarioPerfis().then(function(usuario){
+        AuthService.setUserPro(usuario.pro);
         AuthService.setPerfisUsuario(usuario.perfis);
         if(!usuario.perfis || usuario.perfis.length == 0){
           AuthService.goToCadastro();

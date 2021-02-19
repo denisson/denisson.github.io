@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('verJogoController', ['$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicPopup', '$ionicActionSheet', '$ionicHistory', '$jgModalAssinatura', function ($scope, $state, $stateParams, DataService, AuthService, $ionicPopup, $ionicActionSheet, $ionicHistory, $jgModalAssinatura) {
+  .controller('verJogoController', ['$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicPopup', '$ionicActionSheet', '$ionicHistory', '$jgModalAssinatura', '$ionicModal', 'SumulaService', function ($scope, $state, $stateParams, DataService, AuthService, $ionicPopup, $ionicActionSheet, $ionicHistory, $jgModalAssinatura, $ionicModal, SumulaService) {
 
     $scope.voltar = function(){
       if($ionicHistory.backView()){
@@ -157,23 +157,21 @@ angular
             return;
         }
         $scope.jogo = jogo;
-        $scope.jogo.jogadores.mandante = _.orderBy($scope.jogo.jogadores.mandante, ['gols', 'assistencias', 'cartoes.vermelho', 'cartoes.amarelo', 'cartoes.azul', 'jogador.nome'], ['desc', 'desc', 'asc', 'asc', 'asc', 'asc']);
-        $scope.jogo.jogadores.visitante = _.orderBy($scope.jogo.jogadores.visitante, ['gols', 'assistencias', 'cartoes.vermelho', 'cartoes.amarelo', 'cartoes.azul', 'jogador.nome'], ['desc', 'desc', 'asc', 'asc', 'asc', 'asc']);
+        $scope.jogo.jogadores.mandante = SumulaService.ordenarJogadores($scope.jogo.jogadores.mandante);
+        $scope.jogo.jogadores.visitante = SumulaService.ordenarJogadores($scope.jogo.jogadores.visitante);
         $scope.carregarHistoricoConfrontos();
       });
     });
 
     $scope.carregarHistoricoConfrontos = function(){
-      if($scope.jogo.visitante._id){
-        DataService.jogoHistoricoConfrontos($scope.jogo.mandante._id, $scope.jogo.visitante._id).then(function(result){
-          $scope.jogo.historicoConfrontos = result;
-        });
-      }
+      DataService.jogoHistoricoConfrontos($scope.jogo.mandante._id, $scope.jogo.visitante._id || $scope.jogo.visitante.nome).then(function(result){
+        $scope.jogo.historicoConfrontos = result;
+      });
     }
 
     $scope.verHistoricoConfrontos = function(){
       $jgModalAssinatura.confirmarAssinaturaUmDosTimes('graficos', $scope.jogo.mandante._id, $scope.jogo.visitante._id).then(function(){
-        $state.go('times_confrontos', {idTimeA: $scope.jogo.mandante._id, idTimeB: $scope.jogo.visitante._id});
+        $state.go('times_confrontos', {idTimeA: $scope.jogo.mandante._id, idTimeB: $scope.jogo.visitante._id || $scope.jogo.visitante.nome});
       });
     }
 
@@ -197,7 +195,7 @@ angular
       return  _.get($scope, 'jogo.historicoConfrontos.totais.jogos')  //tem que ter algum histórico pra mostrar
               && AuthService.isAuthenticated() // o usuário precisa estar autenticado, senão, não tem como ele assinar o Jogueiros PRO
               //&& $scope.usuarioPro() // tem que ser usuário PRO
-              //&& ($scope.editavel('mandante') || $scope.editavel('visitante')) // tem que ser admin de um dos times do jogo
+              && ($scope.editavel('mandante') || $scope.editavel('visitante')) // tem que ser admin de um dos times do jogo
     }
 
     $scope.exibirMenu = function(){
@@ -309,6 +307,29 @@ angular
 
     $scope.temporadaJogo = function(jogo){
       return moment(jogo.dataHora).year();
+    }
+
+
+    $scope.jogadorModal = {};
+    $ionicModal.fromTemplateUrl('templates/jogos/verScoutJogador.html', {
+      scope: $scope,
+      animation: 'fade-in'
+    }).then(function(modal){
+      $scope.modalJogador = modal;
+    });
+
+    $scope.verScoutJogador = function(jogador){
+      $scope.jogadorModal = jogador;
+      $scope.modalJogador.show();
+    }
+
+    $scope.verPerfilCompleto = function(jogador){
+      $state.go('jogador', {id: jogador._id, jogador: jogador});
+      $scope.modalJogador.hide();
+    }
+
+    $scope.temNumerosNoJogo = function(jogador) {
+      return SumulaService.temInformacaoParaMostrar(jogador);
     }
 
 }]);

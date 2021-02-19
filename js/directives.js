@@ -3,7 +3,7 @@ angular.module('app.directives', [])
 .directive('jogPartida', ['$ionicModal','AuthService', function($ionicModal, AuthService){
   return {
   	restrict: 'E',
-  	scope: {jogo: '=', informarPlacar: '@', mostrarDetalhes: '@'},
+  	scope: {jogo: '=', informarPlacar: '@', mostrarDetalhes: '@', aoClicarJogo: '&'},
     templateUrl: 'templates/directives/jog-partida.html',
     controller: function($scope, $state){
     	$scope.irParaTime = function(time){
@@ -34,6 +34,7 @@ angular.module('app.directives', [])
         //   $state.go('informarPlacar', {id: jogo._id, jogo: jogo});
         // } else {
           $state.go('jogo', {id: jogo._id});
+          $scope.aoClicarJogo();
         // }
       }
 
@@ -174,13 +175,25 @@ angular.module('app.directives', [])
     }
   };
 }])
-.directive('jogJogadorGols', [function(){
+.directive('jogJogadorGols', ['SumulaService', function(SumulaService){
   return {
     restrict: 'E',
     scope: {jogador: '=', mostrarSeJogou: '@'},
     templateUrl: 'templates/directives/jog-jogador-gols.html',
     controller: function($scope, $state){
+      $scope.jogouNaPartida = function(){
+        return  $scope.mostrarSeJogou && 
+                $scope.jogador && 
+                !SumulaService.temNumeros($scope.jogador);
+      }
 
+      $scope.temScout = function(){
+        return  $scope.jogador && 
+                (
+                  $scope.jogador.desarmes ||
+                  $scope.jogador.defesasDificeis
+                )
+      }
     }
   };
 }])
@@ -591,6 +604,33 @@ angular.module('app.directives', [])
     }
   };
 }])
+
+.directive('jogClickVoltar', ['$ionicHistory', '$state', function($ionicHistory, $state){
+  return {
+    restrict: 'A',
+    link: function(scope, el, attr) {
+      el.bind('click', function() {
+        if($ionicHistory.backView()){
+          $ionicHistory.goBack();
+        } else {
+          $state.go(el.attr('jog-click-voltar') || 'abasInicio.meuPerfil');
+        }
+        return false;
+      });
+    }
+  };
+}])
+.directive('jogBlur', [function(){
+  return {
+    restrict: 'A',
+    link: function(scope, el, attr) {
+      el.bind('focus', function() {
+        el[0].blur();
+      });
+    }
+  };
+}])
+
 // .directive('jogStepper', [function(){
 //   return {
 //   	restrict: 'E',

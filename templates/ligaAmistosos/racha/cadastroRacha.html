@@ -1,0 +1,53 @@
+<ion-view title="{{titulo}}" ng-controller="cadastroRachaController" hide-back-button="false">
+    <ion-nav-buttons side="left">
+        <button class="button" ng-click="cancelar()">
+          Cancelar
+        </button>
+    </ion-nav-buttons>
+    <ion-content>
+        <form class="list padding">
+            <label class="item item-input item-select">
+                <span class="input-label">Dia da semana</span>
+                <!-- <input ng-model="jogador.posicao" type="text" placeholder="Posição que joga no time"> -->
+                <select ng-model="racha.dia">
+                    <option value="" disabled selected>Selecione um dia</option>
+                    <option value="1">Segunda-feira</option>
+                    <option value="2">Terça-feira</option>
+                    <option value="3">Quarta-feira</option>
+                    <option value="4">Quinta-feira</option>
+                    <option value="5">Sexta-feira</option>
+                    <option value="6">Sábado</option>
+                    <option value="7">Domingo</option>
+                </select>
+            </label>
+        
+            <label class="item item-input">
+                <span class="input-label">Local</span>
+                <input ng-model="racha.local.nome" type="text" ng-focus="modalLocal.show()" placeholder="Local do racha" jog-blur>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Horário</span>
+                <input ng-model="racha.hora" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+            </label>
+            <label class="item item-input">
+            <span class="input-label">Duração</span>
+            <input ng-model="racha.duracao" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
+            </label>
+
+            <ion-item class="item-divider">Informações adicionais</ion-item>
+            <label class="item item-input">
+            <span class="input-label">Responsável</span>
+            <input ng-model="racha.responsavel" type="text" placeholder="Nome do responsável pelo racha">
+            </label>
+            <label class="item item-input">
+            <span class="input-label">Telefone</span>
+            <telefone-input telefone="racha.telefone" ></telefone-input>
+            </label>
+            <label class="item item-input">
+            <span class="input-label">Nome do racha</span>
+            <input ng-model="racha.nome" type="text" placeholder="Nome para identificar o racha">
+            </label>
+            <button ng-disabled="!podeSalvar()" ng-click="salvar()" class="button button-positive button-block">{{labelBotao}}</button>
+        </form>
+    </ion-content>
+  </ion-view>

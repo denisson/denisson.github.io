@@ -5,7 +5,7 @@
             <i class="icon ion-android-close"></i>
         </button>
     </ion-header-bar>
-    <ion-content ng-controller="jogadoresController">
+    <ion-content>
         <style>
             .barra-jogador {
                 background-color: #f5f5f5;
@@ -27,7 +27,7 @@
                 background-color: #f4b142;
             }
         </style>
-        <ion-item class="item-avatar" ng-click="verJogadorPorId(jogador._id, null)" ng-repeat="jogador in timeModal.jogadores">
+        <ion-item class="item-avatar" ng-click="verPerfilCompletoJogador(jogador)" ng-repeat="jogador in timeModal.jogadores">
             <img jog-jogador="jogador.foto" jog-size="small">
             <h2>
                 {{jogador.nome}}

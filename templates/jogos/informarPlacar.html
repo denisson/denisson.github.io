@@ -1,33 +1,82 @@
 <ion-view ng-controller="placarController">
     <ion-nav-title>{{titulo}}</ion-nav-title>
+    <style>
+
+    .informarPlacar .item-avatar{
+      border: none;
+      padding-left: 97px;
+      min-height: 97px;
+      padding-top: 25px;
+    }
+
+    .informarPlacar .item-avatar img{
+      border-radius: 0;
+      max-width: 65px;
+      max-height: 65px;
+    }
+
+    .informarPlacar .col-input{
+      position: relative;
+      float: right;
+    }
+    </style>
     <ion-content padding="true" >
-        <form ng-if="jogo" id="informarPlacar-form">
+        <form ng-if="jogo">
+            <div class="informarPlacar">
+                <h5>Gols do {{jogo.mandante.nome}}</h5>
+                <ion-item class="item-avatar item">
+                    <img jog-escudo="jogo.mandante.escudo" jog-size="mid">
 
-            <h5>Gols do {{jogo.mandante.nome}}</h5>
-            <ion-item class="item-avatar item">
-                <img jog-escudo="jogo.mandante.escudo" jog-size="mid">
+                    <!-- <jog-stepper valor="jogo.mandante.gols"></jog-stepper> -->
+                    <div class="col-input">
+                        <button class="button button-outline button-positive ion-minus" ng-disabled="jogo.placar.mandante <= 0" type="button" ng-click="decrement('mandante')"></button>
+                        <div style="margin: 0 48px; width: 100px">
+                            <input type="number" min="0" step="1" ng-model="jogo.placar.mandante">
+                        </div>
+                        <button class="button ion-plus button-positive button-outline" type="button" ng-click="increment('mandante')"></button>
+                    </div>
+                </ion-item>
+                <h5>Gols do {{jogo.visitante.nome}}</h5>
+                <ion-item class="item-avatar item" id="buscaPorTimes-list-item29">
+                    <img jog-escudo="jogo.visitante.escudo" jog-size="mid">
+                    <!-- <jog-stepper valor="jogo.visitante.gols"></jog-stepper> -->
+                    <div class="col-input">
+                        <button class="button button-outline button-positive ion-minus" ng-disabled="jogo.placar.visitante <= 0" type="button" ng-click="decrement('visitante')"></button>
+                        <div style="margin: 0 48px; width: 100px">
+                            <input type="number" min="0" step="1" ng-model="jogo.placar.visitante">
+                        </div>
+                        <button class="button ion-plus button-positive button-outline" type="button" ng-click="increment('visitante')"></button>
+                    </div>
+                </ion-item>
+            </div>
+            <!-- <ul class="list" ng-if="jogoEmpatado()">
+                <li class="item item-toggle" style="border: 0;">
+                   Decisão nos pênaltis
+                   <label class="toggle toggle-positive">
+                     <input type="checkbox" ng-model="jogo.decisaoPenaltis">
+                     <div class="track">
+                       <div class="handle"></div>
+                     </div>
+                   </label>
+                </li>
+            </ul> -->
 
-                <!-- <jog-stepper valor="jogo.mandante.gols"></jog-stepper> -->
-                <div class="col-input">
-                    <button class="button button-outline button-positive ion-minus" ng-disabled="jogo.placar.mandante <= 0" type="button" ng-click="decrement('mandante')"></button>
-                    <div style="margin: 0 48px; width: 100px">
-                        <input type="number" min="0" step="1" ng-model="jogo.placar.mandante">
-                    </div>
-                    <button class="button ion-plus button-positive button-outline" type="button" ng-click="increment('mandante')"></button>
-                </div>
-            </ion-item>
-            <h5>Gols do {{jogo.visitante.nome}}</h5>
-            <ion-item class="item-avatar item" id="buscaPorTimes-list-item29">
-                <img jog-escudo="jogo.visitante.escudo" jog-size="mid">
-                <!-- <jog-stepper valor="jogo.visitante.gols"></jog-stepper> -->
-                <div class="col-input">
-                    <button class="button button-outline button-positive ion-minus" ng-disabled="jogo.placar.visitante <= 0" type="button" ng-click="decrement('visitante')"></button>
-                    <div style="margin: 0 48px; width: 100px">
-                        <input type="number" min="0" step="1" ng-model="jogo.placar.visitante">
-                    </div>
-                    <button class="button ion-plus button-positive button-outline" type="button" ng-click="increment('visitante')"></button>
-                </div>
-            </ion-item>
+            <!-- <div class="item item-avatar" ng-if="jogoEmpatado() && jogo.decisaoPenaltis">
+                 <span class="botoes">
+                    <button class="button button-outline button-positive ion-minus button-stepper button-stepper-sm" ng-disabled="jogo.placar.mandante <= 0" type="button" ng-click="decrement('mandante')"></button>
+                     <img class="foto-jogador" jog-escudo="jogo.mandante.escudo" jog-size="small">
+                  <h2 class="nome-jogador-gols" ng-class="{'fora-elenco':!jogadorGol.elenco}">
+                    {{jogo.mandante.nome}}
+                  </h2>
+
+                
+                    <span>
+                        <input class="input-stepper" type="number" min="0" step="1" ng-model="jogo.placar.mandante">
+                    </span>
+                    <button class="button ion-plus button-positive button-outline button-stepper button-stepper-sm" type="button" ng-click="increment('mandante')"></button>
+                  </span>
+            </div> -->
+
             <button ng-click="salvarPlacar()" class="button button-positive button-block">Salvar</button>
             <button ng-click="informarDepois()" class="button button-block">{{botaoVoltar}}</button>
         </form>

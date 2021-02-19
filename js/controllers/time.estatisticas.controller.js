@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('timeEstatisticasController', ['$scope', '$stateParams', 'DataService', 'AuthService', '$ionicPopup', function ($scope, $stateParams, DataService, AuthService, $ionicPopup) {
+  .controller('timeEstatisticasController', ['$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicPopup', function ($scope, $state, $stateParams, DataService, AuthService, $ionicPopup) {
     $scope.temporada = $stateParams.temporada = $stateParams.temporada || moment().year();
     $scope.timeId = $stateParams.id || AuthService.getTime();
     
@@ -30,6 +30,14 @@ angular
     }).catch(function(){
         mostrarAlerta('Não foi possível carregar as estatísticas do time');
     });
+
+    $scope.verAdversarios = function(ordem){
+        $state.go('time_adversarios', {id: $scope.timeId, temporada: $scope.temporada, ordem: ordem, time: $scope.time});
+    }
+
+    $scope.verHistoricoConfrontos = function(adversario){
+        $state.go('times_confrontos', {idTimeA: $scope.timeId, idTimeB: adversario._id || adversario.nome});
+    }
 
     function mostrarAlerta(mensagem){
         $ionicPopup.alert({

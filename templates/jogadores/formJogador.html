@@ -1,43 +1,11 @@
-<ion-modal-view>
-    <ion-header-bar align-title="center" class="bar bar-header bar-positive">
-        <button class="button button-clear button-primary" ng-click="modalFormJogador.hide()">Cancelar</button>
-        <h1 class="title">{{jogador._id? 'Editar Jogador': 'Adicionar Jogador'}}</h1>
-    </ion-header-bar>
+<ion-view ng-controller="cadastrarJogadorController" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button" jog-click-voltar style="margin: 0">
+          <i class="icon ion-ios-arrow-back"></i>
+        </button>
+    </ion-nav-buttons>
+    <ion-nav-title>{{jogador._id? 'Editar Jogador': 'Adicionar Jogador'}}</ion-nav-title>
     <ion-content class="padding">
-        <form ng-submit="salvarJogador(jogador)">
-        <div class="captura-foto captura-foto-redonda">
-            <img id="foto-capturada" class="captura-foto-img" ng-click="capturarFoto()"  jog-jogador="jogador.foto" jog-size="large"></img>
-            <i ng-click="capturarFoto(jogador)" class="icon ion-image captura-foto-icon"></i>
-        </div>
-            <label class="item item-input">
-                <span class="input-label">Nome</span>
-                <input ng-model="jogador.nome" type="text" placeholder="Nome ou apelido">
-            </label>
-            <label class="item item-input item-select">
-                <span class="input-label">Posição</span>
-                <!-- <input ng-model="jogador.posicao" type="text" placeholder="Posição que joga no time"> -->
-                <select ng-model="jogador.posicao">
-                    <option value="" disabled selected>Posição que joga no time</option>
-                    <option ng-if="posicoes.length" ng-repeat="posicao in posicoes" value="{{posicao.nome}}">{{posicao.nome}}</option>
-                </select>
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Camisa</span>
-                <input ng-model="jogador.camisa" type="text" placeholder="Número da camisa (opcional)">
-            </label>
-            <ul ng-if="opcaoConvidado" class="list">
-              <li class="item item-toggle">
-                 Jogador convidado
-                 <p style="color: #9E9E9E;">Somente para este jogo</p>
-                 <label class="toggle toggle-positive">
-                   <input type="checkbox" ng-model="jogador.convidado">
-                   <div class="track">
-                     <div class="handle"></div>
-                   </div>
-                 </label>
-              </li>
-            </ul>
-            <button ng-disabled="!jogador.nome" type="submit" class="button button-positive button-block">Salvar</button>
-        </form>
+        <form-cadastrar-jogador ng-if="dadosCarregados" jogador="jogador" time-id="timeId" ao-salvar="aposSalvar()" />
     </ion-content>
-</ion-modal-view>
+</ion-view>

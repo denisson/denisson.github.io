@@ -12,11 +12,10 @@ var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.contro
   URL_S3:  'https://s3-sa-east-1.amazonaws.com/jogueiros-fc-uploads/',
   URL_AWS_CLOUDFRONT: 'https://d1zz32ev1utzz6.cloudfront.net/',
   URL_API: 'https://jogueiros-fc-api.herokuapp.com/',
-//  URL_API: 'http://localhost:3000/',
+  // URL_API: 'http://localhost:3000/',
   //  URL_API: 'http://10.0.0.103:3000/',
-//   URL_API: 'http://192.168.15.39:3000/', // IP da máquina quando depurando do próprio dispositivo
-  // URL_API: 'http://10.0.2.2:3000/', // IP da máquina quando usando emulador android. https://stackoverflow.com/questions/5806220/how-to-connect-to-my-http-localhost-web-server-from-android-emulator
-  // TIPO_APP: 'ARBITRAGEM', //TIPO_APP: 'TIME'
+  //  URL_API: 'http://192.168.15.71:3000/', // IP da máquina quando depurando do próprio dispositivo
+//  URL_API: 'http://10.0.2.2:3000/', // IP da máquina quando usando emulador android. https://stackoverflow.com/questions/5806220/how-to-connect-to-my-http-localhost-web-server-from-android-emulator
   URL_SITE: 'https://jogueirosfc.com/'
 
 })
@@ -113,12 +112,16 @@ var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.contro
 
     StoreService.initialize();
 
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
-      cordova.plugins.Keyboard.disableScroll(true);
+    if (Keyboard && Keyboard.disableScroll) {
+        Keyboard.disableScroll(true);
+        Keyboard.hideFormAccessoryBar(false);
     }
+    if($ionicPlatform.is('ios')) {
+      window.addEventListener('keyboardDidShow', function() {
+        document.activeElement.scrollIntoView({behavior: 'smooth'});
+      });
+    }
+
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();

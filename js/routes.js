@@ -273,6 +273,31 @@ angular.module('app.routes', [])
       cache: false
     })
 
+    .state('jogador_cadastrar', { //cadastrarRanking
+      url: '/time/:timeId/cadastrarJogador',
+      templateUrl: 'templates/jogadores/formJogador.html',
+      cache: false
+    })
+
+    .state('jogador_editar', { //cadastrarRanking
+      url: '/time/:timeId/editarJogador/:id',
+      params: {jogador: null},
+      templateUrl: 'templates/jogadores/formJogador.html',
+      cache: false
+    })
+
+    // .state('racha_cadastrar', {
+    //   url: '/racha/cadastrar',
+    //   templateUrl: 'templates/ligaAmistosos/racha/cadastroRacha.html',
+    //   cache: false
+    // })
+
+    // .state('racha_editar', {
+    //   url: '/racha/:id/editar',
+    //   templateUrl: 'templates/ligaAmistosos/racha/cadastroRacha.html',
+    //   cache: false
+    // })
+
   //   .state('buscarAmistosos', {
   //     url: '/amistosos',
   //     cache: false,
@@ -289,9 +314,19 @@ angular.module('app.routes', [])
       url: '/time/:id/:temporada/estatisticas',
       templateUrl: 'templates/times/estatisticas.html'
     },
+    'time_adversarios': {
+      url: '/time/:id/:temporada/adversarios/:ordem',
+      params: {time: null},
+      templateUrl: 'templates/times/adversarios.html'
+    },
     'times_confrontos': {
-      url: '/times/confrontos/:idTimeA/:idTimeB',
+      url: '/times/confrontos/:idTimeA/:idTimeB/:temporada',
       templateUrl: 'templates/times/historicoConfrontos.html'
+    },
+    'jogador': {
+      url: '/jogador/:id/:temporada',
+      params: {jogador: null},
+      templateUrl: 'templates/jogadores/verJogador.html'
     },
     'jogo': {
       url: '/jogo/:id',

@@ -7,16 +7,16 @@
         <form class="list" ng-submit="salvarLocal()">
             <label class="item item-input">
                 <span class="input-label">Nome do local</span>
-                <input ng-model="jogo.novoLocal.nome" type="text" placeholder="Nome do local">
+                <input ng-model="novoLocal.nome" type="text" placeholder="Nome do local">
             </label>
             <label class="item item-input">
                 <span class="input-label">Cidade</span>
-                <input ng-model="jogo.novoLocal.cidade.nomeCompleto" ng-focus="modalEstado.show()" type="text" placeholder="Escolha uma cidade">
+                <input ng-model="novoLocal.cidade.nomeCompleto" ng-focus="modalEstado.show()" type="text" placeholder="Escolha uma cidade" jog-blur>
             </label>
 
             <label class="item item-input item-select">
                 <span class="input-label">Modalidade</span>
-                <select ng-model="jogo.novoLocal.tipo">
+                <select ng-model="novoLocal.tipo">
                     <option value="" disabled selected>Escolha a modalidade</option>
                     <option value="SOCIETY">Society</option>
                     <option value="SALAO">Salão</option>
@@ -27,7 +27,7 @@
             </label>
             <label class="item item-input item-select">
                 <span class="input-label">Quantos jogam?</span>
-                <select ng-model="jogo.novoLocal.numJogadores">
+                <select ng-model="novoLocal.numJogadores">
                     <option value="" disabled selected>Incluindo o goleiro</option>
                     <option value="4">4x4</option>
                     <option value="5">5x5</option>

@@ -12,13 +12,13 @@
         <form class="list">
             <label class="item item-input">
                 <i class="icon ion-search placeholder-icon"></i>
-                <input ng-model="search.query"  ng-change="buscarLocal(search.query)"  type="search" placeholder="Encontre um local" />
+                <input ng-model="searchTerm.query"  ng-change="buscarLocal(searchTerm.query)"  type="search" placeholder="Encontre um local" />
             </label>
         </form>
         <div class="spacer" style="width: 300px; height: 1px;"></div>
-        <ion-list ng-if="locaisSugeridos.length && !search.query.length">
+        <ion-list ng-if="locaisSugeridos.length && !searchTerm.query.length">
             <ion-item class="item-divider">Mais frequentes</ion-item>
-            <div ng-click="localSelecionado(local._id)" ng-repeat="local in locaisSugeridos | fuzzyBy:'_id.nome':search.query">
+            <div ng-click="localSelecionado(local._id)" ng-repeat="local in locaisSugeridos | fuzzyBy:'_id.nome':searchTerm.query">
                 <ion-checkbox ng-model="local._id.selecionado" ng-if="multi">
                     {{localChecked(local._id)}}
                     <h2>{{local._id.nome}}</h2>
@@ -31,7 +31,7 @@
             </div>
         </ion-list>
         <ion-list>
-            <ion-item ng-if="locaisSugeridos.length && !search.query.length" class="item-divider">Todos</ion-item>
+            <ion-item ng-if="locaisSugeridos.length && !searchTerm.query.length" class="item-divider">Todos</ion-item>
             <div ng-click="localSelecionado(local)" ng-repeat="local in locais">
                 <ion-checkbox ng-model="local.selecionado" ng-if="multi">
                     {{localChecked(local)}}
@@ -43,13 +43,13 @@
                     <p>{{local.cidade.nome}}</p>
                 </ion-item>
             </div> 
-            <ion-item ng-if="search.query.length" class="item item-icon-left" ng-click="cadastrarLocal(search.query)">
+            <ion-item ng-if="searchTerm.query.length" class="item item-icon-left" ng-click="cadastrarLocal(searchTerm.query)">
                 <i class="icon ion-plus-circled balanced"></i>
-                <h2>{{search.query}}</h2>
+                <h2>{{searchTerm.query}}</h2>
                 <p>Cadastrar este local de jogo</p>
             </ion-item>
         </ion-list>
-        <p ng-if="!search.query.length && locais.length" class="padding dark">Existem outros locais cadastrados. Informe o nome que procura para refinar a busca.</p>
+        <p ng-if="!searchTerm.query.length && locais.length" class="padding dark">Existem outros locais cadastrados. Informe o nome que procura para refinar a busca.</p>
         <br/>
         <br/>
     </ion-content>

@@ -5,7 +5,7 @@
         
           <button ng-if="!perfilFiltro.esporte.efootball" class="button" id="botao-escolher-regiao" mostrar-br="false" mostrar-outros-esportes="false" tem-time="true"  regiao="{{regiao}}" jog-escolher-regiao>
             Região:
-            <b class="padding-left">{{regiao}}</b>
+            <b class="padding-left">{{formatarFiltro(perfilFiltro)}}</b>
             <i class="icon ion-android-arrow-dropdown" style="color:#FFF"></i>
           </button>
         

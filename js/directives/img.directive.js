@@ -28,6 +28,7 @@ angular.module('app.directives')
     
     if(/^(\w+\:((\/\/)|(image)))/.test(urlImg)){//caso a imagem seja com o protocolo e tudo completo
       el.attr('src', urlImg);
+      el.css({'background-image': ''});
     } else if (urlImg) { 
       if(el.attr('jog-size') != 'small'){
         el.attr('src', '');
@@ -65,6 +66,7 @@ angular.module('app.directives')
     var mapSize = {
       'small': {width: 48, height: 48, fit: 'cover'},
       'mid': {width: 80, height: 80, fit: 'cover'},
+      'big': {width: 180, height: 180, fit: 'cover'},
       'large': {width: 300, height: 300, fit: 'cover'}
     };
     var dimensions = (mapSize[size]? mapSize[size] : mapSize['large']);

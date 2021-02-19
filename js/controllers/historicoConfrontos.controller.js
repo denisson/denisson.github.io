@@ -10,8 +10,9 @@ angular
         $scope.modalJogadores = modal;
     });
 
+    $scope.temporada = $stateParams.temporada;
 
-    DataService.jogoHistoricoConfrontos($stateParams.idTimeA, $stateParams.idTimeB).then(function(result){
+    DataService.jogoHistoricoConfrontos($stateParams.idTimeA, $stateParams.idTimeB, $stateParams.temporada).then(function(result){
         $scope.historicoConfrontos = result;
     });
 
@@ -36,6 +37,11 @@ angular
         $scope.timeModal = $scope.historicoConfrontos[time];
         $scope.timeModal.hashTime = time;
         $scope.modalJogadores.show();
+    }
+
+    $scope.verPerfilCompletoJogador = function(jogador){
+        $state.go('jogador', {id: jogador._id});
+        $scope.modalJogadores.hide();
     }
 
     $scope.getWidthBarraJogador = function(jogador){

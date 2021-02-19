@@ -7,13 +7,19 @@ angular
             // store.verbosity = store.DEBUG;
             store.validator = function(product, callback) {
               DataService.checarReciboPagamento(product).then(function(retorno){
-                callback(retorno.ok); // success!
+                if (retorno.ok) {
+                  callback(true); // success!
+                } else {
+                  callback(false, {
+                    code: store.PURCHASE_EXPIRED, // **Validation error code
+                    latest_receipt: {}, // só para que a validação não se repita. Já que o servidor já confirmou que expirou
+                    error: { message: "Subscription expired"}
+                  });
+                }
               }).catch(function(){
                 callback(false, "Impossible to proceed with validation");
               });
             };
-            // store.validator = config.URL_API + "check-purchase";
-        
         
             var ASSINATURA_MENSAL = "assinatura.mensal";
             store.register({

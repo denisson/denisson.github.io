@@ -5,75 +5,86 @@
       </button>
   </ion-nav-buttons>
     <ion-content class="has-header">
+      <style>
+        .icon-star-destaque{
+          font-size: 40px;
+          color:#d6d6d6;
+        }
+
+        .jogador-destaque .icon-star-destaque{
+          color:#f3973e;
+        }
+      </style>
       <jog-partida jogo="jogo"></jog-partida>
       <form class="list lista-jogadores">
         <div class="item cabecalho">
           Jogador
           <span class="float-right">Foi ao jogo</span>
         </div>
-          <div class="item item-avatar" ng-repeat="jogadorGol in jogadores" ng-class="{'jogador-expandir':jogadorGol.jogador.id == idJogadorAberto}" ng-click="expandirJogador(jogadorGol)">
-                <img class="foto-jogador" jog-jogador="jogadorGol.jogador.foto" jog-size="small">
-                  <h2 class="nome-jogador-gols" ng-class="{'fora-elenco':!jogadorGol.elenco}">
-                    {{jogadorGol.jogador.nome}}
-                  </h2>
-                  <p ng-if="jogadorGol.elenco">
-                    <jog-jogador-gols jogador="jogadorGol" mostrar-se-jogou="true"></jog-jogador-gols>
-                  </p>
+          <div 
+          class="item item-avatar" ng-repeat="jogadorGol in jogadores"
+          ng-class="{'jogador-expandir':jogadorGol.jogador.id==idJogadorAberto, 'jogador-destaque': jogadorGol.destaque}"
+          ng-click="expandirJogador(jogadorGol)">
+              <img class="foto-jogador" jog-jogador="jogadorGol.jogador.foto"
+              jog-size="small"/>
+              <div class="jogador-destaque-icon">
+                <i class="icon ion-ios-star"></i>
+              </div>
+              <h2 class="nome-jogador-gols" ng-class="{'fora-elenco':!jogadorGol.elenco}">
+                {{jogadorGol.jogador.nome}}
+              </h2>
+              <p ng-if="jogadorGol.elenco">
+                <jog-jogador-gols jogador="jogadorGol" mostrar-se-jogou="true"></jog-jogador-gols>
+              </p>
 
-                <div class="col-input col-toggle">
-                  <label class="toggle toggle-positive" ion-stop-event="click">
-                     <input type="checkbox" ng-model="jogadorGol.elenco" ng-change="checkJogador(jogadorGol)">
-                     <div class="track">
-                       <div class="handle"></div>
-                     </div>
-                  </label>
-                </div>
+              <div class="col-input col-toggle">
+                <label class="toggle toggle-positive" ion-stop-event="click">
+                    <input type="checkbox" ng-model="jogadorGol.elenco" ng-change="checkJogador(jogadorGol)">
+                    <div class="track">
+                      <div class="handle"></div>
+                    </div>
+                </label>
+              </div>
               <div class="opcoes-informar" ion-stop-event="click">
-                <div ng-if="jogadorGol.jogador.ehGoleiro" class="opcao">
-                <!-- <div class="opcao"> -->
-                  
-                  <small class="titulo">GOLS SOFRIDOS</small>
-                  <span class="botoes">
-                    <button class="button button-outline button-positive ion-minus button-stepper button-stepper-sm" ng-disabled="jogadorGol.golsSofridos <= 0" type="button" ng-click="decrementGolSofrido(jogadorGol)"></button>
-                    
-                    <span>
-                        <input class="input-stepper" type="number" min="0" step="1" ng-model="jogadorGol.golsSofridos">
-                    </span>
-                        
-                    <button class="button ion-plus button-positive button-outline button-stepper button-stepper-sm" ng-disabled="golsSofridosRestantes <= 0" type="button" ng-click="incrementGolSofrido(jogadorGol)"></button>
-                  </span>                  
+                <jog-jogador-numero 
+                  ng-if="jogadorGol.jogador.ehGoleiro"
+                  value="jogadorGol.golsSofridos" 
+                  titulo="Gols Sofridos"
+                  restante="restantes.golsSofridos"
+                  ao-alterar-valor="atualizarRestante('golsSofridos', inc)">
+                </jog-jogador-numero>
+                <jog-jogador-numero 
+                  ng-if="jogadorGol.jogador.ehGoleiro"
+                  value="jogadorGol.defesasDificeis" 
+                  titulo="Defesas difíceis">
+                </jog-jogador-numero>
+                <jog-jogador-numero 
+                  value="jogadorGol.gols" 
+                  titulo="Gols" 
+                  restante="restantes.gols"
+                  ao-alterar-valor="atualizarRestante('gols', inc)">
+                </jog-jogador-numero>
+                <jog-jogador-numero 
+                  value="jogadorGol.assistencias"
+                  titulo="Assistências" 
+                  restante="restantes.assistencias"
+                  ao-alterar-valor="atualizarRestante('assistencias', inc)">
+                </jog-jogador-numero>
+                <jog-jogador-numero 
+                  ng-if="!jogadorGol.jogador.ehGoleiro"
+                  value="jogadorGol.desarmes" 
+                  titulo="Desarmes">
+                </jog-jogador-numero>
 
-                </div>
-                <div class="opcao">
-                  
-                  <small class="titulo">GOLS</small>
-                  <span class="botoes">
-                    <button class="button button-outline button-positive ion-minus button-stepper button-stepper-sm" ng-disabled="jogadorGol.gols <= 0" type="button" ng-click="decrementGol(jogadorGol)"></button>
-                    
-                    <span>
-                        <input class="input-stepper" type="number" min="0" step="1" ng-model="jogadorGol.gols">
-                    </span>
-                        
-                    <button class="button ion-plus button-positive button-outline button-stepper button-stepper-sm" ng-disabled="golsRestantes <= 0" type="button" ng-click="incrementGol(jogadorGol)"></button>
-                  </span>                  
-
-                </div>
-                <div class="opcao">
-                  <small class="titulo">ASSISTÊNCIAS</small>
-                  <span class="botoes" >
-                    <button class="button button-outline button-positive ion-minus button-stepper button-stepper-sm" ng-disabled="jogadorGol.assistencias <= 0" type="button" ng-click="decrementAssistencia(jogadorGol)"></button>
-
-                    <span>
-                        <input class="input-stepper" type="number" min="0" step="1" ng-model="jogadorGol.assistencias">
-                    </span>
-                        
-                    <button class="button ion-plus button-positive button-outline button-stepper button-stepper-sm" ng-disabled="assistenciasRestantes <= 0" type="button" ng-click="incrementAssistencia(jogadorGol)"></button>
-                  </span>                  
-
-                </div>
+                <!-- <jog-jogador-numero 
+                  ng-if="jogo.houveDisputaPenaltis"
+                  value="jogadorGol.golsSofridos" 
+                  titulo="Gols de Pênalti"
+                  restante="restantes.golsPenaltis"
+                  ao-alterar-valor="atualizarRestante('golsSofridos', inc)">
+                </jog-jogador-numero> -->
 
                 <div class="opcao">
-                  
                   <small class="titulo">CARTÕES</small>
                   <span class="botoes" >
                     <div class="col-input" style="text-align: right;" >
@@ -83,14 +94,35 @@
                       <a class="cartao cartao-vermelho" ng-class="{'cartao-disabled': !jogadorGol.cartoes.vermelho}" ng-click="toggleCartao(jogadorGol, 'vermelho')"></a>
                     </div> 
                   </span>                  
+                </div>
+
+                <div class="opcao">
+                  <small class="titulo">DESTAQUE DA PARTIDA</small>
+                  <span class="botoes">
+                    <div class="col-input" style="text-align: right;">
+                      <a class="icon-star-destaque" ng-click="toggleDestaque(jogadorGol)">
+                        <i class="icon ion-ios-star"></i>
+                      </a>
+                    </div> 
+                  </span>                  
 
                 </div>
+
+                <!-- <div class="opcao jog-jogador-numero">
+                  
+                  <small class="titulo">Adicionar mais informações</small>
+                  <div class="" style="font-size: 0.8em;">Defesas, desarmes, passes, finalizações, ...</div>
+                  <span class="botoes">
+                    <button class="button button-outline button-positive" type="button" ng-click="decrement()">Novos campos</button>
+                  </span>                  
+              
+              </div> -->
 
               </div>
             </div>
 
             <div class="padding">
-              <button ng-controller="jogadoresController" ng-click="adicionarJogador(jogo[time]._id, true)" class="button button-stable button-block icon ion-person-add" href="#"> Adicionar jogador</button>
+              <button ng-click="adicionarJogador(jogo[time]._id)" class="button button-stable button-block icon ion-person-add" href="#"> Adicionar jogador</button>
 
               <button ng-click="informarDepois()" class="button button-block">Informar depois</button>
             </div>

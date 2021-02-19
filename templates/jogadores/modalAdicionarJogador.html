@@ -1,0 +1,16 @@
+<ion-modal-view>
+    <ion-header-bar class="bar bar-header bar-stable">
+        <h1 class="title">Adicionar Jogador</h1>
+        <button class="button button-clear button-primary" ng-click="modalAdicionarJogador.hide()">
+            <i class="icon ion-android-close"></i>
+        </button>
+    </ion-header-bar>
+    <ion-content>
+        <form-cadastrar-jogador
+            ng-if="timeIdModalJogador"  
+            time-id="timeIdModalJogador"
+            ao-salvar="aposAdicionarJogador(jogador)"
+            opcao-convidado="true"
+        />
+    </ion-content>
+</ion-modal-view>

@@ -21,7 +21,7 @@
             <ion-item ng-if="time.esporteChave && !efootball()" class="item-divider">Cidade</ion-item>
             <label ng-if="time.esporteChave && !efootball()" class="item item-input">
                 <span class="input-label">Cidade</span>
-                <input ng-model="time.cidade.nomeCompleto" ng-focus="modalEstado.show()" type="text" placeholder="Cidade do seu time" />
+                <input ng-model="time.cidade.nomeCompleto" ng-focus="modalEstado.show()" type="text" placeholder="Cidade do seu time" jog-blur/>
             </label>
             <ion-item ng-if="efootball()" class="item-divider">Plataforma</ion-item>
             <ion-list ng-if="efootball()" class="jog-radio">

@@ -12,7 +12,7 @@ angular
     // store.when("assinatura.mensal").updated(render);
     if(window.store){
       var product = store.get("assinatura.mensal");
-      $scope.assinatura.preco = product.priceMicros / 1000000;
+      $scope.assinatura.preco = product.price;
       $scope.assinatura.id = product.id;
     }
 
@@ -49,22 +49,30 @@ angular
     }
 
     function setCallbacks(){
+      $rootScope.$emit('loading.init');
       if($scope.primeiraTentativa){
         $scope.primeiraTentativa = false;
+
+        store.once($scope.assinatura.id).approved(function(product){
+          product.verify();
+        });
 
         store.once($scope.assinatura.id).verified(function(product) {
           AuthService.setUserPro(true);
           $scope.$emit('assinatura-finalizada');
+          $rootScope.$emit('loading.finish');
         });
 
         store.once($scope.assinatura.id).cancelled(function(product){
           DataService.logError({product: product, erro: 'Processo de compra cancelado'});
           $scope.mostrarOpcaoWhatsapp();
+          $rootScope.$emit('loading.finish');
         });
 
         store.once($scope.assinatura.id).error(function(err){
           DataService.logError({detalhes: err, erro: 'Processo de compra gerou erro'});
           $scope.mostrarOpcaoWhatsapp();
+          $rootScope.$emit('loading.finish');
         });
       }
     }

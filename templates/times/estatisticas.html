@@ -26,6 +26,46 @@
             .numeros .col{
                 min-width: 0;
             }
+
+            .item-adversario {
+                width: 85px;
+                display: inline-block;
+                margin: 0 8px;
+                text-align: center;
+            }
+
+            .item-adversario .nome-adversario{
+                margin: 0;
+            }
+
+            .item-adversario .numeros-adversario{
+                color: #6f6f6f;
+                margin: 0;
+            }
+
+            .item-adversario img{
+                max-width: 40px;
+                max-height: 40px;
+            }
+
+            .secao-adversario{
+                margin: 5px 15px;
+                white-space: nowrap;
+                overflow-x: auto;
+                font-size: 0.9em;
+                margin-bottom: 32px;
+            }
+
+            .secao-adversario-titulo {
+                font-size: 1.2em;
+                color: #666;
+                margin: 16px;
+            }
+
+            .secao-adversario-titulo a {
+                float: right;
+                font-size: 0.9em;
+            }
         </style>
         <div ng-if="estatisticas" class="image-background img-jogador perfil-destacado">
             <img class="imagem-destacada" jog-escudo="time.escudo" jog-size="mid">
@@ -178,6 +218,62 @@
             </div>
         </div>
 
+        <div class="card card-grafico">
+            <h4 class="titulo-secao"> Adversários</h4>
+            <h5 class="secao-adversario-titulo">
+                Com mais confrontos 
+                <a ng-click="verAdversarios('maisJogos')">Ver todos</a>
+            </h5>
+            <div class="secao-adversario">
+                <div class="item-adversario" ng-click="verHistoricoConfrontos(adversario.time)" ng-repeat="adversario in estatisticas.adversarios.maisJogos">
+                    <img jog-escudo="adversario.time.escudo" jog-size="small">
+                    <h6 class="text-overflow nome-adversario">{{adversario.time.nome}}</h6>
+                    <p class="text-overflow numeros-adversario">{{adversario.jogos}} confrontos</p>
+                </div>
+            </div>
+
+            <h5 class="secao-adversario-titulo">
+                Fregueses
+                <a ng-click="verAdversarios('fregueses')">Ver todos</a>
+            </h5>
+            <div class="secao-adversario">
+                <div class="item-adversario" ng-click="verHistoricoConfrontos(adversario.time)" ng-repeat="adversario in estatisticas.adversarios.fregueses">
+                    <img jog-escudo="adversario.time.escudo" jog-size="small">
+                    <h6 class="text-overflow nome-adversario">{{adversario.time.nome}}</h6>
+                    <p class="text-overflow numeros-adversario">{{adversario.vitorias}} vitórias</p>
+                </div>
+            </div>
+
+            <h5 class="secao-adversario-titulo">
+                Carrascos
+                <a ng-click="verAdversarios('carrascos')">Ver todos</a>
+            </h5>
+            <div class="secao-adversario">
+                <div class="item-adversario" ng-click="verHistoricoConfrontos(adversario.time)" ng-repeat="adversario in estatisticas.adversarios.carrascos">
+                    <img jog-escudo="adversario.time.escudo" jog-size="small">
+                    <h6 class="text-overflow nome-adversario">{{adversario.time.nome}}</h6>
+                    <p class="text-overflow numeros-adversario">{{adversario.derrotas}} derrotas</p>
+                </div>
+            </div>
+            <div class="tabela-numeros padding">
+                <div class="row">
+                    <div class="col col-80 descricao">Total de adversários</div>
+                    <div class="col col-20 numero">{{estatisticas.totaisUnicos.adversarios}}</div>
+                </div>
+                <div class="row">
+                    <div class="col col-80 descricao" >Adversários cadastrados
+                    no Jogueiros</div>
+                    <div class="col col-20 numero">{{estatisticas.totaisUnicos.adversariosCadastrados}}</div>
+                </div>
+                <div class="row">
+                    <div class="col col-80 descricao">Adversários sem cadastro</div>
+                    <div class="col col-20 numero">
+                        {{estatisticas.totaisUnicos.adversarios - estatisticas.totaisUnicos.adversariosCadastrados}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card card-grafico cartoes">
             <h4 class="titulo-secao"> Cartões</h4>
             <div class="row padding-horizontal">
@@ -241,13 +337,9 @@
                     <div class="col col-80 descricao" >Locais</div>
                     <div class="col col-20 numero">{{estatisticas.totaisUnicos.locaisJogos}}</div>
                 </div>
-                <div class="row">
-                    <div class="col col-80 descricao">Adversários</div>
-                    <div class="col col-20 numero">{{estatisticas.totaisUnicos.adversarios}}</div>
-                </div>
             </div>
         </div>
-
+        <br/>
         <!-- Adversários: quantidade, carrasco, freguês, maior número de confrontos, lista de todos os adversários com uma barra mostrando vitorias, empates e derrotas. E o tamanho da barra representando a quantidade de jogos -->
 
         <!-- Maiores sequências: de vitórias, derrotas, empates, sem perder, sem ganhar, sem fazer gols, sem levar gols -->

@@ -8,11 +8,15 @@
         <form class="list padding">
             <label class="item item-input">
                 <span class="input-label">Mandante</span>
-                <input ng-model="jogo.mandante.nome" ng-focus="exibirModalTime('mandante')" type="text" placeholder="Time mandante">
+                <input ng-model="jogo.mandante.nome"
+                ng-focus="exibirModalTime('mandante')" type="text"
+                placeholder="Time mandante" jog-blur>
             </label>
             <label class="item item-input">
                 <span class="input-label">Visitante</span>
-                <input ng-model="jogo.visitante.nome" ng-focus="exibirModalTime('visitante')" type="text" placeholder="Time visitante">
+                <input ng-model="jogo.visitante.nome"
+                ng-focus="exibirModalTime('visitante')" type="text"
+                placeholder="Time visitante" jog-blur>
             </label>
             <label class="item item-input">
                 <span class="input-label">Quando?</span>
@@ -25,7 +29,7 @@
             </label>
             <label class="item item-input">
                 <span class="input-label">Onde?</span>
-                <input ng-model="jogo.local.nome" type="text" ng-focus="modalLocal.show()" placeholder="Local do jogo">
+                <input ng-model="jogo.local.nome" type="text" ng-focus="modalLocal.show()" placeholder="Local do jogo" jog-blur>
             </label>
             <ion-item ng-if="podeExibirSolicitante()" class="item-divider">Qual time solicitou arbitragem?</ion-item>
             <ion-list ng-if="podeExibirSolicitante()">

@@ -16,7 +16,7 @@
           <form class="list padding">
               <label class="item item-input" ng-class="jogo.timeAdversario.nome?'preenchido': ''">
                   <span class="input-label"><!-- <i class="icon ion-social-angular-outline placeholder-icon"></i> --> Contra quem?</span>
-                  <input ng-model="jogo.timeAdversario.nome" ng-focus="modalTime.show()" type="text" placeholder="Time adversário">
+                  <input ng-model="jogo.timeAdversario.nome" ng-focus="modalTime.show()" type="text" placeholder="Time adversário" jog-blur>
               </label>
               <label class="item item-input" ng-class="jogo.data?'preenchido': ''">
                   <span class="input-label"><!-- <i class="icon ion-ios-calendar-outline placeholder-icon"></i> -->Quando?</span>
@@ -29,15 +29,15 @@
               </label>
               <label ng-if="!jogo.esporte.efootball" class="item item-input" ng-class="jogo.local.nome?'preenchido': ''">
                   <span class="input-label"><!-- <i class="icon ion-ios-location-outline placeholder-icon"></i> -->Onde?</span>
-                  <input ng-model="jogo.local.nome" type="text" ng-focus="modalLocal.show()" placeholder="Local do jogo">
+                  <input ng-model="jogo.local.nome" type="text" ng-focus="modalLocal.show()" placeholder="Local do jogo" jog-blur>
               </label>
               <label class="item item-input" ng-class="jogo.timeAdversario.nome?'preenchido': ''">
                   <span class="input-label">Competição</span>
-                  <input ng-model="jogo.competicao.nome" ng-focus="modalCompeticao.show()" type="text" placeholder="Nome da competição">
+                  <input ng-model="jogo.competicao.nome" ng-focus="modalCompeticao.show()" type="text" placeholder="Nome da competição" jog-blur>
               </label>
               <label ng-if="jogo.esporte.efootball" class="item item-input">
                   <span class="input-label">Modo</span>
-                  <input ng-model="jogo.efootball.modo" ng-focus="modalModo.show()" type="text" placeholder="Informe um modo de jogo">
+                  <input ng-model="jogo.efootball.modo" ng-focus="modalModo.show()" type="text" placeholder="Informe um modo de jogo" jog-blur>
               </label>
               <button ng-disabled="!podeSalvar()" ng-click="salvarJogo()" class="button button-positive button-block">{{labelBotao}}</button>
           </form>

@@ -72,3 +72,11 @@ height: calc(49px + env(safe-area-inset-bottom));
 padding-top:env(safe-area-inset-top);
 }
       
+
+.platform-ios .has-tabs, .bar-footer.has-tabs {
+    bottom: 83px;
+}
+
+.platform-ios ion-content {
+    pointer-events: auto; 
+}

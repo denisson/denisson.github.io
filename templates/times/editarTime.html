@@ -3,7 +3,7 @@
         <form class="list" ng-submit="enviar()">
         <div class="captura-foto captura-foto-menor">
             <!-- <input type="file" id="input-file-foto" class="hidden" accept="image/*" /> -->
-            <img class="captura-foto-img" ng-click="capturarFoto()" id="logotipo" jog-escudo="time.escudo"></img>
+            <img class="captura-foto-img" ng-click="capturarFoto()" id="logotipo" jog-escudo="time.escudo" jog-size="mid" />
             <i ng-click="capturarFoto()" class="icon ion-image captura-foto-icon"></i>
         </div>
             <label class="item item-input">
@@ -12,11 +12,14 @@
             </label>
             <label class="item item-input">
                 <span class="input-label">Esporte</span>
-                <input ng-model="time.esporte.nome" ng-click="modalEsporte.show()" type="text" placeholder="Esporte que seu time joga" />
+                <input ng-model="time.esporte.nome"
+                ng-focus="modalEsporte.show()" type="text"
+                placeholder="Esporte que seu time joga" 
+                jog-blur/>
             </label>
             <label ng-if="!time.esporte.efootball" class="item item-input">
                 <span class="input-label">Cidade</span>
-                <input ng-model="time.cidade.nomeCompleto" ng-click="modalEstado.show()" type="text" placeholder="Cidade do seu time" />
+                <input ng-model="time.cidade.nomeCompleto" ng-focus="modalEstado.show()" type="text" placeholder="Cidade do seu time" jog-blur/>
             </label>
 
 
@@ -34,7 +37,7 @@
             </ion-list>
             <label ng-if="time.esporte.efootball" class="item item-input">
                 <span class="input-label">Plataforma</span>
-                <input ng-model="time.efootball.plataforma.nome" ng-click="modalPlataforma.show()" type="text" placeholder="Plataforma utilizada" />
+                <input ng-model="time.efootball.plataforma.nome" ng-focus="modalPlataforma.show()" type="text" placeholder="Plataforma utilizada" jog-blur/>
             </label>
             <ion-item ng-if="time.esporte.efootball" class="item-divider">Modo</ion-item>
             <ion-list ng-if="time.esporte.efootball">
@@ -47,7 +50,7 @@
 
             <label class="item item-input">
                 <span class="input-label">Telefone</span>
-                <input ng-model="time.telefone.numeroFormatado" ng-click="modalTelefone.show()" type="tel" placeholder="Informe um número" />
+                <input ng-model="time.telefone.numeroFormatado" ng-focus="modalTelefone.show()" type="tel" placeholder="Informe um número" jog-blur/>
             </label>
 
             <label class="item item-input">

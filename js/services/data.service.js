@@ -36,8 +36,10 @@ angular.module('app.services')
       return tratarRequisicao(requisicao);
   	}
 
-    function request(url){
-		var requisicao = $http.get(config.URL_API + url, defaultOptions());
+    function request(url, params){
+		var options = defaultOptions();
+		options.params = params;
+		var requisicao = $http.get(config.URL_API + url, options);
 		return tratarRequisicao(requisicao);
   	}
 
@@ -111,8 +113,8 @@ angular.module('app.services')
 		jogosRodada: function(pag, porPag){
 			return request('jogos/rodada?pag=' + pag + '&porPag=' + porPag);
 		},
-		jogosEncerradosTime: function(timeId, temporada, pag, porPag){
-			return request('jogos/' + timeId + '/' + temporada + '/encerrados?pag=' + pag + '&porPag=' + porPag);
+		jogosEncerradosTime: function(timeId, temporada, params){
+			return request('jogos/' + timeId + '/' + temporada + '/encerrados', params);
 		},
 		jogosAgendadosTime: function(timeId, temporada, pag, porPag){
 			return request('jogos/' + timeId + '/' + temporada +  '/proximos?pag=' + pag + '&porPag=' + porPag);
@@ -130,6 +132,10 @@ angular.module('app.services')
 		timeEstatisticas: function(id, temporada){
 			temporada = temporada || moment().year();
 			return request('time/' + id + '/estatisticas?temporada=' + temporada);
+		},
+		timeAdversarios: function(id, temporada, ordem){
+			temporada = temporada || moment().year();
+			return request('time/' + id + '/adversarios?temporada=' + temporada + '&ordem=' + ordem);
 		},
 		times: function(esporte, regiao, plataforma, ligaId){
 			esporte = esporte || '';
@@ -200,8 +206,9 @@ angular.module('app.services')
 		jogo: function(id){
 			return request('jogo/' + id);
 		},
-		jogoHistoricoConfrontos: function(mandanteId, visitanteId){
-			return request('jogos/confrontos/'+ mandanteId + '/' + visitanteId);
+		jogoHistoricoConfrontos: function(mandanteId, visitanteId, temporada){
+			temporada = temporada || '';
+			return request('jogos/confrontos/'+ mandanteId + '/' + visitanteId + '?temporada=' + temporada);
 		},
 		jogador: function(id){
 			return request('jogador/' + id);
@@ -438,6 +445,12 @@ angular.module('app.services')
 		},
 		solicitarJogueirosPRO: function(){
 			return post('usuario/solicitarJogueirosPRO');
+		},
+		infoTimeJogueirosPRO: function(timeId) {
+			return request('admin/infoPRO/' + timeId);
+		},
+		concederJogueiroPRO: function(timeId, meses){
+			return post('admin/grantPRO/' + timeId, {meses: meses});
 		},
 		registrarNotificacaoClicada: function(notificacaoId){
 			return post('usuario/notificacaoClicada', {notificacaoId: notificacaoId});

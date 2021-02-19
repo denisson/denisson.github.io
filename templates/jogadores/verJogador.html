@@ -1,13 +1,15 @@
-<ion-modal-view>
-    <ion-header-bar class="bar bar-header">
-        <button class="button button-clear button-primary" ng-click="modalJogador.hide()">
-            <i class="icon ion-ios-arrow-back"></i>
+<ion-view ng-controller="jogadorController" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button class="button back-button" jog-click-voltar style="margin: 0">
+          <i class="icon ion-ios-arrow-back"></i>
         </button>
-        <h1 class="title">{{jogadorModal.nome}}</h1>
+    </ion-nav-buttons>
+    <ion-nav-title>{{jogadorModal.nome}}</ion-nav-title>
+    <ion-nav-buttons side="right">
         <button ng-if="editavel()" class="button" ng-click="exibirMenuJogador(jogadorModal)">
             <i class="icon ion-android-more-vertical"></i>
         </button>
-    </ion-header-bar>
+    </ion-nav-buttons>
     <ion-content class="image-background img-jogador perfil-destacado">
 
         <div class="captura-foto-redonda">
@@ -228,5 +230,7 @@
             </div>
         </div>
 
+        <br/>
+
     </ion-content>
-</ion-modal-view>
+</ion-view>

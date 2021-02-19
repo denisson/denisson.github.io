@@ -69,9 +69,18 @@
                   </p>
                   <button ng-if="editavel('mandante')" ng-click="informarSumula()" class="button button-positive button-block  button-small" href="#">Cadastrar Súmula</button>
                 </div>
-                <ion-list ng-controller="jogadoresController">
-                    <ion-item  class="item-avatar" ng-click="verJogador(jogadorGol.jogador, temporadaJogo(jogo))" ng-repeat="jogadorGol in jogo.jogadores.mandante">
-                        <img jog-jogador="jogadorGol.jogador.foto" jog-size="small">
+                <ion-list>
+                    <!-- <ion-item  class="item-avatar" ng-click="verJogador(jogadorGol.jogador, temporadaJogo(jogo))" ng-repeat="jogadorGol in jogo.jogadores.mandante"> -->
+                      <ion-item class="item-avatar"
+                      ng-class="{'jogador-destaque': jogadorGol.destaque}"
+                      ng-click="verScoutJogador(jogadorGol)"
+                      ng-repeat="jogadorGol in jogo.jogadores.mandante">
+                        <img class="foto-jogador"
+                          jog-jogador="jogadorGol.jogador.foto" 
+                          jog-size="small" />
+                        <div class="jogador-destaque-icon">
+                          <i class="icon ion-ios-star"></i>
+                        </div>
                         {{jogadorGol.jogador.nome}}
                         <span class="jogo-jogador-gols">
                           <jog-jogador-gols jogador="jogadorGol"></jog-jogador-gols>
@@ -97,9 +106,14 @@
                   </div>
                   <button ng-if="editavel('visitante') && jogo.situacao == 'placarConfirmado'" ng-click="informarSumula()" class="button button-positive button-block button-small">Cadastrar Súmula</button>
                 </div>
-                <ion-list ng-controller="jogadoresController">
-                    <ion-item class="item-avatar" ng-click="verJogador(jogadorGol.jogador, temporadaJogo(jogo))" ng-repeat="jogadorGol in jogo.jogadores.visitante">
-                        <img jog-jogador="jogadorGol.jogador.foto" jog-size="small">
+                <ion-list>
+                    <ion-item class="item-avatar" ng-class="{'jogador-destaque': jogadorGol.destaque}" ng-click="verScoutJogador(jogadorGol)" ng-repeat="jogadorGol in jogo.jogadores.visitante">
+                        <img class="foto-jogador"
+                          jog-jogador="jogadorGol.jogador.foto" 
+                          jog-size="small" />
+                        <div class="jogador-destaque-icon">
+                          <i class="icon ion-ios-star"></i>
+                        </div>
                         {{jogadorGol.jogador.nome}}
                         <span class="jogo-jogador-gols">
                           <jog-jogador-gols jogador="jogadorGol"></jog-jogador-gols>
@@ -137,6 +151,7 @@
             </div>
           </ion-item>
         </div>
+        <br/>
       </div>
     </ion-content>
 </ion-view>

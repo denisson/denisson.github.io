@@ -281,6 +281,7 @@ angular
     function atualizarPerfisUsuario(){
       if(isAuthenticated()) {
         return DataService.usuarioPerfis().then(function(usuario){
+          setUserPro(usuario.pro);
           setPerfisUsuario(usuario.perfis);
           atualizarTokenPerfilAtivo(usuario);
         });        
@@ -295,9 +296,13 @@ angular
         var perfil = _.find(usuario.perfis, function(p){
           return p.perfil._id ==  perfilAtivo.perfil
         });//encontra o perfil na lista que veio do server para ter acesso ao novo token
-        atualizarPerfilCompleto(perfil);
-        setUserPro(usuario.pro);
+        if(perfil) {
+          atualizarPerfilCompleto(perfil);
+        } else {
+          atualizarPerfil(null);
+        }
       }
+      setUserPro(usuario.pro);
     }
 
     function setUserPro(pro){

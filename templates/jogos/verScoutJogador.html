@@ -1,0 +1,62 @@
+<ion-modal-view class="modal-minimo" style="max-width: 330px;">
+    <ion-header-bar class="bar bar-header">
+        <h1 class="title">{{jogadorModal.jogador.nome}}</h1>
+        <button class="button button-clear button-primary" ng-click="modalJogador.hide()">
+            <i class="icon ion-android-close"></i>
+        </button>
+    </ion-header-bar>
+    <ion-content class="image-background img-jogador perfil-destacado" scroll="false">
+
+        <div ng-click="verPerfilCompleto(jogadorModal.jogador)">
+            <div class="captura-foto-redonda">
+                <img class="captura-foto-img" jog-jogador="jogadorModal.jogador.foto" jog-size="big"></img>
+            </div>
+            <h1 class="nome">{{jogadorModal.jogador.nome}}</h1>
+            <p class="posicao">
+                {{jogadorModal.jogador.posicao}} {{jogadorModal.jogador.camisa && jogadorModal.jogador.posicao ? ' • ' : ''}} {{jogadorModal.jogador.camisa ? ('Camisa ' + jogadorModal.jogador.camisa ) : '' }}
+            </p>
+        </div>
+        <div ng-if="temNumerosNoJogo(jogadorModal)" class="card card-grafico">
+            <div class="tabela-numeros padding">
+                <div ng-if="jogadorModal.destaque" class="row">
+                    <div class="col col-80 descricao">Destaque da partida</div>
+                    <div class="col col-20 numero ng-binding"><i class="icon
+                    ion-ios-star" style="color:#f3973e;"></i></div>
+                </div>
+                <div ng-if="jogadorModal.gols" class="row">
+                    <div class="col col-80 descricao">Gols</div>
+                    <div class="col col-20 numero ng-binding">{{jogadorModal.gols}}</div>
+                </div>
+                <div ng-if="jogadorModal.assistencias" class="row">
+                    <div class="col col-80 descricao">Assistências</div>
+                    <div class="col col-20 numero ng-binding">{{jogadorModal.assistencias}}</div>
+                </div>
+                <div ng-if="jogadorModal.desarmes" class="row">
+                    <div class="col col-80 descricao">Desarmes</div>
+                    <div class="col col-20 numero ng-binding">{{jogadorModal.desarmes}}</div>
+                </div>
+                <div ng-if="jogadorModal.cartoes.amarelo" class="row">
+                    <div class="col col-80 descricao">Cartões amarelos</div>
+                    <div class="col col-20 numero ng-binding">{{jogadorModal.cartoes.amarelo}}</div>
+                </div>
+                <div ng-if="jogadorModal.cartoes.vermelho" class="row">
+                    <div class="col col-80 descricao">Cartões vermelhos</div>
+                    <div class="col col-20 numero ng-binding">{{jogadorModal.cartoes.vermelho}}</div>
+                </div>
+                <div ng-if="jogadorModal.golsSofridos" class="row">
+                    <div class="col col-80 descricao">Gols Sofridos</div>
+                    <div class="col col-20 numero ng-binding">{{jogadorModal.golsSofridos}}</div>
+                </div>
+                <div ng-if="jogadorModal.defesasDificeis" class="row">
+                    <div class="col col-80 descricao">Defesas Difíceis</div>
+                    <div class="col col-20 numero ng-binding">{{jogadorModal.defesasDificeis}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-click="verPerfilCompleto(jogadorModal.jogador)" class="text-center" style="margin: 10px;">
+            <a ng-click="event.preventDefault()" >Ver perfil completo</a>
+        </div>
+
+    </ion-content>
+</ion-modal-view>

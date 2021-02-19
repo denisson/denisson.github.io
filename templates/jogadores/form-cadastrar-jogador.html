@@ -1,0 +1,40 @@
+<form ng-submit="salvarJogador(jogador)">
+    <div class="captura-foto captura-foto-redonda">
+        <img id="foto-capturada" class="captura-foto-img" ng-click="capturarFoto()"  jog-jogador="jogador.foto" jog-size="large"></img>
+        <i ng-click="capturarFoto(jogador)" class="icon ion-image captura-foto-icon"></i>
+    </div>
+        <label class="item item-input">
+            <span class="input-label">Nome</span>
+            <input ng-model="jogador.nome" type="text" placeholder="Nome ou apelido">
+        </label>
+        <label class="item item-input item-select">
+            <span class="input-label">Posição</span>
+            <!-- <input ng-model="jogador.posicao" type="text" placeholder="Posição que joga no time"> -->
+            <select ng-model="jogador.posicao" ng-if="posicoes.length">
+                <option value="" disabled selected>Posição que joga no time</option>
+                <option 
+                    ng-repeat="posicao in posicoes"
+                    value="{{posicao.nome}}"
+                    ng-selected="posicao.nome == jogador.posicao">
+                    {{posicao.nome}}
+                </option>
+            </select>
+        </label>
+        <label class="item item-input">
+            <span class="input-label">Camisa</span>
+            <input ng-model="jogador.camisa" type="text" placeholder="Número da camisa (opcional)">
+        </label>
+        <ul ng-if="opcaoConvidado" class="list">
+          <li class="item item-toggle">
+             Jogador convidado
+             <p style="color: #9E9E9E;">Somente para este jogo</p>
+             <label class="toggle toggle-positive">
+               <input type="checkbox" ng-model="jogador.convidado">
+               <div class="track">
+                 <div class="handle"></div>
+               </div>
+             </label>
+          </li>
+        </ul>
+        <button ng-disabled="!jogador.nome" type="submit" class="button button-positive button-block">Salvar</button>
+</form>

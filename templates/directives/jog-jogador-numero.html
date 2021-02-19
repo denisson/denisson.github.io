@@ -1,0 +1,19 @@
+<style>
+    .jog-jogador-numero .titulo{
+        text-transform: uppercase;
+    }
+</style>
+<div class="opcao jog-jogador-numero">
+                  
+    <small class="titulo">{{titulo}}</small>
+    <span class="botoes">
+      <button class="button button-outline button-positive ion-minus button-stepper button-stepper-sm" ng-disabled="!allowDecrement()" type="button" ng-click="decrement()"></button>
+      
+      <span>
+          <input class="input-stepper" type="number" min="{{min}}" step="1" ng-model="value">
+      </span>
+          
+      <button class="button ion-plus button-positive button-outline button-stepper button-stepper-sm" ng-disabled="!allowIncrement()" type="button" ng-click="increment()"></button>
+    </span>                  
+
+</div>
