@@ -16,21 +16,32 @@ angular
 
     return {
         ordenarJogadores: function (jogadores) {
-            var ordem = {
-                'elenco': 'asc',
-                'destaque': 'desc',
-                'gols': 'desc',
-                'gosSofridos': 'desc',
-                'assistencias': 'desc',
-                'defesasDificeis': 'desc',
-                'desarmes': 'desc',
-                'cartoes.vermelho': 'asc',
-                'cartoes.amarelo': 'asc',
-                'cartoes.azul': 'asc',
-                'jogador.nome': 'asc'
-            };
 
-            return _.orderBy(jogadores, _.keys(ordem), _.values(ordem));
+            jogadores.sort(function (jogadorA, jogadorB) {
+                var ordem = {
+                    'elenco': 'desc',
+                    'destaque': 'desc',
+                    'gols': 'desc',
+                    'golsSofridos': 'desc',
+                    'assistencias': 'desc',
+                    'defesasDificeis': 'desc',
+                    'desarmes': 'desc',
+                    'cartoes.vermelho': 'asc',
+                    'cartoes.amarelo': 'asc',
+                    'cartoes.azul': 'asc',
+                };
+
+                for (var attr in ordem) {
+                    var valorA = _.get(jogadorA, attr, 0);
+                    var valorB = _.get(jogadorB, attr, 0);
+                    var ordenar = ordem[attr] == 'asc' ? 1 : -1;
+                    if (valorA != valorB) {
+                        return (valorA - valorB) * ordenar;
+                    }
+                }
+                return _.get(jogadorA, 'jogador.nome', '').localeCompare(_.get(jogadorB, 'jogador.nome', ''));
+            });
+            return jogadores;
         },
         temNumeros: function(jogador){
             var campos = [
