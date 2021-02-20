@@ -220,41 +220,48 @@
 
         <div class="card card-grafico">
             <h4 class="titulo-secao"> Adversários</h4>
-            <h5 class="secao-adversario-titulo">
-                Com mais confrontos 
-                <a ng-click="verAdversarios('maisJogos')">Ver todos</a>
-            </h5>
-            <div class="secao-adversario">
-                <div class="item-adversario" ng-click="verHistoricoConfrontos(adversario.time)" ng-repeat="adversario in estatisticas.adversarios.maisJogos">
-                    <img jog-escudo="adversario.time.escudo" jog-size="small">
-                    <h6 class="text-overflow nome-adversario">{{adversario.time.nome}}</h6>
-                    <p class="text-overflow numeros-adversario">{{adversario.jogos}} confrontos</p>
+            <div ng-if="estatisticas.adversarios.maisJogos.length">
+                <h5 class="secao-adversario-titulo">
+                    Com mais confrontos 
+                    <a ng-click="verAdversarios('maisJogos')">Ver todos</a>
+                </h5>
+                <div class="secao-adversario">
+                    <div class="item-adversario" ng-click="verHistoricoConfrontos(adversario.time)" ng-repeat="adversario in estatisticas.adversarios.maisJogos">
+                        <img jog-escudo="adversario.time.escudo" jog-size="small">
+                        <h6 class="text-overflow nome-adversario">{{adversario.time.nome}}</h6>
+                        <p class="text-overflow numeros-adversario">{{adversario.jogos}} confrontos</p>
+                    </div>
                 </div>
             </div>
 
-            <h5 class="secao-adversario-titulo">
-                Fregueses
-                <a ng-click="verAdversarios('fregueses')">Ver todos</a>
-            </h5>
-            <div class="secao-adversario">
-                <div class="item-adversario" ng-click="verHistoricoConfrontos(adversario.time)" ng-repeat="adversario in estatisticas.adversarios.fregueses">
-                    <img jog-escudo="adversario.time.escudo" jog-size="small">
-                    <h6 class="text-overflow nome-adversario">{{adversario.time.nome}}</h6>
-                    <p class="text-overflow numeros-adversario">{{adversario.vitorias}} vitórias</p>
+            <div ng-if="estatisticas.adversarios.fregueses.length">
+                <h5 class="secao-adversario-titulo">
+                    Fregueses
+                    <a ng-click="verAdversarios('fregueses')">Ver todos</a>
+                </h5>
+                <div class="secao-adversario">
+                    <div class="item-adversario" ng-click="verHistoricoConfrontos(adversario.time)" ng-repeat="adversario in estatisticas.adversarios.fregueses">
+                        <img jog-escudo="adversario.time.escudo" jog-size="small">
+                        <h6 class="text-overflow nome-adversario">{{adversario.time.nome}}</h6>
+                        <p class="text-overflow numeros-adversario">{{adversario.vitorias}} vitórias</p>
+                    </div>
                 </div>
             </div>
 
-            <h5 class="secao-adversario-titulo">
-                Carrascos
-                <a ng-click="verAdversarios('carrascos')">Ver todos</a>
-            </h5>
-            <div class="secao-adversario">
-                <div class="item-adversario" ng-click="verHistoricoConfrontos(adversario.time)" ng-repeat="adversario in estatisticas.adversarios.carrascos">
-                    <img jog-escudo="adversario.time.escudo" jog-size="small">
-                    <h6 class="text-overflow nome-adversario">{{adversario.time.nome}}</h6>
-                    <p class="text-overflow numeros-adversario">{{adversario.derrotas}} derrotas</p>
+            <div ng-if="estatisticas.adversarios.carrascos.length">
+                <h5 class="secao-adversario-titulo">
+                    Carrascos
+                    <a ng-click="verAdversarios('carrascos')">Ver todos</a>
+                </h5>
+                <div class="secao-adversario">
+                    <div class="item-adversario" ng-click="verHistoricoConfrontos(adversario.time)" ng-repeat="adversario in estatisticas.adversarios.carrascos">
+                        <img jog-escudo="adversario.time.escudo" jog-size="small">
+                        <h6 class="text-overflow nome-adversario">{{adversario.time.nome}}</h6>
+                        <p class="text-overflow numeros-adversario">{{adversario.derrotas}} derrotas</p>
+                    </div>
                 </div>
             </div>
+
             <div class="tabela-numeros padding">
                 <div class="row">
                     <div class="col col-80 descricao">Total de adversários</div>
