@@ -208,7 +208,7 @@ angular.module('app.services')
 		},
 		jogoHistoricoConfrontos: function(mandanteId, visitanteId, temporada){
 			temporada = temporada || '';
-			return request('jogos/confrontos/'+ mandanteId + '/' + visitanteId + '?temporada=' + temporada);
+			return request('jogos/confrontos/'+ mandanteId + '/' + encodeURIComponent(visitanteId) + '?temporada=' + temporada);
 		},
 		jogador: function(id){
 			return request('jogador/' + id);
