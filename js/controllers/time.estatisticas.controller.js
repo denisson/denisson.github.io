@@ -36,7 +36,7 @@ angular
     }
 
     $scope.verHistoricoConfrontos = function(adversario){
-        $state.go('times_confrontos', {idTimeA: $scope.timeId, idTimeB: adversario._id || adversario.nome});
+        $state.go('times_confrontos', {idTimeA: $scope.timeId, idTimeB: adversario._id || adversario.nome, temporada: $scope.temporada,});
     }
 
     function mostrarAlerta(mensagem){
