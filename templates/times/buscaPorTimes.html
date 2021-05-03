@@ -7,31 +7,114 @@
         <i class="icon ion-android-arrow-dropdown" style="color:#999"></i>
       </button>
   </ion-nav-buttons>
-    <ion-content padding="true" class="scroll-with-keyboard">
-        <form class="list">
+    <style>
+
+        .buscar-times .search-filters {
+            padding: 0 10px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .buscar-times .search-filters::-webkit-scrollbar {
+            display: none;
+        }
+
+        .buscar-times .search-filters .filter {
+            display: inline-block;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-right: 5px;
+            
+            padding: 6px 14px;
+            min-height: 30px;
+            /* background-color: #f5f5f5; */
+            background-color: #fbfbfb;
+            color: #222;
+            font-weight: 500;
+
+            border: solid 1px #ddd;
+        }
+
+        .buscar-times .search-box{
+            margin-bottom: 0;
+        }
+
+        .buscar-times .search-box .item-input{
+            background-color: #EFEFEF;
+            border: 0;
+            border-radius: 8px;
+            color: #C6C6C6;
+        }
+
+        .buscar-times .search-box .item-input .icon{
+            color: #9C9C9C;
+        }
+    </style>
+    <ion-content class="buscar-times" class="scroll-with-keyboard">
+
+        <form class="search-box list padding">
             <label class="item item-input">
                 <i class="icon ion-search placeholder-icon"></i>
                 <input ng-model="search.query" ng-change="buscarTime(search.query)" type="search" placeholder="Nome do time">
             </label>
         </form>
-        <ion-list class="lista-times">
-            <!-- <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in times | latinize | fuzzyBy:'nome':search"> -->
-            <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in times track by time._id">
-                <img jog-escudo="time.escudo" jog-size="small" style="border-radius: 5px">
-                <h2>{{time.nome}}</h2>
-                <p>{{time.numeros.vitorias}} vitórias, {{time.numeros.empates}} empates e {{time.numeros.derrotas}} derrotas</p>
-            </ion-item>
-        </ion-list>
-        <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarResultados()" distance="10%"></ion-infinite-scroll>
-        <ion-list ng-if="!temMaisResultados && timesSemCidade.length" class="lista-times">
-            <ion-item class="item-divider" style="border: 0;">Times sem cidade informada</ion-item>
-            <!-- <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in times | latinize | fuzzyBy:'nome':search"> -->
-            <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in timesSemCidade track by time._id">
-                <img jog-escudo="time.escudo" jog-size="small" style="border-radius: 5px">
-                <h2>{{time.nome}}</h2>
-                <p>{{time.numeros.vitorias}} vitórias, {{time.numeros.empates}} empates e {{time.numeros.derrotas}} derrotas</p>
-            </ion-item>
-        </ion-list>
-        <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultadosSemCidade" on-infinite="carregarResultadosSemCidade()" distance="10%"></ion-infinite-scroll>
+        <div ng-if="!perfilFiltro.esporte.efootball" class="search-filters">
+            <div on-selecionado="filtrarPor('cidade', cidade)" jog-selecionar-cidade estado="perfilFiltro.regiao" class="filter"> 
+                <i class="icon ion-ios-location"></i> 
+                {{filtros.cidade.nome || 'Todas as cidades'}}
+                <i class="icon ion-android-arrow-dropdown"></i>
+            </div>
+            <div class="filter" selecionar-modalidade modal-minimo="true" on-selecionado="filtrarPor('modalidade', modalidade)">
+                {{descricaoModalidade(filtros.modalidade) || 'Modalidade'}}
+                <i class="icon ion-android-arrow-dropdown"></i>
+            </div>
+            <!-- <div class="filter" on-selecionado="filtrarPor('genero', genero)">
+                <select>
+                    <option disabled selected>Sexo</option>
+                    <option ng-repeat="genero in generos" >{{genero.nome}}</option>
+                </select>
+                <i class="icon ion-android-arrow-dropdown"></i>
+            </div> -->
+            <div class="filter" jog-options-modal options="generos" key="chave" value="nome" title="Sexo" on-selecionado="filtrarPor('genero', option)">
+                {{filtros.genero.nome || 'Sexo'}}
+                <i class="icon ion-android-arrow-dropdown"></i>
+            </div>
+            <div class="filter" selecionar-categoria on-selecionado="filtrarPorCategoria(categoria, idade)" modal-minimo="true">
+                {{filtros.idade.descricao || 'Idade'}}
+                <i class="icon ion-android-arrow-dropdown"></i>
+            </div>
+        </div>
+        <div class="search-results padding">
+            <ion-list class="lista-times">
+                <!-- <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in times | latinize | fuzzyBy:'nome':search"> -->
+                <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in times track by time._id">
+                    <img jog-escudo="time.escudo" jog-size="small" style="border-radius: 5px">
+                    <h2>{{time.nome}}</h2>
+                    <p>{{time.numeros.vitorias}} vitórias, {{time.numeros.empates}} empates e {{time.numeros.derrotas}} derrotas</p>
+                    <!-- <p>{{time.relevancia}}</p> -->
+                    <p>{{descricaoTime(time)}}</p>
+                </ion-item>
+            </ion-list>
+            <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarResultados()" distance="10%"></ion-infinite-scroll>
+            <ion-list ng-if="!temMaisResultados && timesSemCidade.length" class="lista-times">
+                <ion-item class="item-divider" style="border: 0;">Times sem cidade informada</ion-item>
+                <!-- <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in times | latinize | fuzzyBy:'nome':search"> -->
+                <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in timesSemCidade track by time._id">
+                    <img jog-escudo="time.escudo" jog-size="small" style="border-radius: 5px">
+                    <h2>{{time.nome}}</h2>
+                    <p>{{time.numeros.vitorias}} vitórias, {{time.numeros.empates}} empates e {{time.numeros.derrotas}} derrotas</p>
+                </ion-item>
+            </ion-list>
+            <div ng-show="!temMaisResultados && textoRemoverFiltro()" class="padding mensagem-destacada">
+                <h4 class="dark">Não encontrou o time?</h2>
+                <p class="dark"><a href="#" ng-click="removerFiltro(); $event.preventDefault()">{{textoRemoverFiltro()}}</a></p>
+            </div>
+            <p ng-show="dadosCarregados && !temMaisResultados && !textoRemoverFiltro() && !times.length && !timesSemCidade.length" class="dark padding">
+                Nenhum resultado encontrado {{ search.query ? 'para "' + search.query + '"' : '' }}
+            </p>
+            <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultadosSemCidade" on-infinite="carregarResultadosSemCidade()" distance="10%"></ion-infinite-scroll>
+        </div>
     </ion-content>
 </ion-view>
