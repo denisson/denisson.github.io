@@ -251,7 +251,11 @@ angular
       perfilCompleto.cidade = perfilCompleto.perfil.cidade;
       perfilCompleto.esporte = perfilCompleto.perfil.esporte;
       perfilCompleto.efootball = perfilCompleto.perfil.efootball;
+      perfilCompleto.modalidade = perfilCompleto.perfil.modalidade;
+      perfilCompleto.idade = perfilCompleto.perfil.idade;
+      perfilCompleto.genero = perfilCompleto.perfil.genero;
       perfilCompleto.pro = perfilCompleto.perfil.pro;
+      perfilCompleto.dono = perfilCompleto.perfil.dono;
       perfilCompleto.perfil = perfilCompleto.perfil._id;
       atualizarPerfil(perfilCompleto, perfilCompleto.token);
     }
@@ -319,6 +323,12 @@ angular
       perfil.cidade = alteracoes.cidade;
       perfil.esporte = alteracoes.esporte;
       perfil.efootball = alteracoes.efootball;
+      perfil.efootball = alteracoes.efootball;
+      perfil.efootball = alteracoes.efootball;
+      perfil.efootball = alteracoes.efootball;
+      perfil.modalidade = alteracoes.modalidade;
+      perfil.idade = alteracoes.idade;
+      perfil.genero = alteracoes.genero;
       atualizarPerfil(perfil);
     }
     
@@ -392,12 +402,20 @@ angular
       return _.get(getPerfilAtivo(), 'cidade.uf');
     }
 
+    function getCidade(){
+      return _.get(getPerfilAtivo(), 'cidade');
+    }
+
     function getPerfilFiltro(){
       var perfil = getPerfilAtivo();
       return {
         esporte: _.get(perfil, 'esporte'),
         regiao: getRegiao(),
+        cidade: getCidade(),
         plataforma: _.get(perfil, 'efootball.plataforma'),
+        modalidade: _.get(perfil, 'modalidade'),
+        idade: _.get(perfil, 'idade'),
+        genero: _.get(perfil, 'genero'),
         modos: _.get(perfil, 'efootball.modos')
       }
     }
@@ -415,6 +433,15 @@ angular
     function isTimePro(){
       var perfil = getPerfilAtivo();
       return perfil && perfil.tipo == 'Time' && perfil.pro;
+    }
+
+    function getPrimeiroTime(){
+      var user = getUsuarioLogado();
+      if( user ){ 
+        return _.find(user.perfis, {tipo: 'Time'});
+      } else {
+        return null;
+      }
     }
     
     function adminJogueiros(){
@@ -455,6 +482,7 @@ angular
       isUsuarioPro: isUsuarioPro,
       setUserPro: setUserPro,
       isTimePro: isTimePro,
+      getPrimeiroTime: getPrimeiroTime,
       adminJogueiros: adminJogueiros,
     };
 });

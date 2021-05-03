@@ -1,0 +1,12 @@
+<ion-modal-view class="modal-minimo" style="width: 90%; max-width: 400px">
+    <ion-header-bar class="bar bar-header bar-stable">
+        <h1 class="title">Novidade no Jogueiros!</h1>
+    </ion-header-bar>
+    <ion-content>
+        <p style="color: #666; margin: 20px">Para ficar mais fácil de encontrar times da mesma modalidade, categoria e sexo, informe os dados abaixo.</p>
+        <sobre-time time="time"></sobre-time>
+        <p class="padding">
+            <button ng-disabled="!completo()" ng-click="salvar()" class="button button-positive button-block">Salvar</button>
+        </p>
+    </ion-content>
+</ion-modal-view>

@@ -1,0 +1,15 @@
+<label class="item item-input">
+    <span class="input-label">Telefone</span>
+    <input ng-model="time.telefone.numeroFormatado" ng-focus="modalTelefone.show()" type="tel" placeholder="Informe um número" jog-blur/>
+</label>
+
+<label class="item item-input">
+    <span class="input-label">Site</span>
+    <input ng-model="time.site" type="text" placeholder="Site do time" />
+</label>
+<label class="item item-input">
+    <span class="input-label">Instagram</span>
+    <input ng-model="time.instagram" type="text" placeholder="Conta do instagram" />
+</label>
+
+<jog-textarea label="Biografia" objeto="time" campo-texto="biografia" descricao="Fale sobre o time, conquistas, objetivos, ..." limite="150"></jog-textarea>

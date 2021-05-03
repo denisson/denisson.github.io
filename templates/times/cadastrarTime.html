@@ -2,7 +2,7 @@
     <ion-content padding="true" class="image-background img-login">
         <div class="mensagem-destacada" style="padding: 15px 30px;">
             <h2 class="dark" style="margin-left:-15px; margin-right: -15px">Bem-vindo, Jogueiro!</h2>
-            <p class="dark">Manda o escudo do seu time pra gente, depois informa o nome, a cidade e pronto!</p>
+            <p class="dark">Manda o escudo do seu time pra gente, depois informa o nome e mais algumas informações para conhecermos melhor o seu time.</p>
         </div>
         <form class="list" ng-submit="enviar()">
         <div class="captura-foto">
@@ -18,11 +18,16 @@
             <ion-list class="jog-radio">
                 <ion-radio ng-repeat="esporte in esportes" name="esporte" ng-model="time.esporteChave" value="{{esporte.chave}}">{{esporte.nome}}</ion-radio>
             </ion-list>
-            <ion-item ng-if="time.esporteChave && !efootball()" class="item-divider">Cidade</ion-item>
-            <label ng-if="time.esporteChave && !efootball()" class="item item-input">
-                <span class="input-label">Cidade</span>
-                <input ng-model="time.cidade.nomeCompleto" ng-focus="modalEstado.show()" type="text" placeholder="Cidade do seu time" jog-blur/>
-            </label>
+            <div ng-if="time.esporteChave && !efootball()">
+                <ion-item class="item-divider">Sobre o time</ion-item>
+                <label class="item item-input">
+                    <span class="input-label">Cidade</span>
+                    <input ng-model="time.cidade.nomeCompleto" ng-focus="modalEstado.show()" type="text" placeholder="Cidade do seu time" jog-blur/>
+                </label>
+                <div ng-if="time.esporteChave == 'FUT'">
+                    <sobre-time time="time"></sobre-time>
+                </div>
+            </div>
             <ion-item ng-if="efootball()" class="item-divider">Plataforma</ion-item>
             <ion-list ng-if="efootball()" class="jog-radio">
                 <ion-radio name="plataforma" ng-model="time.efootball.plataforma" ng-repeat="plataforma in plataformas" ng-value="plataforma">{{plataforma.nome}}</ion-radio>
