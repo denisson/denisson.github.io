@@ -1,0 +1,14 @@
+<style>
+    .jog-options-horizontal .button-outline {
+        color: #444;
+    }
+</style>
+<div class="button-bar jog-options-horizontal" >
+    <button 
+        ng-repeat="option in options"
+        ng-click="selecionar(option); $event.preventDefault()" 
+        ng-class="{'button-outline': !isSelected(option), 'button-positive': isSelected(option)}" 
+        class="button button-stepper-sm">
+        {{option[value]}}
+    </button>
+</div>

@@ -1,7 +1,7 @@
 angular
   .module('app.controllers')
-  .controller('selecionarPerfilController', ['$scope', '$rootScope',  '$state', '$stateParams', 'DataService', 'AuthService', '$jgModalAssinatura',
-  function ($scope, $rootScope, $state, $stateParams, DataService, AuthService, $jgModalAssinatura) {
+  .controller('selecionarPerfilController', ['$scope', '$rootScope',  '$state', 'DataService', 'AuthService', '$jgModalAssinatura',
+  function ($scope, $rootScope, $state, DataService, AuthService, $jgModalAssinatura) {
 
     $scope.selecionarPerfil = function(perfilCompleto){
       AuthService.atualizarPerfilCompleto(perfilCompleto);

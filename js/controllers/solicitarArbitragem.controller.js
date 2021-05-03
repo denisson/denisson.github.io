@@ -58,6 +58,6 @@ angular
     } 
     
     $scope.naoSolicitar = function(){
-      AuthService.redirectClean('abasInicio.jogo-aba-time', null, {id: $scope.jogo._id});
+      AuthService.redirectClean('abasInicio.meuTime');
     }
   }])
