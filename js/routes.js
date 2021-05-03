@@ -286,6 +286,24 @@ angular.module('app.routes', [])
       cache: false
     })
 
+    .state('onboarding_jogo', { 
+      url: '/onboarding/primeiroJogo',
+      templateUrl: 'templates/onboarding/primeiroJogo.html',
+      cache: false
+    })
+
+    .state('onboarding_adversario', {
+      url: '/onboarding/encontrarAdversario',
+      templateUrl: 'templates/onboarding/encontrarAdversario.html',
+      cache: false
+    })
+
+    .state('onboarding_completar', {
+      url: '/onboarding/completarPerfil',
+      templateUrl: 'templates/onboarding/completarPerfil.html',
+      cache: false
+    })
+
     // .state('racha_cadastrar', {
     //   url: '/racha/cadastrar',
     //   templateUrl: 'templates/ligaAmistosos/racha/cadastroRacha.html',

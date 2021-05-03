@@ -1,0 +1,19 @@
+<ion-view title="Complete o seu perfil" hide-nav-bar="true" ng-controller="completarPerfilController">
+    <ion-content padding="true" class="image-background img-login">
+      <form ng-submit="salvar()">
+        <div class="mensagem-destacada" style="padding: 15px 30px;">
+            <h2 class="dark" style="margin-left:-15px; margin-right: -15px">Complete o perfil do time</h2>
+            <p class="dark">Você pode informar um telefone para que outros times entrem em contato, e, se tiver um site ou instagram, informa aqui também que é uma ótima maneira de divulgar o seu time. As informações abaixo são opcionais, mas não custa nada, né? ;)</p>
+        </div>
+
+        <informacoes-adicionais-time time="time"></informacoes-adicionais-time>
+
+        <button type="submit" class="button button-positive button-block">Salvar</button>
+        <p style="text-align: center">
+          ou <br/>
+          <a ui-sref="onboarding_jogo">Pular esta etapa</a>
+        </p>
+      </form>
+    </div>
+    </ion-content>
+</ion-view>

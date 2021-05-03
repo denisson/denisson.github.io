@@ -1,0 +1,16 @@
+<ion-view title="{{titulo}}" hide-nav-bar="true">
+    <ion-content padding="true" class="image-background img-login">
+        <div class="mensagem-destacada" style="padding: 15px 30px;">
+            <h2 class="dark" style="margin-left:-15px; margin-right: -15px">Quando é o próximo jogo?</h2>
+            <!-- <p class="dark">Pronto! Seu time já está no Jogueiros!</p> -->
+            <p class="dark">Seu próximo jogo já está agendado? Clique no botão abaixo para cadastrá-lo e o Jogueiros vai te lembrar de informar o placar assim que terminar a partida.</p>
+        </div>
+
+        <button ui-sref="novoJogo" class="button button-positive button-block">Cadastrar jogo</button>
+        <p style="text-align: center">
+            ou <br/>
+            <a ui-sref="onboarding_adversario" ng-click="sair()">Pular esta etapa</a>
+        </p>
+        <br/>
+    </ion-content>
+</ion-view>

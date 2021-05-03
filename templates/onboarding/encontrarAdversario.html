@@ -1,0 +1,36 @@
+<ion-view title="{{titulo}}" hide-nav-bar="true">
+    <ion-content padding="true" class="image-background img-login">
+        <div class="padding-horizontal padding-top" style="text-align: right">
+            <a href="#" ui-sref="abasInicio.meuPerfil">Pular</a>
+        </div>
+        <div class="mensagem-destacada" style="padding: 15px 30px;">
+            <h2 class="dark" style="margin-left:-15px; margin-right: -15px">Procurando adversário?</h2>
+            <p class="dark">Veja algumas sugestões abaixo. Para marcar o jogo, clique no time e entre em contato pelo whatsapp.</p>
+        </div>
+
+        <div ng-controller="buscaPorTimesController" class="search-results padding">
+            <ion-list class="lista-times">
+                <!-- <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in times | latinize | fuzzyBy:'nome':search"> -->
+                <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in times track by time._id">
+                    <img jog-escudo="time.escudo" jog-size="small" style="border-radius: 5px">
+                    <h2>{{time.nome}}</h2>
+                    <p>{{time.numeros.vitorias}} vitórias, {{time.numeros.empates}} empates e {{time.numeros.derrotas}} derrotas</p>
+                    <!-- <p>{{time.relevancia}}</p> -->
+                    <!-- <p>{{time.modalidade.tipo}}</p> -->
+                    <!-- <p>{{time.cidade.nome}}</p> -->
+                    <p>{{descricaoTime(time)}}</p>
+                </ion-item>
+            </ion-list>
+            <ion-infinite-scroll ng-if="dadosCarregados && page <= 3" on-infinite="carregarResultados()" distance="10%"></ion-infinite-scroll>
+        </div>
+
+        <div class="padding">
+            <button ui-sref="abasInicio.busca" class="button button-positive button-block">Ver mais times</button>
+            <p style="text-align: center">
+                ou <br/>
+                <a ui-sref="abasInicio.meuPerfil">Pular esta etapa</a>
+            </p>
+        </div>
+        <br/>
+    </ion-content>
+</ion-view>
