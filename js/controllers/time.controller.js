@@ -1,16 +1,25 @@
 angular
   .module('app.controllers')
   .controller('timeController', 
-  ['$rootScope', '$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicActionSheet', '$ionicHistory', '$ionicPopup', '$ionicModal' , 'config', '$jgModalAssinatura', 
-  function ($rootScope, $scope, $state, $stateParams, DataService, AuthService, $ionicActionSheet,$ionicHistory, $ionicPopup, $ionicModal, config, $jgModalAssinatura) {
+  ['$rootScope', '$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicActionSheet', '$ionicPopup', '$ionicModal' , 'config', '$jgModalAssinatura', 'TimeService',
+  function ($rootScope, $scope, $state, $stateParams, DataService, AuthService, $ionicActionSheet, $ionicPopup, $ionicModal, config, $jgModalAssinatura, TimeService) {
     var diasExtenso = ['','Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
     $scope.jogadoresOrdem = 'ARTILHARIA';
     $rootScope.$emit('loading.init');
     $scope.temporada = $stateParams.temporada;
-    $scope.mostrarTodosRankings = true;
+    $scope.mostrarTodosRankings = true;  
 
     $scope.usuarioPro = function(){
       return AuthService.isUsuarioPro();
+    }
+
+    $scope.acessoLiberado = function(){
+      if( AuthService.isUsuarioPro() ) {
+        return true;
+      } else if ( AuthService.getPrimeiroTime() == $scope.timeId ){
+        return true;
+      }
+      return false;
     }
 
     $scope.timePro = function(){
@@ -94,6 +103,10 @@ angular
     $scope.atualizar = function(){
       $scope.temporada = $stateParams.temporada = $stateParams.temporada || moment().year();
       $scope.timeId = $stateParams.id || AuthService.getTime();
+
+      // if( $scope.editavel() && !$scope.acessoLiberado() ) {
+      //   mostrarAlerta('Precisa do PRO');
+      // }
       
       DataService.timeJogos($scope.timeId, $stateParams.temporada).then(function(time){
         if(!time){
@@ -133,6 +146,8 @@ angular
         $scope.$broadcast('scroll.refreshComplete');
         $rootScope.$emit('loading.finish');
         checarCidade();
+        checarTimeBloqueado();
+        if($scope.editavel()) TimeService.checarCadastroCompleto($scope.time);
       }).catch(function(){
           //Checar quando falhar a consulta ao banco e exibir um erro
           mostrarAlerta('Não foi possível carregar as informações do time');
@@ -211,6 +226,10 @@ angular
       return $scope.time && AuthService.getTime() && $scope.timeId === AuthService.getTime();
     }
 
+    $scope.habilitado = function() {
+      return $scope.editavel() && $scope.time.ativo;
+    }
+
     $scope.adminJogueiros = function(){
       return AuthService.adminJogueiros();
     }
@@ -225,27 +244,6 @@ angular
       } else {
         $scope.exibirModalTime($scope.time);
       }
-    }
-
-    $scope.reativarTime = function(){
-      DataService.reativarTime($scope.time._id).then(function(){
-        $scope.time.ativo = true;
-      });
-    }
-
-    $scope.excluirTime = function(){
-        $ionicPopup.confirm({
-          title: 'Confirmar exclusão',
-          content: 'Deseja realmente remover este time? Não será possível desfazer essa ação.'
-        }).then(function(res) {
-          if(res) {
-            DataService.excluirTime($scope.time._id).then(function(resposta){
-              AuthService.atualizarPerfil(null, resposta.token);
-              $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
-              $state.go('abasInicio.meuPerfil');
-            });
-         }
-       });
     }
 
     $scope.exibirModalTime = function(time){
@@ -290,12 +288,17 @@ angular
 
       indicesBotoes['compartilhar'] = i;
       buttons[i++] = { text: 'Compartilhar' };
-      indicesBotoes['jogador'] = i;
-      buttons[i++] = { text: 'Adicionar Jogador' };
+      // indicesBotoes['jogador'] = i;
+      // buttons[i++] = { text: 'Adicionar Jogador' };
 
       if($scope.podeSelecionarPerfil()){
         indicesBotoes['perfis'] = i;
         buttons[i++] = { text: 'Gerenciar perfis' };
+      }
+
+      if($scope.time.ativo){
+        indicesBotoes['desativar'] = i;
+        buttons[i++] = { text: 'Desativar time' };
       }
 
       if(AuthService.adminJogueiros()){
@@ -304,6 +307,9 @@ angular
 
         indicesBotoes['concederPRO'] = i;
         buttons[i++] = { text: 'Liberar PRO' };
+
+        indicesBotoes['bloquear'] = i;
+        buttons[i++] = { text: 'Bloquear Time' };
       }
 
       var params = {
@@ -331,6 +337,12 @@ angular
               case indicesBotoes['concederPRO']:
                 $scope.concederJogueiroPRO();
                 break;
+                case indicesBotoes['desativar']:
+                  TimeService.desativarTime($scope.time);
+                  break;
+              case indicesBotoes['bloquear']:
+                $scope.bloquerTime();
+                break;
             }
            return true;
          }
@@ -354,6 +366,17 @@ angular
             });  
           }
         });      
+      });
+    }
+
+    $scope.bloquerTime = function() {
+      $ionicPopup.confirm({
+        title: 'Bloquear este time?',
+        okText: 'Bloquear'
+      }).then(function(res){
+        if (res) {
+          DataService.bloquearTime($scope.time._id);
+        }
       });
     }
 
@@ -444,6 +467,16 @@ angular
 
     }
 
+    $scope.reativarTime = function(){
+      DataService.reativarTime($scope.time._id).then(function(){
+        $scope.time.ativo = true;
+      });
+    }
+
+    $scope.excluirTime = function(){
+      TimeService.excluirTime($scope.time);
+    }
+
     $scope.excluirConviteAdmin = function(conviteId){
 
         var confirmPopup = $ionicPopup.confirm({
@@ -503,6 +536,21 @@ angular
       }
 
       return texto;
+    }
+
+    $scope.montarTextoSobreTime = function(){
+      return TimeService.descricao($scope.time);
+    }
+
+    function checarTimeBloqueado() {
+      if ( $scope.editavel() && $scope.time.bloqueadoEm ) {
+        return $ionicPopup.alert({
+          title: 'Time bloqueado',
+          content: 'Este time foi bloquado. Em caso de dúvidas, entre em contato conosco pelo email jogueirosfc.inc@gmail.com.'
+        }).then(function () {
+          checarTimeBloqueado();
+        });
+      }
     }
 
 }])

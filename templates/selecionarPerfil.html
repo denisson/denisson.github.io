@@ -1,16 +1,31 @@
 <ion-view title="" hide-nav-bar="true" ng-controller="selecionarPerfilController">
     <ion-content  padding="true" class="image-background img-login">
+        <style>
+            .item.desativado img,
+            .item.desativado h2,
+            .item.desativado p{
+                opacity: 0.3;
+            }
+
+            .item .texto-desativado{
+                display: none;
+            }
+
+            .item.desativado .texto-desativado{
+                display: inline;
+            }
+        </style>
 
       <div ng-if="perfis">
         <div class="mensagem-destacada">
             <h2 class="dark">Bem-vindo!</h2>
             <p class="dark"> Selecione uma dos perfis abaixo para continuar.</p>
         </div>
-        <ion-item ng-click="selecionarPerfil(perfil)" class="item-transparente item-avatar" ng-repeat="perfil in perfis">
+        <ion-item ng-click="selecionarPerfil(perfil)" ng-class="{desativado: perfil.tipo == 'Time' && !perfil.perfil.ativo}" class="item-transparente item-avatar item-button-right" ng-repeat="perfil in perfis">
             <img ng-if="perfil.tipo == 'Arbitro' || perfil.tipo == 'Jogador'" jog-jogador="perfil.perfil.foto" jog-size="small">
             <img ng-if="perfil.tipo == 'Liga' || perfil.tipo == 'Time'" jog-escudo="perfil.perfil.escudo" jog-size="small">
             <h2>{{perfil.perfil.nome}}</h2>
-            <p>{{getDescricaoPerfil(perfil.tipo)}}</p>
+            <p>{{getDescricaoPerfil(perfil.tipo)}} <span class="texto-desativado">desativado</span></p>
         </ion-item>
         <ion-item ng-click="cadastrarTime()" class="item-transparente item item-avatar">
             <i class="item-image icon ion-plus-circled balanced" style="font-size: 40px"></i>
@@ -22,6 +37,7 @@
         <p style="text-align: center">
             <a href="#" ng-click="sair()">Fazer login com outro email</a>
         </p>
+        <br />
       </div>
     </ion-content>
 </ion-view>

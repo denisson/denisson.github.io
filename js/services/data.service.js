@@ -36,9 +36,12 @@ angular.module('app.services')
       return tratarRequisicao(requisicao);
   	}
 
-    function request(url, params){
+    function request(url, params, cache){
 		var options = defaultOptions();
 		options.params = params;
+		if(cache) {
+			options.cache = CacheFactory.get('oneDayCache');
+		}
 		var requisicao = $http.get(config.URL_API + url, options);
 		return tratarRequisicao(requisicao);
   	}
@@ -84,7 +87,7 @@ angular.module('app.services')
 	    storageMode: 'localStorage' // This cache will use `localStorage`.
 	});
 
-	// $http.defaults.cache = CacheFactory.get('dataCache');
+	// $http.defaults.cache = CacheFactory.get('oneDayCache');
 	return {
 		blockPopup: function(){
 			blockPopup = true;
@@ -137,12 +140,8 @@ angular.module('app.services')
 			temporada = temporada || moment().year();
 			return request('time/' + id + '/adversarios?temporada=' + temporada + '&ordem=' + ordem);
 		},
-		times: function(esporte, regiao, plataforma, ligaId){
-			esporte = esporte || '';
-			regiao = regiao || '';
-			plataforma = plataforma || '';
-			ligaId = ligaId || '';
-			return request('times?esporte='+ esporte + '&regiao=' + regiao + '&plataforma=' + plataforma + '&ligaId=' + ligaId);
+		times: function(filtros){
+			return request('times', filtros);
 		},
 		rankingGeralTimes: function(tipoRanking, esporte, regiao, plataforma){
 			esporte = esporte || '';
@@ -156,7 +155,8 @@ angular.module('app.services')
 			  deferred.resolve([
 				{ "chave" : "FUT", "nome" : "Futebol", "efootball" : false },
 				{ "chave" : "PES", "nome" : "PES", "efootball" : true },
-				{ "chave" : "FIFA", "nome" : "FIFA", "efootball" : true }
+				{ "chave" : "FIFA", "nome" : "FIFA", "efootball" : true },
+				{ "chave" : "BOTAO", "nome" : "Futebol de botão", "efootball" : false },
 			]);
 
 			return deferred.promise;
@@ -198,10 +198,10 @@ angular.module('app.services')
 			return request('competicao/sugeridas/' + timeId);
 		},
 		estados: function(){
-			return request('estados');
+			return request('estados', null, true);
 		},
 		cidadesDaUf: function(uf){
-			return request('cidadesDaUf/' + uf);
+			return request('cidadesDaUf/' + uf, null, true);
 		},
 		jogo: function(id){
 			return request('jogo/' + id);
@@ -217,7 +217,7 @@ angular.module('app.services')
 			return request('jogador/' + id + '/jogos?temporada='+temporada);
 		},
 		jogadorPosicoes: function(){
-			return request('jogador/posicoes');
+			return request('jogador/posicoes', null, true);
 		},
 		jogadorEstatisticas: function(id, timeId, temporada){
 			temporada = temporada || moment().year();
@@ -268,6 +268,9 @@ angular.module('app.services')
 		},
 		editarTime: function(time){
 			return upload('time/' + time._id, time.escudo, time);
+		},
+		desativarTime: function(timeId){
+			return post('time/' + timeId + '/desativar');
 		},
 		reativarTime: function(timeId){
 			return post('time/' + timeId + '/reativar');
@@ -452,8 +455,14 @@ angular.module('app.services')
 		concederJogueiroPRO: function(timeId, meses){
 			return post('admin/grantPRO/' + timeId, {meses: meses});
 		},
+		bloquearTime: function(timeId){
+			return post('admin/bloquearTime/' + timeId);
+		},
 		registrarNotificacaoClicada: function(notificacaoId){
 			return post('usuario/notificacaoClicada', {notificacaoId: notificacaoId});
+		},
+		modalidades: function(){
+			return request('modalidade/', null, true);
 		},
 		logError: function(exception){
 			var userData = JSON.parse(window.localStorage.getItem('user_data'));

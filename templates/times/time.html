@@ -71,16 +71,19 @@
       <div ng-if="!time.esporte.efootball && time.cidade.nomeCompleto">
         {{time.cidade.nomeCompleto}}
       </div>
+      <div ng-if="montarTextoSobreTime()">
+        {{montarTextoSobreTime()}}
+      </div>
       <div ng-if="time.esporte.efootball">
         <span ng-if="time.esporte.efootball">{{time.esporte.nome}}<span/>
         <span ng-if="time.efootball.plataforma.nome"> • {{time.efootball.plataforma.nome}}</span>
         <span ng-if="modosFormatados()"> • {{modosFormatados()}}</span>
       </div>
-      <telefone-link telefone="time.telefone" editavel="{{editavel()}}" ao-clicar-cadastrar-telefone="editarTime()"></telefone-link>
+      <telefone-link telefone="time.telefone" editavel="{{habilitado()}}" ao-clicar-cadastrar-telefone="editarTime()"></telefone-link>
     </div>
 
-    <div ng-if="editavel() && !time.ativo" class="confirmacao-jogo" style="margin-bottom: 16px;">
-      <p class="dark">O perfil do seu time foi desativado por que não está sendo utilizado. Deseja reativar este perfil ou excluí-lo definitivamente?</p>
+    <div ng-if="editavel() && !time.ativo && !time.bloqueadoEm" class="confirmacao-jogo" style="margin-bottom: 16px;">
+      <p class="dark">Este perfil foi desativado. Deseja reativar o time ou excluí-lo definitivamente?</p>
       <p>
         <button ng-click="reativarTime()" class="button button-positive">Reativar</button>
         <button ng-click="excluirTime()" class="button button-stable button-outline" href="#">Excluir</button>
@@ -106,7 +109,7 @@
     </div>
 
     <ion-list>
-      <ion-item ng-if="time.jogos.encerrados.length && (usuarioPro() && time.pro || editavel())" class="item-divider">Jogueiros <span class="jg-badge jg-badge-pro">PRO</span></ion-item>
+      <ion-item ng-if="editavel()" class="item-divider">Jogueiros <span class="jg-badge jg-badge-pro">PRO</span></ion-item>
       <ion-item ng-if="time.jogos.encerrados.length && (usuarioPro() && time.pro || editavel())" ng-click="verEstatisticas()" style="padding-right: 72px;">
           <h2>Gráficos e Estatísticas </h2>
           <p>Aproveitamento, gols, cartões, médias, sequências, jogadores por jogo, mando de campo</p>
@@ -116,21 +119,25 @@
             </div>
           </div>
       </ion-item>
-      <ion-item ng-if="editavel() && time.jogos.confirmarJogo.length" class="item-divider">
+      <ion-item ng-if="editavel()" ui-sref="selecionarPerfil">
+        <h2>Meus times </h2>
+        <p>Vários times, modalidades ou categorias? Cadastre todos no Jogueiros!</p>
+      </ion-item>
+      <ion-item ng-if="habilitado() && time.jogos.confirmarJogo.length" class="item-divider">
         Confirmar Jogos
         <span class="badge badge-assertive">{{time.jogos.confirmarJogo.length}}</span>
       </ion-item>
-      <jog-partidas ng-if="editavel()" partidas="time.jogos.confirmarJogo"></jog-partidas>
-      <ion-item ng-if="editavel() && time.jogos.aguardandoPlacar.length" class="item-divider">
+      <jog-partidas ng-if="habilitado()" partidas="time.jogos.confirmarJogo"></jog-partidas>
+      <ion-item ng-if="habilitado() && time.jogos.aguardandoPlacar.length" class="item-divider">
         Jogos sem placar
         <span class="badge badge-assertive">{{time.jogos.aguardandoPlacar.length}}</span>
       </ion-item>
-      <jog-partidas ng-if="editavel()" partidas="time.jogos.aguardandoPlacar"></jog-partidas>
-      <ion-item ng-if="editavel() && time.jogos.confirmarPlacar.length" class="item-divider">
+      <jog-partidas ng-if="habilitado()" partidas="time.jogos.aguardandoPlacar"></jog-partidas>
+      <ion-item ng-if="habilitado() && time.jogos.confirmarPlacar.length" class="item-divider">
         Confirmar Placar
         <span class="badge badge-assertive">{{time.jogos.confirmarPlacar.length}}</span>
       </ion-item>
-      <jog-partidas ng-if="editavel()" partidas="time.jogos.confirmarPlacar"></jog-partidas>
+      <jog-partidas ng-if="habilitado()" partidas="time.jogos.confirmarPlacar"></jog-partidas>
 
       <ion-item ng-if="time.rankings.length" class="item-divider">Ranking</ion-item>
       <ion-item ng-if="rankingTime.atual || mostrarTodosRankings" ng-click="verRanking(rankingTime.ranking)" class="item-avatar" ng-repeat="rankingTime in time.rankings">
@@ -145,21 +152,34 @@
         <button ng-click="verRankingsAnteriores()" class="button button-positive button-outline button-block" href="#"> Ver anteriores </button>
       </ion-item>
 
-      <ion-item ng-if="editavel() || time.jogos.proximos.length" class="item-divider">Próximos Jogos</ion-item>
-      <ion-item ng-if="!time.jogos.proximos.length && editavel()">
-        <button ui-sref="novoJogo" class="button button-outline button-block button-positive icon ion-plus-circled" href="#"> Cadastrar Jogo </button>
+      <ion-item ng-if="habilitado() || time.jogos.proximos.length" class="item-divider">
+        Próximos Jogos
+        <span ng-if="habilitado()" class="item-note">
+          <a ui-sref="novoJogo" style="text-decoration: none;"><i class="icon ion-plus-circled"></i> Cadastrar Jogo</a>
+        </span>
+      </ion-item>
+      <ion-item ng-if="habilitado() && !time.jogos.proximos.length">
+        <p style="white-space: normal">
+          Quando é a próxima partida? Clique em <b>Cadastrar Jogo</b> para agendar uma partida.
+          <!-- <br/><br/>
+          Se ainda não tiver adversário, nós te ajudamos a encontrar! Clique na aba <a ui-sref="abasInicio.busca" style="text-decoration: none;">Buscar Times</a>. -->
+        </p>
       </ion-item>
       <jog-partidas partidas="time.jogos.proximos"></jog-partidas>
       <ion-item ng-if="paginacao.proximos.maisJogos" ><button ng-click="verJogosAgendados()" class="button button-positive button-outline button-block" href="#"> Ver mais jogos </button></ion-item>
-
-      <ion-item ng-if="editavel() || time.jogos.encerrados.length" class="item-divider">Últimos jogos</ion-item>
-      <ion-item ng-if="!time.jogos.encerrados.length && editavel()">
-        <button ui-sref="novoJogo" class="button button-outline button-block button-positive icon ion-plus-circled" href="#"> Cadastrar Jogo </button>
+      <ion-item ng-if="habilitado() || time.jogos.encerrados.length" class="item-divider">
+        Últimos jogos
+        <span ng-if="habilitado()" class="item-note">
+          <a ui-sref="novoJogo" style="text-decoration: none;"><i class="icon ion-plus-circled"></i> Cadastrar Jogo</a>
+        </span>
+      </ion-item>
+      <ion-item ng-if="habilitado() && !time.jogos.encerrados.length">
+        <p style="white-space: normal">Clique em <b>Cadastrar Jogo</b> para registrar os resultados dos jogos já encerrados.</p>
       </ion-item>
       <jog-partidas partidas="time.jogos.encerrados"></jog-partidas>
       <ion-item ng-if="paginacao.encerrados.maisJogos" ><button ng-click="verJogosAnteriores()" class="button button-positive button-outline button-block" href="#"> Ver jogos anteriores </button></ion-item>
 
-      <ion-item ng-if="time.jogadores.length || editavel()" class="item-divider item-select">Jogadores 
+      <ion-item ng-if="time.jogadores.length || habilitado()" class="item-divider item-select">Jogadores 
               <select ng-model="jogadoresOrdem" ng-change="ordenarPor(jogadoresOrdem)" style="background: transparent;">
                   <option value="ARTILHARIA">Artilharia</option>
                   <option value="ASSISTENCIAS">Assistências</option>
@@ -189,7 +209,7 @@
             <h2 class="qtd-gols">{{golsJogadorNaTemporada(jogador)}}</h2>
           </div>
       </ion-item>
-      <ion-item ng-if="time && editavel()" >
+      <ion-item ng-if="time && habilitado()" >
         <button ng-click="adicionarJogador(time.id)" class="button button-positive button-outline button-block icon ion-person-add" href="#"> Adicionar Jogador </button>
       </ion-item>
     </ion-list>
@@ -218,7 +238,7 @@
     </ion-list>
 
     <br/>
-    <p style="text-align: center">
+    <p ng-if="editavel()" style="text-align: center">
       Dúvidas ou sugestões?
       <br/>
       <a href="#" ng-click="irParaWhatsapp('5582996966288'); $event.stopPropagation();">Whatsapp</a>
