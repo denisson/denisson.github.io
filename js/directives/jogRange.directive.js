@@ -5,6 +5,14 @@ angular.module('app.directives')
         scope: {onSelecionado: '&', min: '=', max: '=', from: '=', to: '='},
         link: function(scope, element, attrs){
             var range =  $(element[0]);
+            function selecionar(data) {
+                if (scope.to) {
+                    scope.onSelecionado(data);    
+                } else if (data.from){
+                    scope.onSelecionado({value: data.from});
+                }
+            }
+            selecionar(scope);
             range.ionRangeSlider({
                 skin: "round",
                 type: scope.to ? "double" : "single",
@@ -14,13 +22,7 @@ angular.module('app.directives')
                 to: scope.to,
                 hide_min_max: true,
                 force_edges: true,
-                onFinish: function(data){
-                    if (scope.to) {
-                        scope.onSelecionado(data);    
-                    } else {
-                        scope.onSelecionado({value: data.from});
-                    }
-                }
+                onFinish: selecionar
             });
         }
   };
