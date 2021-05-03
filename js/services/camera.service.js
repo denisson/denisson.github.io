@@ -54,7 +54,7 @@ angular
           mediaType: Camera.MediaType.PICTURE,
           targetWidth: 400,
           targetHeight: 400,
-          // correctOrientation:true
+          correctOrientation:true
         };
     
         $cordovaCamera.getPicture(options).then(function(imagePath) {
