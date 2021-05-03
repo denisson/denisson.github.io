@@ -264,7 +264,7 @@ angular.module('app.directives', [])
     return {
       restrict: 'E',
     scope: {horario: '='},
-    templateUrl: 'templates/directives/jog-range-horario.html',
+    templateUrl: 'templates/directives/jog-range.html',
     link: function(scope, element, attrs){
         var range =  $(element[0].querySelector('.js-range-slider'));
       range.ionRangeSlider({
@@ -464,7 +464,13 @@ angular.module('app.directives', [])
           //abrir opções de estado
           exibirModalEstados();
         } else {
-          exibirModalCidades(scope.estado);
+          DataService.estados().then(function(estados){
+            var estado = _.find(estados, function(e) {
+              return e.uf == scope.estado;
+            });
+            scope.capital = estado.capital;
+            exibirModalCidades(scope.estado);
+          });
         }
       });
     }
