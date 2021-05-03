@@ -4,7 +4,7 @@
         <h1 class="title">Cadastrar Local do Jogo</h1>
     </ion-header-bar>
     <ion-content padding="true" class="has-header">
-        <form class="list" ng-submit="salvarLocal()">
+        <form ng-if="novoLocal" class="list" ng-submit="salvarLocal()">
             <label class="item item-input">
                 <span class="input-label">Nome do local</span>
                 <input ng-model="novoLocal.nome" type="text" placeholder="Nome do local">
@@ -13,31 +13,18 @@
                 <span class="input-label">Cidade</span>
                 <input ng-model="novoLocal.cidade.nomeCompleto" ng-focus="modalEstado.show()" type="text" placeholder="Escolha uma cidade" jog-blur>
             </label>
-
-            <label class="item item-input item-select">
-                <span class="input-label">Modalidade</span>
-                <select ng-model="novoLocal.tipo">
-                    <option value="" disabled selected>Escolha a modalidade</option>
-                    <option value="SOCIETY">Society</option>
-                    <option value="SALAO">Salão</option>
-                    <option value="GRAMA">Grama</option>
-                    <option value="TERRA">Terra</option>
-                    <option value="AREIA">Areia</option>
-                </select>
+            <label class="item item-input">
+                <span class="input-label">Tipo de campo</span>
+                <input type="text" jog-options-modal jog-options="tiposCampo" jog-key="chave" jog-value="nome" jog-title="Tipo de campo" on-selecionado="selecionado('tipo', option)" placeholder="Society, salão, grama..." value="{{novoLocal.tipo.nome}}" >
             </label>
-            <label class="item item-input item-select">
-                <span class="input-label">Quantos jogam?</span>
-                <select ng-model="novoLocal.numJogadores">
-                    <option value="" disabled selected>Incluindo o goleiro</option>
-                    <option value="4">4x4</option>
-                    <option value="5">5x5</option>
-                    <option value="6">6x6</option>
-                    <option value="7">7x7</option>
-                    <option value="8">8x8</option>
-                    <option value="9">9x9</option>
-                    <option value="10">10x10</option>
-                    <option value="11">11x11</option>
-                </select>
+            <label class="item item-input">
+                <span class="input-label">
+                    Quantos jogam?
+                    <p style="color: #9E9E9E;">Incluindo o goleiro</p>
+                </span>
+                <p style="width: 65%; padding: 0 15px;">
+                    <input type="text" jog-range min="2" max="11" from="novoLocal.numJogadores" on-selecionado="selecionado('numJogadores', value)">
+                </p>
             </label>
             <button type="submit" class="button button-positive button-block">Cadastrar</button>
 

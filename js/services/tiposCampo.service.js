@@ -10,11 +10,12 @@ angular
       ];
 
     function nome(chave){
-        return _.find(tiposCampo, {chave: chave}).nome
+      var tipo = _.find(tiposCampo, {chave: chave});
+      return tipo? tipo.nome : null;
     }
 
     function getTiposCampo(){
-        return tiposCampo;
+      return tiposCampo;
     }
 
     function valoresByChaves(chaves) {

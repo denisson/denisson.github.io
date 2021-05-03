@@ -22,11 +22,11 @@
                 <ion-checkbox ng-model="local._id.selecionado" ng-if="multi">
                     {{localChecked(local._id)}}
                     <h2>{{local._id.nome}}</h2>
-                    <p>{{local._id.cidade.nome}}</p>
+                    <p>{{detalhesLocal(local._id)}}</p>
                 </ion-checkbox>
                 <ion-item class="item" ng-if="!multi">
                     <h2>{{local._id.nome}}</h2>
-                    <p>{{local._id.cidade.nome}}</p>
+                    <p>{{detalhesLocal(local._id)}}</p>
                 </ion-item>
             </div>
         </ion-list>
@@ -36,11 +36,11 @@
                 <ion-checkbox ng-model="local.selecionado" ng-if="multi">
                     {{localChecked(local)}}
                     <h2>{{local.nome}}</h2>
-                    <p>{{local.cidade.nome}}</p>
+                    <p>{{detalhesLocal(local)}}</p>
                 </ion-checkbox>
                 <ion-item class="item" ng-if="!multi">
                     <h2>{{local.nome}}</h2>
-                    <p>{{local.cidade.nome}}</p>
+                    <p>{{detalhesLocal(local)}}</p>
                 </ion-item>
             </div> 
             <ion-item ng-if="searchTerm.query.length" class="item item-icon-left" ng-click="cadastrarLocal(searchTerm.query)">

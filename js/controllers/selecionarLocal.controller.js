@@ -1,13 +1,11 @@
 angular
   .module('app.controllers')
-  .controller('selecionarLocalController', ['$scope', '$rootScope', '$ionicModal', 'DataService', 'AuthService', '$ionicPopup', function ($scope, $rootScope, $ionicModal, DataService, AuthService, $ionicPopup) {
+  .controller('selecionarLocalController', ['$scope', '$rootScope', '$ionicModal', 'DataService', 'AuthService', '$ionicPopup', 'ModalidadeService', 'TiposCampoService' ,'$q', function ($scope, $rootScope, $ionicModal, DataService, AuthService, $ionicPopup, ModalidadeService, TiposCampoService,  $q) {
     $scope.cidades = [];
     $scope.estados = [];
     var fuseLocais;
 
-    // DataService.estados().then(function(estados){
-    //   $scope.estados = estados;
-    // });
+    $scope.tiposCampo = TiposCampoService.getTiposCampo();
 
     $scope.regiao = AuthService.getRegiao();
     $scope.searchTerm = {query: ''};
@@ -32,7 +30,11 @@ angular
 
 
     function carregarLocais(){
-      if(!$scope.regiao) return false;
+      if(!$scope.regiao) {
+        var promise = $q.defer();
+        promise.reject('');
+        return promise;
+      }
       return DataService.locais($scope.regiao).then(function(locais){
         $scope.locais = _.slice(locais, 0, 50);
         fuseLocais = new Fuse(locais, {
@@ -89,7 +91,7 @@ angular
     }
 
     $scope.cadastrarLocal = function(nomeLocal){
-      $scope.novoLocal = {nome: nomeLocal, cidade: AuthService.getCidade()};
+      $scope.novoLocal = {nome: nomeLocal, cidade: AuthService.getCidade(), numJogadores: 7};
       $scope.modalCadastrarLocal.show();
       // $scope.timeSelecionado({nome:nomeTime});
     }
@@ -110,7 +112,9 @@ angular
     $scope.salvarLocal = function(){
       if(localEstaCompleto()){
         $scope.novoLocal.createdBy = AuthService.getUsuarioId();
-        DataService.salvarLocalJogo($scope.novoLocal).then(function(localSalvo){
+        var localSalvar = _.clone($scope.novoLocal);
+        localSalvar.tipo = localSalvar.tipo.chave;
+        DataService.salvarLocalJogo(localSalvar).then(function(localSalvo){
             $scope.novoLocal._id = localSalvo.id;
             $scope.local = $scope.novoLocal;
             $scope.modalCadastrarLocal.hide();
@@ -118,6 +122,21 @@ angular
             // $scope.modalLocal.hide();
         });
       }
+    }
+
+    $scope.selecionado = function(campo, valor) {
+      if ($scope.novoLocal) $scope.novoLocal[campo] = valor;
+    }
+
+    $scope.detalhesLocal = function(local){
+      var tipoCampo = TiposCampoService.nome(local.tipo);
+      var textos = [];
+
+      if(local.cidade) textos.push(local.cidade.nome);
+      if(tipoCampo) textos.push(tipoCampo);
+      if(local.numJogadores) textos.push(local.numJogadores + 'x' + local.numJogadores);
+      
+      return textos.join(' • ');
     }
 
   }])
