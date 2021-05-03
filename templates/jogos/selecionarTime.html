@@ -23,6 +23,7 @@
                 <ion-item class="item-avatar item" ng-click="timeSelecionado(time)" ng-if="time._id != jogo.mandante._id" ng-repeat="time in times track by time._id">
                     <img jog-escudo="time.escudo" jog-size="small">
                     <h2>{{time.nome}}</h2>
+                    <p>{{descricaoTime(time)}}</p>
                     <p>{{time.cidade.nomeCompleto || time.esporte.efootball ? '' : 'Cadastro provisório'}}</p>
                 </ion-item>
                 <ion-item class="item-avatar item" ng-click="cadastrarTime(search.query)">
@@ -32,6 +33,10 @@
                 </ion-item>
             </ion-list>
             <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarResultados()" distance="10%"></ion-infinite-scroll>
+            <div ng-show="!temMaisResultados && textoRemoverFiltro()" class="padding mensagem-destacada">
+                <h4 class="dark">Não encontrou o time?</h2>
+                <p class="dark"><a href="#" ng-click="removerFiltro(); $event.preventDefault()">{{textoRemoverFiltro()}}</a></p>
+            </div>
             <ion-list ng-if="!temMaisResultados && timesSemCidade.length" class="lista-times">
                 <ion-item class="item-divider" style="border: 0;">Times sem cidade informada</ion-item>
                 <!-- <ion-item class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: time._id})" ng-repeat="time in times | latinize | fuzzyBy:'nome':search"> -->
