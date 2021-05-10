@@ -31,9 +31,6 @@ function($q, $ionicModal, AuthService) {
     if (liberarAcesso){
       deferred.resolve();
     } else {
-      var analytics = _.get(window, 'cordova.plugins.firebase.analytics');
-      analytics.logEvent('assinatura_modal', {feature: feature});
-      analytics.logEvent('assinatura_modal_'+feature);
       $ionicModal.fromTemplateUrl('templates/assinaturaModal.html', {
         // scope: scopeModal,
         animation: 'fade-in'

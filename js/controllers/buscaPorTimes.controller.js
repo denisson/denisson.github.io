@@ -179,8 +179,8 @@ angular
         filtros.idadeMax = _.get(filtros, 'idade.maxima');
         delete filtros.idade;
         var filtrosModalidade = ModalidadeService.getFiltros(filtros.modalidade);
-        filtros = _.merge(filtros, filtrosModalidade);
         delete filtros.modalidade;
+        filtros = _.merge(filtros, filtrosModalidade);
       } else {
         delete filtros.genero;
         delete filtros.idade;
