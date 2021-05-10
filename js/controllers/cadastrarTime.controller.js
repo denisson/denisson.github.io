@@ -1,8 +1,8 @@
 angular
   .module('app.controllers')
   .controller('cadastrarTimeController', 
-    ['$scope', '$rootScope', '$state', '$stateParams', 'DataService', 'CameraService', 'AuthService','$ionicModal', '$ionicPopup', 'GeneroService', 'ModalidadeService', 'CategoriaService',
-    function ($scope, $rootScope,  $state, $stateParams, DataService, CameraService, AuthService, $ionicModal, $ionicPopup, GeneroService, ModalidadeService, CategoriaService) {
+    ['$scope', 'PerfilFiltroService', '$state', '$stateParams', 'DataService', 'CameraService', 'AuthService','$ionicModal', '$ionicPopup', 'GeneroService', 'ModalidadeService', 'CategoriaService',
+    function ($scope, PerfilFiltroService,  $state, $stateParams, DataService, CameraService, AuthService, $ionicModal, $ionicPopup, GeneroService, ModalidadeService, CategoriaService) {
       $scope.modalidades;
       $scope.modalidade = {};
       $scope.modo = {};
@@ -137,15 +137,18 @@ angular
           
           DataService.editarTime(timeSalvar).then(function(time){
             AuthService.atualizarPerfilTime(time);
-            $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
+            // $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
+            PerfilFiltroService.setAtual(AuthService.getPerfilFiltro());
             AuthService.redirectClean('abasInicio.time-aba-time', null, {id: time._id});
           });
         } else {
           $scope.time.dono = AuthService.getUsuarioId();
           $scope.time.esporte = _.find($scope.esportes, {chave: _.get($scope.time, 'esporteChave')});
           DataService.salvarTime($scope.time).then(function(resposta){
+            // if (window.FirebasePlugin) { window.FirebasePlugin.logEvent('time_cadastro'); }
             AuthService.atualizarPerfil(resposta.perfil, resposta.token);
-            $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
+            // $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
+            PerfilFiltroService.setAtual(AuthService.getPerfilFiltro());
             AuthService.redirectClean('onboarding_completar', null, {id: resposta.perfil.perfil});
           });
         }

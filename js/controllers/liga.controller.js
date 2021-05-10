@@ -169,10 +169,6 @@ angular
         $state.go('selecionarPerfil');
     }
 
-    $scope.formatarTelefone = function(telefone){
-      return telefone.replace(/^(\d{2})?(\d{4,5})(\d{4})$/, "$1 $2-$3").trim();
-    }
-
     $ionicModal.fromTemplateUrl('templates/ligaAmistosos/adicionarArbitro.html', {
       scope: $scope,
       animation: 'fade-in'

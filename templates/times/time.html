@@ -109,7 +109,7 @@
     </div>
 
     <ion-list>
-      <ion-item ng-if="editavel()" class="item-divider">Jogueiros <span class="jg-badge jg-badge-pro">PRO</span></ion-item>
+      <ion-item ng-if="time.jogos.encerrados.length && (usuarioPro() && time.pro || editavel())" class="item-divider">Jogueiros <span class="jg-badge jg-badge-pro">PRO</span></ion-item>
       <ion-item ng-if="time.jogos.encerrados.length && (usuarioPro() && time.pro || editavel())" ng-click="verEstatisticas()" style="padding-right: 72px;">
           <h2>Gráficos e Estatísticas </h2>
           <p>Aproveitamento, gols, cartões, médias, sequências, jogadores por jogo, mando de campo</p>
@@ -119,10 +119,10 @@
             </div>
           </div>
       </ion-item>
-      <ion-item ng-if="editavel()" ui-sref="selecionarPerfil">
+      <!-- <ion-item ng-if="editavel()" ui-sref="selecionarPerfil">
         <h2>Meus times </h2>
         <p>Vários times, modalidades ou categorias? Cadastre todos no Jogueiros!</p>
-      </ion-item>
+      </ion-item> -->
       <ion-item ng-if="habilitado() && time.jogos.confirmarJogo.length" class="item-divider">
         Confirmar Jogos
         <span class="badge badge-assertive">{{time.jogos.confirmarJogo.length}}</span>

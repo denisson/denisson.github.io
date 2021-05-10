@@ -1,8 +1,8 @@
 angular
   .module('app.controllers')
   .controller('buscaPorTimesController', 
-  ['$scope', '$rootScope', '$stateParams', 'DataService', 'AuthService', 'TimeService', 'GeneroService', 'ModalidadeService', 'CategoriaService',
-  function ($scope, $rootScope, $stateParams, DataService, AuthService, TimeService, GeneroService, ModalidadeService, CategoriaService) {
+  ['$scope', '$rootScope', '$stateParams', 'DataService', 'AuthService', 'TimeService', 'GeneroService', 'ModalidadeService', 'CategoriaService', 'PerfilFiltroService',
+  function ($scope, $rootScope, $stateParams, DataService, AuthService, TimeService, GeneroService, ModalidadeService, CategoriaService, PerfilFiltroService) {
 
     var QTD_POR_PAGINA = 10;
     var fuse;
@@ -12,10 +12,11 @@ angular
     $scope.dadosCarregados = false; // Flag utilizada para saber se já retornou o resultado do banco de dados
     $scope.todosTimes = [];
     $scope.todosTimesInicio = [];
-    $scope.perfilFiltro = AuthService.getPerfilFiltro();
+    $scope.perfilFiltro = PerfilFiltroService.getAtual();
     $scope.ligaId = AuthService.getLiga();
     $scope.search = {query: ''};
     $scope.generos = GeneroService.generos;
+    $scope.timeIdLogado = AuthService.getTime();
     var timesTmp = [];
 
     var fuseSemCidade;
@@ -43,13 +44,20 @@ angular
       return idade;
     }
 
-    $rootScope.$on('alterarRegiao', function(event, filtro){
+    $scope.aoAlterarPerfilFiltro = function(filtro) {
       $scope.perfilFiltro = filtro;
+      PerfilFiltroService.setAtual(filtro);
       $scope.filtros.esporte = _.get($scope.perfilFiltro, 'esporte.chave');
       $scope.filtros.regiao = $scope.perfilFiltro.regiao;
       $scope.filtros.plataforma = _.get($scope.perfilFiltro, 'plataforma.chave');
       $scope.filtros.cidade = _.get($scope.perfilFiltro, 'cidade.uf') === $scope.perfilFiltro.regiao ? _.get($scope.perfilFiltro, 'cidade') : null;
       aplicarFiltro();
+    }
+
+    $scope.$on('$ionicView.enter', function(){
+      if (PerfilFiltroService.diferenteDoAtual($scope.perfilFiltro)) {
+        $scope.aoAlterarPerfilFiltro(PerfilFiltroService.getAtual());
+      }
     });
 
     $scope.carregarResultados = function(){
@@ -164,22 +172,33 @@ angular
     $scope.filtrosParaRequisicao = function(){
       var filtros = _.clone($scope.filtros);
       filtros.cidade = _.get(filtros, 'cidade._id');
-      // filtros.modalidade = _.get(filtros, 'modalidade.chave');
-      filtros.genero = _.get(filtros, 'genero.chave');
-      filtros.idadeMin = _.get(filtros, 'idade.minima');
-      filtros.idadeMax = _.get(filtros, 'idade.maxima');
-      delete filtros.idade;
-      var filtrosModalidade = ModalidadeService.getFiltros(filtros.modalidade);
-      delete filtros.idade;
-      return _.merge(filtros, filtrosModalidade);
+
+      if(filtros.esporte === 'FUT') {
+        filtros.genero = _.get(filtros, 'genero.chave');
+        filtros.idadeMin = _.get(filtros, 'idade.minima');
+        filtros.idadeMax = _.get(filtros, 'idade.maxima');
+        delete filtros.idade;
+        var filtrosModalidade = ModalidadeService.getFiltros(filtros.modalidade);
+        filtros = _.merge(filtros, filtrosModalidade);
+        delete filtros.modalidade;
+      } else {
+        delete filtros.genero;
+        delete filtros.idade;
+        delete filtros.modalidade;
+      }
+      return filtros;
     }
 
     $scope.textoRemoverFiltro = function(){
       var filtros = [];
+      if ($scope.filtros.esporte !== 'FUT' && $scope.filtros.esporte !== 'BOTAO') {
+        return null;
+      }
+
       if ($scope.filtros.cidade) filtros.push('cidades');
-      if ($scope.filtros.modalidade) filtros.push('modalidades');
-      if ($scope.filtros.idade) filtros.push('idades');
-      if ($scope.filtros.genero) filtros.push('sexos');
+      if ($scope.filtros.esporte === 'FUT' && $scope.filtros.modalidade) filtros.push('modalidades');
+      if ($scope.filtros.esporte === 'FUT' &&$scope.filtros.idade) filtros.push('idades');
+      if ($scope.filtros.esporte === 'FUT' && $scope.filtros.genero) filtros.push('sexos');
       if (filtros.length) {
         var ultimo = filtros.pop();
         var texto = filtros.join(', ');
@@ -192,7 +211,8 @@ angular
 
     $scope.descricaoTime = function(time){
       var descricao = TimeService.descricao(time);
-      return _.get(time, 'cidade.nome') + (descricao ? ' • ' + descricao : '');
+      var cidade = _.get(time, 'cidade.nome', '');
+      return [cidade, descricao].filter(Boolean).join(' • ');
     }
 
     $scope.descricaoModalidade = function(modalidade) {

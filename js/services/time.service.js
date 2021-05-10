@@ -1,10 +1,11 @@
 angular
   .module('app.services')
-  .service('TimeService', function(GeneroService, ModalidadeService, CategoriaService, DataService, $ionicPopup, AuthService, $rootScope, $state, $ionicModal) {
+  .service('TimeService', function(GeneroService, ModalidadeService, CategoriaService, DataService, $ionicPopup, AuthService, PerfilFiltroService, $rootScope, $state, $ionicModal) {
 
     function descricao(time){
       var textos = [];
 
+      if (time.esporte.chave !== 'FUT') return '';
       if (_.get(time.modalidade, 'tipo')) textos.push(ModalidadeService.descricao(time.modalidade));
       if (time.genero) textos.push(GeneroService.nome(time.genero));
       if (time.idade) textos.push(CategoriaService.descricaoIdade(time.idade));
@@ -20,7 +21,8 @@ angular
           if(res) {
             DataService.excluirTime(time._id).then(function(resposta){
               AuthService.atualizarPerfil(null, resposta.token);
-              $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
+              // $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
+              PerfilFiltroService.setAtual(AuthService.getPerfilFiltro());
               $state.go('selecionarPerfil', {}, {reload: true});
             });
          }
@@ -42,7 +44,7 @@ angular
     }
 
     function cadastroIncompleto(time){
-      return !_.get(time.modalidade, 'tipo') || !time.genero || !time.idade;
+      return time.esporte.chave === 'FUT' && (!_.get(time.modalidade, 'tipo') || !time.genero || !time.idade);
     }
 
     function checarCadastroCompleto(time){

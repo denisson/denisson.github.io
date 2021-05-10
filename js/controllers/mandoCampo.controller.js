@@ -5,7 +5,7 @@ angular
   $scope.time = AuthService.getTime();
 
 
-    $ionicModal.fromTemplateUrl('templates/times/informarTelefone.html', {
+    $ionicModal.fromTemplateUrl('templates/directives/telefone-modal.html', {
       scope: $scope,
       animation: 'no-animation',
       focusFirstInput: true,

@@ -8,17 +8,16 @@
         <br/>
             <div class="row">
               <div class="col col-25">
-                  <label class="item item-input item-select" style="height: 100%; border: 0; width: 100%;">
-                    <select ng-model="telefone.ddi" style="width: 100%;height: 100%;max-width: 100%; padding-right: 35px; padding-left: 0;">
-                      <option value="1">+1</option>
-                      <option value="33">+33</option>
-                      <option value="55">+55</option>
-                    </select>
+                  <label class="item item-input item-select" style="height: 100%; border: 0; width: 100%;" jog-options-modal jog-type="SELECT" jog-options="ddis" jog-key="code" jog-value="descricao" jog-title="Selecione um país" on-selecionado="ddiSelecionado(option)" pode-buscar="true">
+                    <span style="width: 100%;max-width: 100%; padding-right: 35px; padding-left: 0; text-align: right; font-size: 0.9em; color: #000;">
+                      +{{telefone.ddi}}
+                    </span>
                   </label>
               </div>
               <div class="col">
                 <label class="item item-input" style="border: 0;">
-                    <input ng-model="telefone.numero" type="tel" maxlength="15" placeholder="Telefone com DDD" ui-br-phone-number>
+                    <input ng-if="telefone.ddi == 55" ng-model="telefone.numero" type="tel" maxlength="15" placeholder="Telefone com DDD" ui-br-phone-number>
+                    <input ng-if="telefone.ddi != 55" ng-model="telefone.numero" type="tel" maxlength="15" placeholder="Telefone com DDD">
                 </label>
               </div>
             </div>

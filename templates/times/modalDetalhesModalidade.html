@@ -9,28 +9,30 @@
                 <h2>{{modalidade.nome}}</h2>
             </ion-item>
         </ion-list> -->
-        <div ng-if="modalidadeSelecionada.tipo.perguntar.indexOf('tiposCampo') !== -1">
-            <ion-item class="item-divider">Tipos de campo</ion-item>
-            <ion-list>
-                <ion-toggle ng-repeat="tipoCampo in modalidadeSelecionada.tipo.tiposCampo" ng-click="toggleTipoCampo(tipoCampo)" ng-value="tipoCampo"  toggle-class="toggle-positive">
-                    {{nomeTipoCampo(tipoCampo)}}
-                </ion-toggle>
-            </ion-list>
-        </div>
-        <div ng-if="modalidadeSelecionada.tipo.perguntar.indexOf('numJogadores') !== -1">
-            <ion-item class="item-divider">Número de jogadores</ion-item>
-            <label  class="item item-input">
-                <span class="input-label">
-                    Quantos jogam?
-                    <p style="color: #9E9E9E;">Incluindo o goleiro</p>
-                </span>
-                <p style="width: 65%; padding: 0 15px;">
-                    <input type="text" jog-range min="1" max="11" from="modalidadeSelecionada.numJogadores" on-selecionado="setNumJogadores(value)">
-                </p>
-            </label>
-        </div>
-        <div ng-if="modalMinimo" class="padding">
-            <button ng-click="concluir()" class="button button-positive button-block">{{labelBotao || 'Confirmar'}}</button>
+        <div ng-if="modalidadeSelecionada">
+            <div ng-if="modalidadeSelecionada.tipo.perguntar.indexOf('tiposCampo') !== -1">
+                <ion-item class="item-divider">Tipos de campo</ion-item>
+                <ion-list>
+                    <ion-toggle ng-checked="tipoCampoChecked(tipoCampo)" ng-repeat="tipoCampo in modalidadeSelecionada.tipo.tiposCampo" ng-click="toggleTipoCampo(tipoCampo)" ng-value="tipoCampo"  toggle-class="toggle-positive">
+                        {{nomeTipoCampo(tipoCampo)}}
+                    </ion-toggle>
+                </ion-list>
+            </div>
+            <div ng-if="modalidadeSelecionada.tipo.perguntar.indexOf('numJogadores') !== -1">
+                <ion-item class="item-divider">Número de jogadores</ion-item>
+                <label  class="item item-input">
+                    <span class="input-label">
+                        Quantos jogam?
+                        <p style="color: #9E9E9E;">Incluindo o goleiro</p>
+                    </span>
+                    <p style="width: 65%; padding: 0 15px;">
+                        <input type="text" jog-range min="1" max="11" from="modalidadeSelecionada.numJogadores" on-selecionado="setNumJogadores(value)">
+                    </p>
+                </label>
+            </div>
+            <div ng-if="modalMinimo" class="padding">
+                <button ng-click="concluir()" class="button button-positive button-block">{{labelBotao || 'Confirmar'}}</button>
+            </div>
         </div>
     </ion-content>
     <ion-footer-bar ng-if="!modalMinimo" align-title="center" class="bar bar-positive">

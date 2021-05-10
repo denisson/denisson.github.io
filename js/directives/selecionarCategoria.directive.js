@@ -2,10 +2,10 @@ angular.module('app.directives')
 .directive('selecionarCategoria', ['$ionicModal', 'CategoriaService', function($ionicModal, CategoriaService){
     return {
         restrict: 'A',
-        scope: {onSelecionado: '&', preSelecionado: '=', labelBotao: '@', modalMinimo: '@'},
+        scope: {onSelecionado: '&', preSelecionado: '=', labelBotao: '@', modalMinimo: '@', podeLimpar: '='},
         link: function(scope, el, attr) {
             scope.categorias = CategoriaService.getCategorias();
-            scope.categoriaSelecionada = scope.preSelecionado || {};
+            // scope.categoriaSelecionada = scope.preSelecionado || {};
             scope.idade = {
                 minima: null,
                 maxima: null
@@ -18,12 +18,13 @@ angular.module('app.directives')
             });
 
             scope.concluir = function(){
-                scope.idade.descricao = CategoriaService.descricaoIdade(scope.idade);
+                scope.idade.descricao = scope.categoriaSelecionada.chave ? CategoriaService.descricaoIdade(scope.idade) : null;
                 scope.onSelecionado({categoria: scope.categoriaSelecionada, idade: scope.idade});
                 scope.modal.hide();
             }
 
             scope.selecionar = function(categoria) {
+                scope.titulo = categoria.nome;
                 scope.categoriaSelecionada = categoria;
                 scope.idade.minima = categoria.idadeMinima;
                 scope.idade.maxima = categoria.chave === 'BASE'? categoria.idadeMaxima : null;
@@ -42,7 +43,13 @@ angular.module('app.directives')
                 scope.idade.maxima = maxima;
             }
 
+            scope.limpar = function() {
+                scope.selecionar({});
+                scope.concluir();
+            }
+
             function exibirModal(){
+                scope.selecionar({});
                 scope.modal.show();
             }
 

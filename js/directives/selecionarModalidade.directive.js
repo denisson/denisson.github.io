@@ -2,14 +2,14 @@ angular.module('app.directives')
 .directive('selecionarModalidade', ['$ionicModal', 'ModalidadeService', 'TiposCampoService', '$ionicPopup', function($ionicModal, ModalidadeService, TiposCampoService, $ionicPopup){
     return {
         restrict: 'A',
-        scope: {onSelecionado: '&', preSelecionado: '=', labelBotao: '@', esporte: '=', modalMinimo: '@', trigger: '@'},
+        scope: {onSelecionado: '&', preSelecionado: '=', labelBotao: '@', esporte: '=', modalMinimo: '@', trigger: '@', podeLimpar: '='},
         link: function(scope, el, attr) {
             scope.modalidades = [];
             scope.modalidadeSelecionada = null;
 
             $ionicModal.fromTemplateUrl('templates/times/selecionarModalidade.html', {
                 scope: scope,
-                animation: 'no-animation',
+                // animation: 'no-animation',
             }).then(function(modal){
                 scope.modal = modal; 
             });
@@ -47,9 +47,15 @@ angular.module('app.directives')
                 } else {
                     $ionicPopup.alert({
                         title: 'Informe os tipos de campo',
-                        content: 'É importante saber em quais tipos de campo o seu time joga para te ajudarmos a encontrar outros times da mesma modalidade que a sua.'
+                        content: 'É preciso informar pelo menos um tipo de campo.'
                     });
                 }
+            }
+
+            scope.limpar = function() {
+                scope.modalidadeSelecionada = null;
+                scope.onSelecionado({modalidade: scope.modalidadeSelecionada});
+                scope.modal.hide();
             }
 
             scope.dispararEventoSelecionado = function() {
@@ -64,6 +70,10 @@ angular.module('app.directives')
                 scope.modalidadeSelecionada.tiposCampo = _.xor(scope.modalidadeSelecionada.tiposCampo, [tipoCampo]);
             }
 
+            scope.tipoCampoChecked = function(tipoCampo) {
+                return _.includes(scope.modalidadeSelecionada.tiposCampo, tipoCampo);
+            }
+
             scope.setNumJogadores = function(num) {
                 scope.modalidadeSelecionada.numJogadores = num;
             }
@@ -74,8 +84,11 @@ angular.module('app.directives')
             }
 
             function exibirModalDetalhes() {
-                scope.modalidadeSelecionada.tiposCampo = _.includes(scope.modalidadeSelecionada.tipo.perguntar, 'tiposCampo')? [] : scope.modalidadeSelecionada.tiposCampo;
-                scope.modalidadeSelecionada.numJogadores = _.includes(scope.modalidadeSelecionada.tipo.perguntar, 'numJogadores')? 7 : scope.modalidadeSelecionada.numJogadores;
+                var tipoSelecionado = scope.modalidadeSelecionada.tipo;
+                scope.modalidadeSelecionada.tiposCampo = _.includes(tipoSelecionado.perguntar, 'tiposCampo')? _.get(scope.modalidadeSelecionada.tipo, 'default.tiposCampo') || [] : scope.modalidadeSelecionada.tiposCampo;
+                scope.modalidadeSelecionada.numJogadores = _.includes(tipoSelecionado.perguntar, 'numJogadores')? _.get(scope.modalidadeSelecionada.tipo, 'default.numJogadores') || 6 : scope.modalidadeSelecionada.numJogadores;
+
+                scope.modalidadeSelecionada = _.clone(scope.modalidadeSelecionada);
 
                 scope.modalDetalhes.show();
             }

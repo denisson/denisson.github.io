@@ -36,8 +36,9 @@
         </div>
         <br/>
         <p ng-if="mostrarOutrosEsportes" style="text-align: center;">
-            <a ng-if="efootball" ng-click="alternarEfootball(false)">Ver times de Futebol</a>
-            <a ng-if="!efootball" ng-click="alternarEfootball(true)">Ver times de PES ou FIFA</a>
+            <a jog-options-modal jog-type="SELECT" jog-options="esportes" jog-key="chave" jog-value="nome" jog-title="Selecione um esporte" on-selecionado="outroEsporteSelecionado(option)" on-show-modal="modalRegiao.hide()">Ver outros esportes</a>
+            <!-- <a ng-if="efootball" ng-click="alternarEfootball(false)">Ver times de Futebol</a>
+            <a ng-if="!efootball" ng-click="alternarEfootball(true)">Ver times de PES ou FIFA</a> -->
         </p>
         <br/>
     </ion-scroll>

@@ -11,8 +11,8 @@ var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.contro
   // URL_IMAGEBOSS:  'https://img.imageboss.me/',
   URL_S3:  'https://s3-sa-east-1.amazonaws.com/jogueiros-fc-uploads/',
   URL_AWS_CLOUDFRONT: 'https://d1zz32ev1utzz6.cloudfront.net/',
-  // URL_API: 'https://jogueiros-fc-api.herokuapp.com/',
-  URL_API: 'http://localhost:3000/',
+  URL_API: 'https://jogueiros-fc-api.herokuapp.com/',
+  // URL_API: 'http://localhost:3000/',
   //  URL_API: 'http://10.0.0.103:3000/',
   //  URL_API: 'http://192.168.15.71:3000/', // IP da máquina quando depurando do próprio dispositivo
 //  URL_API: 'http://10.0.2.2:3000/', // IP da máquina quando usando emulador android. https://stackoverflow.com/questions/5806220/how-to-connect-to-my-http-localhost-web-server-from-android-emulator

@@ -295,7 +295,13 @@ angular.module('app.routes', [])
     .state('onboarding_adversario', {
       url: '/onboarding/encontrarAdversario',
       templateUrl: 'templates/onboarding/encontrarAdversario.html',
-      cache: false
+      cache: false,
+      controller: function($scope, config){
+        $scope.convidar = function () {
+          window.plugins.socialsharing.share('Agenda de jogos, adversários e estatísticas de desempenho. \n \n Jogueiros é o jeito simples e gratuito de organizar o seu time! Baixe agora. \n' + config.URL_SITE);
+        }
+        
+      }
     })
 
     .state('onboarding_completar', {

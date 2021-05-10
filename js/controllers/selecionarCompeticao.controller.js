@@ -43,12 +43,12 @@ angular
     }
 
     carregarCompeticoes();
-
-    $rootScope.$on('alterarRegiao', function(event, filtro){
+    
+    $scope.aoAlterarPerfilFiltro = function(filtro){
       $scope.perfilFiltro = filtro;
       carregarCompeticoes().then(function(){
         $scope.buscarCompeticoes($scope.search.query);
       });
-    });
+    }
 
   }])

@@ -5,6 +5,7 @@ angular.module('app.directives')
         scope: {onSelecionado: '&', min: '=', max: '=', from: '=', to: '='},
         link: function(scope, element, attrs){
             var range =  $(element[0]);
+            
             function selecionar(data) {
                 if (scope.to) {
                     scope.onSelecionado(data);    
@@ -23,6 +24,21 @@ angular.module('app.directives')
                 hide_min_max: true,
                 force_edges: true,
                 onFinish: selecionar
+            });
+            var slider = range.data("ionRangeSlider");
+
+            scope.$watch('from', function() {
+                if (slider) {
+                    slider.update({from: scope.from});
+                    selecionar(scope);
+                }
+            });
+
+            scope.$watch('to', function() {
+                if (slider) {
+                    slider.update({to: scope.to});
+                    selecionar(scope);
+                }
             });
         }
   };

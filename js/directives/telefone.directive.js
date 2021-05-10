@@ -6,11 +6,7 @@ angular.module('app.directives')
     templateUrl: 'templates/directives/telefone-botao.html',
     controller: function($scope){
 	    $scope.formatarTelefone = formatarTelefone;
-
-	    $scope.irParaWhatsapp = function(telefone){
-	      window.open('https://api.whatsapp.com/send?phone=' + telefone.ddi + '' + telefone.numero, '_system'); 
-	      return false;
-		}
+	    $scope.irParaWhatsapp = irParaWhatsapp;
     }
   }
 }])
@@ -21,11 +17,7 @@ angular.module('app.directives')
     templateUrl: 'templates/directives/telefone-link.html',
     controller: function($scope){
 	    $scope.formatarTelefone = formatarTelefone;
-
-	    $scope.irParaWhatsapp = function(telefone){
-	      window.open('https://api.whatsapp.com/send?phone=' + telefone.ddi + '' + telefone.numero, '_system'); 
-	      return false;
-		}
+	    $scope.irParaWhatsapp = irParaWhatsapp;
 		
 	    $scope.cadastrarTelefone = function(){
 			$scope.aoClicarCadastrarTelefone();
@@ -34,16 +26,23 @@ angular.module('app.directives')
     }
   }
 }])
-.directive('telefoneInput', ['$ionicModal', '$ionicPopup',  function($ionicModal, $ionicPopup){
+.directive('telefoneInput', ['$ionicModal', '$ionicPopup', 'DataService', function($ionicModal, $ionicPopup, DataService){
   return {
   	restrict: 'E',
-  	scope: {telefone: '='},
+  	scope: {telefone: '=', aoInformar: '&'},
     templateUrl: 'templates/directives/telefone-input.html',
     controller: function($scope, $state){
 
-		
+		DataService.ddis().then(function(ddis){
+			$scope.ddis = ddis;
+		})
+
+		$scope.ddiSelecionado = function(ddi) {
+			$scope.telefone.ddi = ddi.code;
+		}
+
 	    if($scope.telefone) {
-			$scope.telefone.numeroFormatado = formatarTelefone($scope.telefone.numero);
+			$scope.telefone.numeroFormatado = formatarTelefone($scope.telefone);
 			$scope.telefone = $scope.telefone;
 	    } else {
 			$scope.telefone = {ddi: '55', whatsapp: true};    	
@@ -58,25 +57,20 @@ angular.module('app.directives')
 		});
 
 		$scope.confirmarTelefone = function(){
-		//todo:checar se telefone é válido
-		if($scope.telefone.numero != undefined){
-		  // Informou o ddd?
-		  	if($scope.telefone.numero.length >= 10 || $scope.telefone.numero.length == 0){ 
-		      	$scope.telefone = $scope.telefone;
-		      	$scope.telefone.numeroFormatado = formatarTelefone($scope.telefone.numero);
-		        // if(editando()){
-		          // DataService.editarArbitro(_.pick($scope.arbitro, ['_id', 'telefone'])).then(function(){
-		          //   $scope.modalTelefone.hide();
-		          // });
-		        // } else {
-		        	$scope.modalTelefone.hide();
-		        // }
-			    } else {
-			    	$ionicPopup.alert({
-			    		title: 'Informe o DDD',
-			    		content: 'Informe o telefone completo com DDD'
-			    	});        
-			    }
+			//todo:checar se telefone é válido
+			if($scope.telefone.numero != undefined){
+			// Informou o ddd?
+				if($scope.telefone.ddi != 55 || $scope.telefone.numero.length >= 10 || $scope.telefone.numero.length == 0){ 
+					$scope.telefone = $scope.telefone;
+					$scope.telefone.numeroFormatado = formatarTelefone($scope.telefone);
+					$scope.modalTelefone.hide();
+					$scope.aoInformar({telefone: $scope.telefone});
+				} else {
+					$ionicPopup.alert({
+						title: 'Informe o DDD',
+						content: 'Informe o telefone completo com DDD'
+					});        
+				}
 			} else {
 				$ionicPopup.alert({
 					title: 'Telefone inválido',
@@ -90,5 +84,12 @@ angular.module('app.directives')
 }]);
 
 function formatarTelefone(telefone){
-	return telefone ? telefone.replace(/^(\d{2})?(\d{4,5})(\d{4})$/, "$1 $2-$3").trim() : '';
+	if (!telefone.numero) return '';
+	return telefone.ddi == 55 ? telefone.numero.replace(/^(\d{2})?(\d{4,5})(\d{4})$/, "$1 $2-$3").trim() : '+' + telefone.ddi + ' ' +  telefone.numero;
+}
+
+function irParaWhatsapp(telefone) {
+	var numero = (telefone.ddi + '' + telefone.numero).replace(/\s*/g, '');
+	window.open('https://api.whatsapp.com/send?phone=' + numero, '_system'); 
+	return false;
 }

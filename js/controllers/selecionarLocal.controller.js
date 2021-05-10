@@ -8,6 +8,7 @@ angular
     $scope.tiposCampo = TiposCampoService.getTiposCampo();
 
     $scope.regiao = AuthService.getRegiao();
+    $scope.esporte = _.get(AuthService.getPerfilFiltro(), 'esporte.chave');
     $scope.searchTerm = {query: ''};
 
     $scope.buscarLocal = function(query){
@@ -35,7 +36,7 @@ angular
         promise.reject('');
         return promise;
       }
-      return DataService.locais($scope.regiao).then(function(locais){
+      return DataService.locais($scope.regiao, $scope.esporte).then(function(locais){
         $scope.locais = _.slice(locais, 0, 50);
         fuseLocais = new Fuse(locais, {
           keys: ['nomeSemAcento'],
@@ -46,13 +47,12 @@ angular
 
     carregarLocais();
 
-    $rootScope.$on('alterarRegiao', function(event, filtro){
+    $scope.aoAlterarPerfilFiltro = function(filtro){
       $scope.regiao = filtro.regiao;
       carregarLocais().then(function(){
         $scope.buscarLocal($scope.searchTerm.query);
       });
-    });
-
+    }
 
     $ionicModal.fromTemplateUrl('templates/jogos/cadastrarLocal.html', {
       scope: $scope,
@@ -98,22 +98,27 @@ angular
 
     function localEstaCompleto(){
       var local = $scope.novoLocal;
-      if(!_.get(local, 'nome') || !_.get(local, 'cidade._id') || !_.get(local, 'tipo') || !_.get(local, 'numJogadores')){
-        $ionicPopup.alert({
-          title: 'Cadastro incompleto',
-          content: 'Preencha todos os campos para concluir o cadastro!'
-        });
-        return false;
-      } else {
+      if ($scope.esporte === 'FUT' && _.get(local, 'nome') && _.get(local, 'cidade._id') && _.get(local, 'tipo') && _.get(local, 'numJogadores')) {
+        return true;
+      } 
+
+      if ($scope.esporte !== 'FUT' && _.get(local, 'nome') && _.get(local, 'cidade._id')) {
         return true;
       }
+
+      $ionicPopup.alert({
+        title: 'Cadastro incompleto',
+        content: 'Preencha todos os campos para concluir o cadastro!'
+      });
+      return false;
     }
 
     $scope.salvarLocal = function(){
       if(localEstaCompleto()){
         $scope.novoLocal.createdBy = AuthService.getUsuarioId();
         var localSalvar = _.clone($scope.novoLocal);
-        localSalvar.tipo = localSalvar.tipo.chave;
+        localSalvar.tipo = _.get(localSalvar, 'tipo.chave');
+        localSalvar.esporte = $scope.esporte;
         DataService.salvarLocalJogo(localSalvar).then(function(localSalvo){
             $scope.novoLocal._id = localSalvo.id;
             $scope.local = $scope.novoLocal;

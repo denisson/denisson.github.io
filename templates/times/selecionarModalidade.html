@@ -2,6 +2,7 @@
     <ion-header-bar class="bar bar-header bar-positive">
         <button ng-if="!modalMinimo" class="button button-clear button-primary" ng-click="modal.hide()">Cancelar</button>
         <h1 class="title">{{titulo || 'Modalidade'}}</h1>
+        <button ng-if="podeLimpar" class="button button-clear button-primary" ng-click="limpar()">Limpar</button>
     </ion-header-bar>
     <ion-content ng-class="{'padding': !modalMinimo}" >
         <!-- <ion-list>

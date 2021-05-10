@@ -25,7 +25,7 @@ angular
         if (!_.get(modalidade, 'tipo')) return '' ;
         var tipoModalidade = find({_id: modalidade.tipo});
         if( !tipoModalidade ) return '';
-        return !tipoModalidade.perguntar.length ? tipoModalidade.nome : tipoModalidade.nome + ' • ' + modalidade.numJogadores + 'x' + modalidade.numJogadores;
+        return !tipoModalidade.perguntar.length ? tipoModalidade.nomeCurto : tipoModalidade.nomeCurto + ' • ' + modalidade.numJogadores + 'x' + modalidade.numJogadores;
     }
 
     function getFiltros(modalidade){

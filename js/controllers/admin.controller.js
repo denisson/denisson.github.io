@@ -1,14 +1,20 @@
 angular
   .module('app.controllers')
-  .controller('adminController', ['$scope', '$rootScope', '$stateParams', 'DataService', 'AuthService', function ($scope, $rootScope, $stateParams, DataService, AuthService) {
+  .controller('adminController', ['$scope', '$rootScope', '$stateParams', 'DataService', 'AuthService', 'PerfilFiltroService', function ($scope, $rootScope, $stateParams, DataService, AuthService, PerfilFiltroService) {
 
       // $scope.dados = [];
-      $scope.perfilFiltro = AuthService.getPerfilFiltro();
+      $scope.perfilFiltro = PerfilFiltroService.getAtual();
       $scope.tipoGrafico = 'jogosCadastrados';
 
-      $rootScope.$on('alterarRegiao', function(event, filtro){
+      $scope.aoAlterarPerfilFiltro = function(filtro) {
         $scope.perfilFiltro = filtro;
         $scope.carregarDados();
+      }
+      
+      $scope.$on('$ionicView.enter', function(){
+        if (PerfilFiltroService.diferenteDoAtual($scope.perfilFiltro)) {
+          $scope.aoAlterarPerfilFiltro(PerfilFiltroService.getAtual());
+        }
       });
 
       

@@ -62,119 +62,6 @@ angular.module('app.directives', [])
     controller: function($scope, $state){}
   };
 }])
-.directive('jogEscolherRegiao', ['$ionicModal', 'DataService', '$rootScope', 'AuthService', function($ionicModal, DataService, $rootScope, AuthService){
-  return {
-    restrict: 'A',
-    // scope: {mostrarBr: '=', temTime: '=', temJogos: '='},
-    link: function(scope, el, attr) {
-      var fuseEstados;
-      scope.estados = [];
-
-      function inicializar(){
-      
-        if(scope.efootball){
-          scope.titulo = 'Selecionar plataforma'
-          scope.perfilFiltro.chaveEsporte = _.get(scope.perfilFiltro, 'esporte.chave');
-          scope.perfilFiltro.chavePlataforma = _.get(scope.perfilFiltro, 'plataforma.chave');
-        } else {
-          scope.regiao = scope.ufTimeLogado = attr.regiao || scope.perfilFiltro.regiao;
-          scope.titulo = 'Selecionar região'
-        }
-        
-        scope.modalRegiao;
-        scope.mostrarBr = attr.mostrarBr == undefined ? true : scope.$eval(attr.mostrarBr);
-        scope.mostrarOutrosEsportes = attr.mostrarOutrosEsportes == undefined ? true : scope.$eval(attr.mostrarOutrosEsportes);
-        // scope.filtro = attr.filtro == undefined ? null : scope.$eval(attr.filtro);
-        scope.temTime = attr.temTime == undefined ? false : scope.$eval(attr.temTime);
-        scope.temJogos = attr.temJogos == undefined ? false : scope.$eval(attr.temJogos);
-        scope.ocultarCancelar = attr.ocultarCancelar == undefined ? false : (scope.$eval(attr.ocultarCancelar) && !scope.regiao);
-      }
-
-      scope.perfilFiltro = scope.perfilFiltro || AuthService.getPerfilFiltro();
-      scope.efootball = _.get(scope.perfilFiltro, 'esporte.efootball');
-      inicializar();
-
-      scope.alterarPerfilFiltro = function(estado){
-        $rootScope.$broadcast('alterarRegiao', scope.perfilFiltro);
-        scope.modalRegiao.hide();
-      }
-
-      
-      DataService.estados().then(function(estados){
-        scope.estados = estados;
-        fuseEstados = new Fuse(estados, {
-          keys: ['nomeSemAcento'],
-          threshold: 0.3,
-        });
-      });
-
-      DataService.esportes().then(function(esportes){
-        scope.esportes = esportes;
-      });
-    
-      DataService.plataformas().then(function(plataformas){
-        scope.plataformas = plataformas;
-      });
-
-      scope.buscarEstado = function(query){
-        if(fuseEstados) {
-          if(query.length){
-            scope.estados = fuseEstados.search(_.deburr(query));
-          } else {
-            scope.estados = fuseEstados.list;
-          }  
-        }
-      }
-
-      $ionicModal.fromTemplateUrl('templates/directives/selecionarRegiao.html', {
-        scope: scope,
-      }).then(function(modal){
-        scope.modalRegiao = modal;
-        if(scope.$eval(attr.abrirModal) && !scope.regiao && !scope.efootball){
-          modal.show();
-        }
-      });
-
-      scope.regiaoSelecionada = function(estado){
-        scope.perfilFiltro.esporte = _.find(scope.esportes, {chave: 'FUT'});
-        scope.perfilFiltro.plataforma = null;
-        scope.perfilFiltro.regiao = estado.uf || estado;
-        scope.alterarPerfilFiltro();
-      }
-
-      scope.esporteSelecionado = function(esporte){
-        scope.perfilFiltro.esporte = esporte;
-        scope.perfilFiltro.plataforma = null;
-        scope.perfilFiltro.chavePlataforma = null;
-        scope.alterarPerfilFiltro();
-      }
-
-      scope.plataformaSelecionada = function(plataforma){
-        scope.perfilFiltro.plataforma = plataforma;
-        scope.alterarPerfilFiltro();
-      }
-
-      scope.alternarEfootball = function(efootball){
-        scope.efootball = efootball;
-        inicializar();
-      }
-
-      scope.mostrarEstado = function(estado){
-        return (
-          (!scope.temTime || estado.temTime) //ou não precisa ter time, ou o estado tem que ter o time
-          &&
-          (!scope.temJogos || estado.temJogos)  // ou não precisa ter jogos, ou o estado tem que ter jogos
-        ) 
-        || scope.ufTimeLogado == estado.uf;
-        ;
-      }
-
-      el.bind('click', function() {
-        scope.modalRegiao.show();
-      });
-    }
-  };
-}])
 .directive('jogJogadorGols', ['SumulaService', function(SumulaService){
   return {
     restrict: 'E',
@@ -521,13 +408,6 @@ angular.module('app.directives', [])
       }
 
       carregarLocais();
-
-      scope.$on('alterarRegiao', function(event, uf){
-        scope.regiao = uf;
-        carregarLocais().then(function(){
-          scope.buscarLocal(scope.search.query);
-        });
-      });
 
       function checkLocaisSelecionados(){
           for (var i = 0; i < _.get(scope, 'locaisPreSelecionados.length', 0); i++) {

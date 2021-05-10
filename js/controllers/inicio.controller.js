@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('inicioController', ['$scope', '$rootScope', '$stateParams', 'DataService', 'AuthService', '$ionicPopup', '$attrs', function ($scope, $rootScope, $stateParams, DataService, AuthService, $ionicPopup, $attrs) {
+  .controller('inicioController', ['$scope', '$rootScope', '$stateParams', 'DataService', '$ionicScrollDelegate', '$ionicPopup', '$attrs', function ($scope, $rootScope, $stateParams, DataService, $ionicScrollDelegate, $ionicPopup, $attrs) {
     var QTD_POR_PAGINA = 10;
     $scope.jogos = [];
     $scope.page = 0;
@@ -8,8 +8,7 @@ angular
     $scope.dadosCarregados = false; // Flag utilizada para saber se já retornou o resultado do banco de dados
     $scope.proximos = $attrs.proximosJogos;
     
-
-    $rootScope.$on('alterarRegiao', function(event, uf){
+    $scope.$on('alterarPerfilFiltro', function(){
       $scope.atualizar();
     });
 
@@ -39,7 +38,7 @@ angular
     $scope.carregarJogos = function(zerar){
       $scope.zerar = zerar;
       var result;
-      if($scope.dadosCarregados){//primeiro carregamento
+      if($scope.dadosCarregados && !zerar ){//primeiro carregamento
         DataService.blockPopup();
       }
       var esporte = _.get($scope, 'perfilFiltro.esporte.chave');
@@ -64,18 +63,15 @@ angular
 
     $scope.inicializar = function(){
       if($scope.page === 0){
-        $scope.page = 1;
         $scope.atualizar();
       }
     }
 
-    $scope.$on('$ionicView.enter', function(){
-      $scope.inicializar();
-    });
-
     $scope.atualizar = function(){
       $scope.page = 1;
+      $ionicScrollDelegate.scrollTop();
       $scope.carregarJogos(true);
+      
     }
 
     $scope.inicializar();

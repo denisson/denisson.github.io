@@ -190,6 +190,11 @@ angular
           setNotificationToken(notificationTokenAntesLogin, notificationTokenTypeAntesLogin);
         }
         redirectAfterLogin(usuario.perfis, options.loginTelaArbitro);
+        // if (window.FirebasePlugin) {
+        //   window.FirebasePlugin.setUserId(usuario.id);
+        //   window.FirebasePlugin.logEvent('login');
+        // }
+        
       }).catch(function(err){
         DataService.logError(err);
       });

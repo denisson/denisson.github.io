@@ -6,11 +6,10 @@ angular
       $scope.perfilFiltro = AuthService.getPerfilFiltro();
       $scope.tipoRanking = 'vitorias';
 
-      $rootScope.$on('alterarRegiao', function(event, filtro){
+      $scope.aoAlterarPerfilFiltro = function(filtro){
         $scope.perfilFiltro = filtro;
         $scope.carregarTimes();
-      });
-
+      }
       
       $scope.carregarTimes = function(){
         var esporte = _.get($scope.perfilFiltro, 'esporte.chave');

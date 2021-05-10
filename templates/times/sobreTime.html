@@ -1,10 +1,10 @@
 <label class="item item-input">
     <span class="input-label">Modalidade</span>
-    <input selecionar-modalidade on-selecionado="selecionado('modalidade', modalidade)" type="text" placeholder="Fut7, futsal, campo, areia ..." ng-value="descricaoModalidade(time.modalidade)"/>
+    <input selecionar-modalidade on-selecionado="selecionado('modalidade', modalidade)" type="text" placeholder="Fut7, futsal, campo, areia ..." ng-model="descricao.modalidade"/>
 </label>
 <label class="item item-input">
     <span class="input-label">Idade</span>
-    <input selecionar-categoria on-selecionado="selecionado('idade', idade)" label-botao="Confirmar" type="text" placeholder="Idade dos jogadores" ng-value="descricaoIdade(time.idade)"/>
+    <input selecionar-categoria on-selecionado="selecionado('idade', idade)" label-botao="Confirmar" type="text" placeholder="Idade dos jogadores" ng-model="descricao.categoria"/>
 </label>
 <div class="item">
     <jog-options-horizontal options="generos" on-selecionado="selecionado('genero', item.chave)" pre-selecionado="time.genero" key="chave" value="nome" />

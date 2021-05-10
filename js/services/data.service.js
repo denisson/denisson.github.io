@@ -176,8 +176,8 @@ angular.module('app.services')
 		// timesComPaginacao: function(pag, porPag){
 		// 	return request('times/pagina?pag=' + pag + '&porPag=' + porPag);
 		// },
-		locais: function(regiao){
-			return request('locais?regiao=' + regiao);
+		locais: function(regiao, esporte){
+			return request('locais', {regiao: regiao, esporte: esporte});
 		},
 		locaisPreferidos: function(timeId){
 			return request('locaisPreferidos/' + timeId);
@@ -463,6 +463,9 @@ angular.module('app.services')
 		},
 		modalidades: function(){
 			return request('modalidade/', null, true);
+		},
+		ddis: function(){
+			return request('ddi/', null, true);
 		},
 		logError: function(exception){
 			var userData = JSON.parse(window.localStorage.getItem('user_data'));

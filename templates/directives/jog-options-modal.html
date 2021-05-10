@@ -1,13 +1,24 @@
 <ion-modal-view class="modal-minimo">
     <ion-header-bar class="bar bar-header bar-positive">
         <h1 ng-if="jogTitle" class="title">{{jogTitle}}</h1>
+        <button ng-if="podeLimpar" class="button button-clear button-primary" ng-click="limpar()">Limpar</button>
     </ion-header-bar>
     <ion-content>
-        <ion-list class="jog-radio">
-            <ion-radio ng-repeat="option in jogOptions" ng-click="selecionar(option)" ng-value="option[jogKey]">
+        <label ng-if="podeBuscar" class="item item-input">
+            <i class="icon ion-search placeholder-icon"></i>
+            <input ng-model="search" type="search" placeholder="pesquisar..." ng-change="mudou()" />
+        </label>
+        <ion-list ng-if="jogType === 'RADIO'" class="jog-radio">
+            <ion-radio ng-repeat="option in jogOptions | fuzzyBy:''+jogValue+'':search" ng-click="selecionar(option)" ng-value="option[jogKey]">
                 {{option[jogValue]}}
                 <p ng-if="option[jogDescription]">{{option[jogDescription]}}</p>
             </ion-radio>
+        </ion-list>
+        <ion-list ng-if="jogType === 'SELECT'">
+            <ion-item ng-repeat="option in jogOptions | fuzzyBy:''+jogValue+'':search" ng-click="selecionar(option)">
+                {{option[jogValue]}}
+                <p ng-if="option[jogDescription]">{{option[jogDescription]}}</p>
+            </ion-item>
         </ion-list>
     </ion-content>
 </ion-modal-view>

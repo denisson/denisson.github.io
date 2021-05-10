@@ -4,19 +4,19 @@ angular.module('app.directives')
         restrict: 'E',
         templateUrl: 'templates/times/sobreTime.html',
         scope: {time: '='},
-        link: function($scope) {
+        link: function($scope) {            
+            function initDescricao(){
+                $scope.descricao = {
+                    modalidade: ModalidadeService.descricao($scope.time.modalidade),
+                    categoria: CategoriaService.descricaoIdade($scope.time.idade),
+                }
+            };
+            initDescricao();
             $scope.generos = GeneroService.generos;
-
-            $scope.descricaoIdade = function (idade) {
-                return CategoriaService.descricaoIdade(idade);
-            }
-        
-            $scope.descricaoModalidade = function (modalidade) {
-                return ModalidadeService.descricao(modalidade);
-            }
 
             $scope.selecionado = function(field, value){
                 $scope.time[field] = value;
+                initDescricao();
             }
         
         }

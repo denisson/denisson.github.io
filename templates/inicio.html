@@ -1,7 +1,7 @@
 <ion-view class="has-tabs-top" ng-controller="inicioTopoController">
   <ion-nav-title>Jogueiros FC</ion-nav-title>
   <ion-nav-buttons side="right" class="item-select" >
-      <button class="button" mostrar-br="true" tem-jogos="true" filtro="perfilFiltro" jog-escolher-regiao>
+      <button class="button" mostrar-br="true" tem-jogos="true" filtro="perfilFiltro" jog-escolher-regiao ao-alterar="aoAlterarPerfilFiltro(filtro)">
         <span ng-if="!perfilFiltro.esporte.efootball" style="display: inline;">Região:</span>
         <b class="padding-left">{{formatarFiltro(perfilFiltro)}}</b>
         <i class="icon ion-android-arrow-dropdown" style="color:#999"></i>
@@ -47,7 +47,7 @@
                         </ion-list>
                         <div ng-show="!jogos.length && dadosCarregados" class="padding mensagem-destacada">
                             <h3 class="dark">A bola ainda não rolou por aqui :(</h2>
-                            <p class="dark">Seja o primeiro do {{formatarFiltro(perfilFiltro)}}! Você pode cadastrar os seus jogos, mesmo que o adversário ainda não esteja no Jogueiros, e convidar outros times para ficar ainda melhor.</p>
+                            <p class="dark">Seja o primeiro de {{formatarFiltro(perfilFiltro)}}! Você pode cadastrar os seus jogos, mesmo que o adversário ainda não esteja no Jogueiros, e convidar outros times para ficar ainda melhor.</p>
                         </div>
                         <ion-infinite-scroll ng-if="dadosCarregados && temMaisResultados" on-infinite="carregarJogos()" distance="10%"></ion-infinite-scroll>
                     </ion-content>

@@ -31,8 +31,8 @@
                 <ion-toggle ng-model="modo.coop" toggle-class="toggle-positive">Coop</ion-toggle>
                 <ion-toggle ng-model="modo.x1" toggle-class="toggle-positive">1x1</ion-toggle>
             </ion-list>
-            <ion-item ng-if="!time.esporte.efootball" class="item-divider">Sobre o time</ion-item>
-            <sobre-time time="time"></sobre-time>
+            <ion-item ng-if="time.esporte.chave === 'FUT'" class="item-divider">Sobre o time</ion-item>
+            <sobre-time ng-if="time.esporte.chave === 'FUT'" time="time"></sobre-time>
             <ion-item class="item-divider">Informações adicionais</ion-item>
             <informacoes-adicionais-time time="time"></informacoes-adicionais-time>
 

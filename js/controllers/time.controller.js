@@ -399,10 +399,6 @@ angular
       return $scope.time.temporadas.length > 1;
     }
 
-    $scope.formatarTelefone = function(telefone){
-      return telefone.replace(/^(\d{2})?(\d{4,5})(\d{4})$/, "$1 $2-$3").trim();
-    }
-
     $scope.verRanking = function(ranking){
       $state.go('liga_ranking', {id: ranking._id});
     }

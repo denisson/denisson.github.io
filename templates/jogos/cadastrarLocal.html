@@ -13,19 +13,21 @@
                 <span class="input-label">Cidade</span>
                 <input ng-model="novoLocal.cidade.nomeCompleto" ng-focus="modalEstado.show()" type="text" placeholder="Escolha uma cidade" jog-blur>
             </label>
-            <label class="item item-input">
-                <span class="input-label">Tipo de campo</span>
-                <input type="text" jog-options-modal jog-options="tiposCampo" jog-key="chave" jog-value="nome" jog-title="Tipo de campo" on-selecionado="selecionado('tipo', option)" placeholder="Society, salão, grama..." value="{{novoLocal.tipo.nome}}" >
-            </label>
-            <label class="item item-input">
-                <span class="input-label">
-                    Quantos jogam?
-                    <p style="color: #9E9E9E;">Incluindo o goleiro</p>
-                </span>
-                <p style="width: 65%; padding: 0 15px;">
-                    <input type="text" jog-range min="2" max="11" from="novoLocal.numJogadores" on-selecionado="selecionado('numJogadores', value)">
-                </p>
-            </label>
+            <div ng-if="esporte === 'FUT'">
+                <label class="item item-input">
+                    <span class="input-label">Tipo de campo</span>
+                    <input type="text" jog-options-modal jog-type="SELECT" jog-options="tiposCampo" jog-key="chave" jog-value="nome" jog-title="Tipo de campo" on-selecionado="selecionado('tipo', option)" placeholder="Society, salão, grama..." value="{{novoLocal.tipo.nome}}" >
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">
+                        Quantos jogam?
+                        <p style="color: #9E9E9E;">Incluindo o goleiro</p>
+                    </span>
+                    <p style="width: 65%; padding: 0 15px;">
+                        <input type="text" jog-range min="2" max="11" from="novoLocal.numJogadores" on-selecionado="selecionado('numJogadores', value)">
+                    </p>
+                </label>
+            </div>
             <button type="submit" class="button button-positive button-block">Cadastrar</button>
 
         </form>

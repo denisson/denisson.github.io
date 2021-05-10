@@ -1,6 +1,6 @@
 angular
   .module('app.controllers')
-  .controller('conviteArbitroLigaController', ['$rootScope', '$scope', '$state', '$stateParams', 'DataService', 'AuthService', '$ionicActionSheet', '$ionicHistory', '$ionicPopup', '$ionicModal', 'config', function ($rootScope, $scope, $state, $stateParams, DataService, AuthService, $ionicActionSheet,$ionicHistory, $ionicPopup, $ionicModal, config) {
+  .controller('conviteArbitroLigaController', ['$rootScope', '$scope', '$state', '$stateParams', 'DataService', 'AuthService', 'PerfilFiltroService','$ionicActionSheet', '$ionicHistory', '$ionicPopup', '$ionicModal', 'config', function ($rootScope, $scope, $state, $stateParams, DataService, AuthService, PerfilFiltroService, $ionicActionSheet,$ionicHistory, $ionicPopup, $ionicModal, config) {
 
     $scope.liga = null;
     $scope.usuarioJaTemPerfil = false;
@@ -24,7 +24,8 @@ angular
       if(result.perfil){
         $scope.usuarioJaTemPerfil = true;
         AuthService.atualizarPerfil(result.perfil, result.tokenPerfil);
-        $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
+        // $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
+        PerfilFiltroService.setAtual(AuthService.getPerfilFiltro());
       }
     }).catch(function(){
         mostrarAlerta('Este convite não é mais válido... Que tal pedir um link atualizado?');

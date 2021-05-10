@@ -1,12 +1,13 @@
 angular
   .module('app.controllers')
-  .controller('selecionarPerfilController', ['$scope', '$rootScope',  '$state', 'DataService', 'AuthService', '$jgModalAssinatura',
-  function ($scope, $rootScope, $state, DataService, AuthService, $jgModalAssinatura) {
+  .controller('selecionarPerfilController', ['$scope', '$rootScope',  '$state', 'DataService', 'AuthService', 'PerfilFiltroService', '$jgModalAssinatura',
+  function ($scope, $rootScope, $state, DataService, AuthService, PerfilFiltroService, $jgModalAssinatura) {
 
     $scope.selecionarPerfil = function(perfilCompleto){
       AuthService.atualizarPerfilCompleto(perfilCompleto);
       AuthService.goToInicioPerfil(perfilCompleto);
-      $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
+      // $rootScope.$broadcast('alterarRegiao', );
+      PerfilFiltroService.setAtual(AuthService.getPerfilFiltro());
     }
     
     if(!$scope.perfis || $scope.perfis.length == 0){
@@ -37,7 +38,8 @@ angular
 
     function irParaCadastroTime(){
       AuthService.atualizarPerfil(null);
-      $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
+      // $rootScope.$broadcast('alterarRegiao', AuthService.getPerfilFiltro());
+      PerfilFiltroService.setAtual(AuthService.getPerfilFiltro());
       $state.go('abasInicio.cadastrarTime');
     }
 

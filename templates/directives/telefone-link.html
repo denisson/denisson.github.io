@@ -2,12 +2,12 @@
 	<a 	ng-if="telefone.numero && telefone.whatsapp === true" 
 		ng-click="irParaWhatsapp(telefone); $event.stopPropagation()"
 		style="text-decoration: none">
-		{{formatarTelefone(telefone.numero)}}
+		{{formatarTelefone(telefone)}}
 	</a>
 	<a 	ng-if="telefone.numero && (telefone.whatsapp === false)"
 		href="tel:+{{telefone.ddi}}{{telefone.numero}}"
 		style="text-decoration: none">
-		{{formatarTelefone(telefone.numero)}}
+		{{formatarTelefone(telefone)}}
 	</a>
 	<a  ng-if="!telefone.numero && editavel == 'true'"
 		ng-click="cadastrarTelefone(); $event.stopPropagation()"
