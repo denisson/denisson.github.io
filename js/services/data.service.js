@@ -64,14 +64,14 @@ angular.module('app.services')
 		    	}
 			};
 			$cordovaFileTransfer.upload(config.URL_API + url, arquivo, options).then(function(result) {
-		        console.log(result);
 		        deferred.resolve(JSON.parse(result.response));
 		        $rootScope.$emit('loading.finish');
 		      }, function(err) {
+				DataService.logError(err);
 		      	$rootScope.$emit('loading.finish');
-		        console.log(err);
+		        // console.log(err);
 		      }, function (progress) {
-		        console.log(progress);
+		        // console.log(progress);
 		      }
 		    );
 			return deferred.promise;
@@ -127,6 +127,9 @@ angular.module('app.services')
 		},
 		timeJogadores: function(id){
 			return request('time/' + id + '/jogadores');
+		},
+		timeExJogadores: function(id){
+			return request('time/' + id + '/ex-jogadores');
 		},
 		timeJogos: function(id, temporada){
 			temporada = temporada || moment().year();
@@ -251,6 +254,9 @@ angular.module('app.services')
 		removerJogador: function(id, timeId){
       		return deleteRequest('jogador/' + id + '/' + timeId);
 		},
+		reativarJogador: function(id, timeId){
+			return post('jogador/' + id + '/' + timeId + '/' + 'reativar');
+	  },
 		salvarPlacar: function(jogoId, placar){
 	      return post('jogo/placar/' + jogoId, placar);
 	    },
@@ -457,6 +463,9 @@ angular.module('app.services')
 		},
 		bloquearTime: function(timeId){
 			return post('admin/bloquearTime/' + timeId);
+		},
+		timesPRO: function(filtros){
+			return request('admin/timesPRO', filtros);
 		},
 		registrarNotificacaoClicada: function(notificacaoId){
 			return post('usuario/notificacaoClicada', {notificacaoId: notificacaoId});

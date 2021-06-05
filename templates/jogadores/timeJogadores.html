@@ -1,0 +1,45 @@
+<ion-item ng-if="jogadores.length || podeAdicionar" class="item-divider item-select">Jogadores 
+    <select ng-model="jogadoresOrdem" ng-change="ordenarPor(jogadoresOrdem)" style="background: transparent;">
+        <option value="ARTILHARIA">Artilharia</option>
+        <option value="ASSISTENCIAS">Assistências</option>
+        <option value="JOGOS">Jogos</option>
+        <option value="POSICAO">Posição</option>
+        <option value="NOME">Nome</option>
+    </select>
+</ion-item>
+<ion-item ng-click="verJogador(jogador, temporada)" class="item-avatar avatar-jogador" ng-repeat="jogador in jogadores">
+    <img jog-jogador="jogador.foto" jog-size="small">
+    <h2>{{jogador.nome}}</h2>
+    <p>
+        {{jogador.posicao}}
+        <span ng-if="jogador.posicao && jogador.camisa"> • </span>
+        <span ng-if="jogador.camisa">Camisa {{jogador.camisa}}</span>
+    </p>
+    <div class="item-col-jogos">
+        <p>Jogos</p>
+        <h2 class="qtd-gols">{{jogosJogadorNaTemporada(jogador)}}</h2>
+    </div>
+    <div class="item-col-assist">
+        <p>Assist</p>
+        <h2 class="qtd-gols">{{assistJogadorNaTemporada(jogador)}}</h2>
+    </div>
+    <div class="item-col-gols">
+        <p>Gols</p>
+        <h2 class="qtd-gols">{{golsJogadorNaTemporada(jogador)}}</h2>
+    </div>
+</ion-item>
+<ion-item ng-if="podeAdicionar" >
+    <button ng-click="adicionarJogador(timeId)" class="button button-positive button-outline button-block icon ion-person-add" href="#"> Adicionar Jogador </button>
+</ion-item>
+
+<ion-item ng-if="podeAdicionar" class="item-divider">Ex-jogadores </ion-item>
+<ion-item ng-if="podeAdicionar && !exJogadores.length" >
+    <button ng-click="verExJogadores(timeId)" class="button button-positive button-outline button-block" href="#"> Ver ex-jogadores </button>
+</ion-item>
+<ion-item ng-if="podeAdicionar && exJogadores.length" ng-click="verJogador(jogador, temporada)" class="item-avatar" ng-repeat="jogador in exJogadores">
+    <img jog-jogador="jogador.foto" jog-size="small">
+    <h2>{{jogador.nome}}</h2>
+    <p>
+        Dispensado em {{jogador.saiuDoTimeEm | date:"dd/MM/yyyy"}}
+    </p>
+</ion-item>

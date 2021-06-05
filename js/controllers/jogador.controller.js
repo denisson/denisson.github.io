@@ -152,4 +152,11 @@ angular
       }
     }
 
+    $scope.reativarJogador = function(){
+      DataService.reativarJogador($scope.jogadorModal._id, $scope.jogadorModal.time).then(function(){
+        $scope.jogadorModal.saiuDoTime = false;
+        $scope.jogadorModal.saiuDoTimeEm = null;
+      })
+    }
+
 }])

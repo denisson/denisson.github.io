@@ -11,12 +11,12 @@
             </label>
             <label class="item item-input">
                 <span class="input-label">Cidade</span>
-                <input ng-model="novoLocal.cidade.nomeCompleto" ng-focus="modalEstado.show()" type="text" placeholder="Escolha uma cidade" jog-blur>
+                <input jog-selecionar-cidade on-selecionado="novoLocal.cidade = cidade" ng-model="novoLocal.cidade.nomeCompleto" type="text" placeholder="Escolha uma cidade" jog-blur>
             </label>
             <div ng-if="esporte === 'FUT'">
                 <label class="item item-input">
                     <span class="input-label">Tipo de campo</span>
-                    <input type="text" jog-options-modal jog-type="SELECT" jog-options="tiposCampo" jog-key="chave" jog-value="nome" jog-title="Tipo de campo" on-selecionado="selecionado('tipo', option)" placeholder="Society, salão, grama..." value="{{novoLocal.tipo.nome}}" >
+                    <input type="text" jog-options-modal jog-type="SELECT" jog-options="tiposCampo" jog-key="chave" jog-value="nome" jog-title="Tipo de campo" on-selecionado="selecionado('tipo', option)" placeholder="Society, salão, grama..." ng-model="novoLocal.tipo.nome" >
                 </label>
                 <label class="item item-input">
                     <span class="input-label">

@@ -26,6 +26,7 @@
     <script src="lib/angular-input-masks/angular-input-masks-standalone.min.js"></script>
     <script src="lib/jquery/dist/jquery.min.js"></script>
     <script src="lib/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
+    <script src="lib/cropperjs/dist/cropper.min.js"></script>
     
     <script src="lib/chart.js/dist/Chart.min.js"></script> 
 
@@ -34,6 +35,7 @@
     -->
 
     <link href="lib/ion.rangeSlider/css/ion.rangeSlider.min.css" rel="stylesheet">
+    <link href="lib/cropperjs/dist/cropper.min.css" rel="stylesheet">
     <link href="css/ionic.app.css" rel="stylesheet">
     <link href="css/card-grafico.css" rel="stylesheet">
     <link href="css/platform-ios.css" rel="stylesheet">
@@ -845,6 +847,16 @@
     /*box-shadow: 0 0 0px 1px #387ef5;*/
   }
 
+  .mapa-jogador-ano-jogo.destaque{
+    background-color: #387ef5 !important;
+    position: relative;
+  }
+
+  .mapa-jogador-ano-jogo.destaque .icon{
+    position: absolute;
+    left: 2px;
+    line-height: 16px;
+  }
 
   .mapa-jogador-visao-mensal  .topo {
     z-index: 3;
@@ -1403,6 +1415,7 @@
     <script src="js/controllers/historicoConfrontos.controller.js"></script>
     <script src="js/controllers/time.adversarios.controller.js"></script>
     <script src="js/controllers/onboarding/completarPerfil.controller.js"></script>
+    <script src="js/controllers/timesPRO.controller.js"></script>
     <!-- <script src="js/controllers/cadastroRacha.controller.js"></script> -->
 <!--     <script src="js/controllers/propostaJogo.controller.js"></script>
     <script src="js/controllers/mandoCampo.controller.js"></script> -->
@@ -1425,6 +1438,8 @@
     <script src="js/directives/informacoesAdicionaisTime.directive.js"></script>
     <script src="js/directives/sobreTime.directive.js"></script>
     <script src="js/directives/jogEscolherRegiao.directive.js"></script>
+    <script src="js/directives/jogCropper.directive.js"></script>
+    <script src="js/directives/timeJogadores.directive.js"></script>
     <script src="js/components.js"></script>
     <script src="js/services/auth.service.js"></script>
     <script src="js/services/data.service.js"></script>

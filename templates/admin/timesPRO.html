@@ -1,0 +1,22 @@
+<ion-view hide-nav-bar="false" ng-controller="timesPROController">
+    <ion-nav-title>Times PRO</ion-nav-title>
+      <ion-content class="buscar-times" class="scroll-with-keyboard">
+          <div class="search-results padding">
+              <ion-list class="lista-times" ng-repeat="usuario in usuarios track by usuario._id">
+                <ion-item class="item-divider">
+                    {{usuario.email}} - Pro: {{usuario.pro}}
+                    <p ng-if="usuario.proDataFim">{{usuario.proDataFim | date:"dd/MM/yyyy"}}</p>
+                    <p ng-if="usuario.subscription">{{usuario.subscription.startDate | date:"dd/MM/yyyy"}} a {{usuario.subscription.expiryDate | date:"dd/MM/yyyy"}}</p>
+                </ion-item>
+                <ion-item ng-if="perfilInfo.tipo == 'Time'"class="item-avatar item" ui-sref="abasInicio.time-aba-busca({id: perfilInfo.perfil._id})" ng-repeat="perfilInfo in usuario.perfis track by perfilInfo.perfil._id">
+                    <img jog-escudo="perfilInfo.perfil.escudo" jog-size="small" style="border-radius: 5px">
+                    <h2>{{perfilInfo.perfil.nome}}</h2>
+                    <p>{{perfilInfo.perfil.numeros.vitorias}} vitórias, {{perfilInfo.perfil.numeros.empates}} empates e {{perfilInfo.perfil.numeros.derrotas}} derrotas</p>
+                    <!-- <p>{{time.relevancia}}</p> -->
+                    <p>{{descricaoTime(perfilInfo.perfil)}}</p>
+                    <button ng-click="enviarZap(perfilInfo.perfil); $event.stopPropagation()" class="button">Enviar zap</button>
+                </ion-item>
+              </ion-list>
+          </div>
+      </ion-content>
+  </ion-view>

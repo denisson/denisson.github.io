@@ -123,6 +123,10 @@ angular.module('app.routes', [])
       url: '/admin/graficos',
       templateUrl: 'templates/admin/graficos.html'
     })
+    .state('adminTimesPRO', {
+      url: '/admin/timesPRO',
+      templateUrl: 'templates/admin/timesPRO.html'
+    })
 
     .state('abasInicio.meuPerfil', {
       url: '/meuPerfil',

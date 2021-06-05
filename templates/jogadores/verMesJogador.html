@@ -21,8 +21,11 @@
 
 
         <div class="mapa-detalhes-jogo" ng-if="jogoClicadoMapa" style="background-color: #fff">
-            <ion-item  class="item-transparente item-avatar" style="border-top-color: #aaa;   border-bottom: dotted 2px #dddddd;">
-                <img jog-jogador="jogadorModal.foto" jog-size="small">
+            <ion-item ng-class="{'jogador-destaque': jogoClicadoMapa.numeros.destaque}"  class="item-transparente item-avatar" style="border-top-color: #aaa;   border-bottom: dotted 2px #dddddd;">
+                <img class="foto-jogador" jog-jogador="jogadorModal.foto" jog-size="small">
+                <div class="jogador-destaque-icon">
+                    <i class="icon ion-ios-star"></i>
+                </div>
                 {{jogadorModal.nome}}
                 <p ng-if="!jogoClicadoMapa.numeros">Não jogou nessa partida</p>
                 <p>

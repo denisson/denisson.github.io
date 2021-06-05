@@ -179,39 +179,7 @@
       <jog-partidas partidas="time.jogos.encerrados"></jog-partidas>
       <ion-item ng-if="paginacao.encerrados.maisJogos" ><button ng-click="verJogosAnteriores()" class="button button-positive button-outline button-block" href="#"> Ver jogos anteriores </button></ion-item>
 
-      <ion-item ng-if="time.jogadores.length || habilitado()" class="item-divider item-select">Jogadores 
-              <select ng-model="jogadoresOrdem" ng-change="ordenarPor(jogadoresOrdem)" style="background: transparent;">
-                  <option value="ARTILHARIA">Artilharia</option>
-                  <option value="ASSISTENCIAS">Assistências</option>
-                  <option value="JOGOS">Jogos</option>
-                  <option value="POSICAO">Posição</option>
-                  <option value="NOME">Nome</option>
-              </select>
-      </ion-item>
-      <ion-item ng-click="verJogador(jogador, temporada)" class="item-avatar avatar-jogador" ng-repeat="jogador in time.jogadores">
-          <img jog-jogador="jogador.foto" jog-size="small">
-          <h2>{{jogador.nome}}</h2>
-          <p>
-            {{jogador.posicao}}
-            <span ng-if="jogador.posicao && jogador.camisa"> • </span>
-            <span ng-if="jogador.camisa">Camisa {{jogador.camisa}}</span>
-          </p>
-          <div class="item-col-jogos">
-            <p>Jogos</p>
-            <h2 class="qtd-gols">{{jogosJogadorNaTemporada(jogador)}}</h2>
-          </div>
-          <div class="item-col-assist">
-            <p>Assist</p>
-            <h2 class="qtd-gols">{{assistJogadorNaTemporada(jogador)}}</h2>
-          </div>
-          <div class="item-col-gols">
-            <p>Gols</p>
-            <h2 class="qtd-gols">{{golsJogadorNaTemporada(jogador)}}</h2>
-          </div>
-      </ion-item>
-      <ion-item ng-if="time && habilitado()" >
-        <button ng-click="adicionarJogador(time.id)" class="button button-positive button-outline button-block icon ion-person-add" href="#"> Adicionar Jogador </button>
-      </ion-item>
+      <time-jogadores time-id="time.id" jogadores="time.jogadores" pode-adicionar="habilitado()" temporada="temporada"/>
     </ion-list>
 
     <ion-list ng-if="editavel()">

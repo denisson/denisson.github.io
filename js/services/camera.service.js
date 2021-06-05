@@ -1,11 +1,10 @@
 angular
   .module('app.services')
-  .service('CameraService', function($cordovaCamera, DataService, $ionicPopup, $ionicPlatform) {
+  .service('CameraService', function($cordovaCamera, DataService, $ionicPopup, $ionicPlatform, $rootScope, $ionicModal) {
 
     function getPicture(){
       return new Promise(function(resolve, reject){
 
-        
         var permissions = window.cordova.plugins.permissions;
 
         var error = function(){
@@ -16,10 +15,47 @@ angular
 
         permissions.requestPermission(permissions.READ_EXTERNAL_STORAGE, function(status){
           if( !status.hasPermission ) return error();
-          abrirGaleria(resolve, reject);
+          abrirGaleria(
+            function(img){
+              exibirCropper(img, resolve, reject);
+            },
+            reject
+          );
         }, error);
         
         
+      });
+    }
+
+    function exibirCropper(img, resolve, reject) {
+      var scope = $rootScope.$new();
+
+      scope.continuar = function(){
+        resolve(scope.cropper.getCroppedCanvas().toDataURL());
+        scope.modal.hide();
+      }
+
+      scope.setCropper = function(cropper){
+        scope.cropper = cropper;
+      }
+
+      scope.rotate = function(){
+        scope.cropper.rotate(90);
+      }
+
+      scope.cancelar = function() {
+        scope.modal.hide();
+        reject();
+      }
+
+      $ionicModal.fromTemplateUrl('templates/cropperModal.html', {
+        scope: scope,
+        animation: 'fade-in'
+      }).then(function(modal){
+        scope.modal = modal;
+        modal.show().then(function() {
+          scope.image = img;
+        });
       });
     }
 

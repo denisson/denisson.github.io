@@ -1,0 +1,33 @@
+<ion-modal-view>
+    <ion-content class="jog-cropper-modal">
+        <style>
+            .jog-cropper-modal{
+                background-color: #000;
+            }
+
+            .jog-cropper-modal .container{
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .jog-cropper-modal img {
+                display: block;
+                /* This rule is very important, please don't ignore this */
+                max-width: 100%;
+                max-height: 100%;
+            }
+        </style>
+        <div ng-if="image" class="container">
+            <img jog-cropper ao-inicializar="setCropper(cropper)" ng-src="{{image}}"/>
+        </div>
+    </ion-content>
+    <ion-footer-bar align-title="center" class="bar">
+        <!-- <div ng-click="salvarGols()" class="title">Salvar</div> -->
+        <button ng-click="cancelar()" class="button button-clear">Cancelar</button>
+        <div class="title"><i ng-click="rotate()" class="icon ion-refresh" /></div>
+        <button ng-click="continuar()" class="button button-clear button-positive" style="font-weight: 400;">Continuar</button>
+        <!-- <button  type="submit" class="button button-positive button-block" >OK</button> -->
+    </ion-footer-bar>
+</ion-modal-view>

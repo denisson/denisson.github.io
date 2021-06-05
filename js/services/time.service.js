@@ -5,7 +5,7 @@ angular
     function descricao(time){
       var textos = [];
 
-      if (time.esporte.chave !== 'FUT') return '';
+      if (_.get(time, 'esporte.chave') !== 'FUT') return '';
       if (_.get(time.modalidade, 'tipo')) textos.push(ModalidadeService.descricao(time.modalidade));
       if (time.genero) textos.push(GeneroService.nome(time.genero));
       if (time.idade) textos.push(CategoriaService.descricaoIdade(time.idade));

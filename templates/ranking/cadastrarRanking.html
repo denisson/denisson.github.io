@@ -30,6 +30,10 @@
                 <span class="input-label">Jogos por semana</span>
                 <input ng-model="ranking.numJogosPorSemana" type="number" placeholder="1" required />
             </label>
+            <label class="item item-input">
+                <span class="input-label">Máximo de jogos no ranking</span>
+                <input ng-model="ranking.numJogosMaximo" type="number" placeholder="" required />
+            </label>
             <ion-item class="item-divider">Critérios de classificação</ion-item>
             <ion-list show-reorder="true">
               <ion-item ng-repeat="criterio in ranking.criterios">

@@ -53,6 +53,17 @@
             </div>
         </ion-item>
 
+        <ion-item class="row numeros item-transparente">
+            <div class="col col-33">
+                <h5 class="valor">{{jogadorModal.estatisticas.jogador.destaque || 0}}</h5>
+                <p class="campo">Destaque</p>
+            </div>
+
+        </ion-item>
+
+        <div ng-if="jogadorModal.saiuDoTime" class="padding" style="background-color: #fff;">
+            <button ng-click="reativarJogador()" class="button button-positive button-outline button-block icon ion-reply" href="#"> Reativar jogador </button>
+        </div>
 
         <div class="jogos-temporada">
             <h4 class="titulo-secao">{{ temporadaModal != "todas" ? ('Jogos na temporada ' + temporadaModal) : 'Jogos em todas as temporadas' }}</h4>
@@ -69,12 +80,14 @@
                         ng-if="jogadorModal.jogosPorMes"
                         ng-repeat="dadosJogo in jogosMes.jogos"
                         ng-class="{
+                                    destaque: dadosJogo.numeros.destaque,
                                     presente: dadosJogo.numeros,
                                     gols: dadosJogo.numeros.gols > 0,
                                     assistencias: dadosJogo.numeros.assistencias > 0, 
                                     clicado:jogoClicadoMapa.jogo.id == dadosJogo.jogo.id
                                 }"
                         ion-stop-event="click">
+                        <i ng-if="dadosJogo.numeros.destaque" class="icon ion-ios-star"></i>
                     </a>
                 </div>
                 <p ng-if="!jogadorModal.jogosPorMes" style="color: #666">Nenhum jogo cadastrado</p>
@@ -98,7 +111,7 @@
             <div ng-if="jogadorModal.ehGoleiro" class="card card-grafico">
                 <h4 class="titulo-secao"> Gols sofridos</h4>
                 <div class="padding">
-                    <canvas ng-if="jogadorModal.estatisticas" grafico-jogador-numeros dados="jogadorModal.estatisticas.numerosPorJogo" atributo="golsSofridos" atributo-time="golsContra"></canvas>
+                    <canvas grafico-jogador-numeros dados="jogadorModal.estatisticas.numerosPorJogo" atributo="golsSofridos" atributo-time="golsContra"></canvas>
                 </div>
                 <h6 class="descricao-grafico">Cada barra representa uma partida que este jogador esteve presente. A altura da barra mostra a quantidade de <b>gols sofridos pelo time</b> e a parte azul mostra os <b>gols sofridos</b> por esse goleiro. Toque em um ponto do gráfico para saber mais informações.</h6>
                 <div class="tabela-numeros padding">
@@ -112,10 +125,27 @@
                     </div>
                 </div>
             </div>
+            <div ng-if="jogadorModal.ehGoleiro" class="card card-grafico">
+                <h4 class="titulo-secao"> Defesas difíceis</h4>
+                <div class="padding">
+                    <canvas grafico-jogador-numeros dados="jogadorModal.estatisticas.numerosPorJogo" atributo="defesasDificeis" atributo-time="defesasDificeis"></canvas>
+                </div>
+                <h6 class="descricao-grafico">Cada barra representa uma partida que este jogador esteve presente. A altura da barra mostra a quantidade de <b>defesas difíceis feitas pelos goleiros do time</b> e a parte azul mostra as <b>defesas</b> deste goleiro. Toque em um ponto do gráfico para saber mais informações.</h6>
+                <div class="tabela-numeros padding">
+                    <div class="row">
+                        <div class="col col-80 descricao">Defesas difíceis</div>
+                        <div class="col col-20 numero">{{jogadorModal.estatisticas.jogador.defesasDificeis}}</div>
+                    </div>
+                    <div class="row even">
+                        <div class="col col-80 descricao">Jogos com defesas difíceis</div>
+                        <div class="col col-20 numero">{{jogadorModal.estatisticas.jogador.jogosComDefesasDificeis}}</div>
+                    </div>
+                </div>
+            </div>
             <div class="card card-grafico">
                 <h4 class="titulo-secao"> Gols</h4>
                 <div class="padding">
-                    <canvas ng-if="jogadorModal.estatisticas" grafico-jogador-numeros dados="jogadorModal.estatisticas.numerosPorJogo" atributo="gols"></canvas>
+                    <canvas grafico-jogador-numeros dados="jogadorModal.estatisticas.numerosPorJogo" atributo="gols"></canvas>
                 </div>
                 <h6 class="descricao-grafico">Cada barra representa uma partida que este jogador esteve presente. A altura da barra mostra a quantidade de <b>gols do time</b> e a parte azul mostra os <b>gols</b> do jogador. Toque em um ponto do gráfico para saber mais informações.</h6>
                 <div class="tabela-numeros padding">
@@ -144,7 +174,7 @@
             <div class="card card-grafico">
                 <h4 class="titulo-secao"> Assistências</h4>
                 <div class="padding">
-                    <canvas ng-if="jogadorModal.estatisticas" grafico-jogador-numeros dados="jogadorModal.estatisticas.numerosPorJogo" atributo="assistencias"></canvas>
+                    <canvas grafico-jogador-numeros dados="jogadorModal.estatisticas.numerosPorJogo" atributo="assistencias"></canvas>
                 </div>
                 <h6 class="descricao-grafico">Cada barra representa uma partida que este jogador esteve presente. A altura da barra mostra a quantidade de <b>gols do time</b> e a parte azul mostra as <b>assistências</b> do jogador. Toque em um ponto do gráfico para saber mais informações.</h6>
                 <div class="tabela-numeros padding">
@@ -167,10 +197,35 @@
                 </div>
             </div>
             <div class="card card-grafico">
+                <h4 class="titulo-secao"> Desarmes</h4>
+                <div class="padding">
+                    <canvas grafico-jogador-numeros dados="jogadorModal.estatisticas.numerosPorJogo" atributo="desarmes" atributo-time="desarmes"></canvas>
+                </div>
+                <h6 class="descricao-grafico">Cada barra representa uma partida que este jogador esteve presente. A altura da barra mostra a quantidade de <b>desarmes do time</b> e a parte azul mostra os <b>desarmes</b> do jogador. Toque em um ponto do gráfico para saber mais informações.</h6>
+                <div class="tabela-numeros padding">
+                    <div class="row">
+                        <div class="col col-80 descricao">Desarmes</div>
+                        <div class="col col-20 numero">{{jogadorModal.estatisticas.jogador.desarmes}}</div>
+                    </div>
+                    <div class="row even">
+                        <div class="col col-80 descricao">Média de desarmes</div>
+                        <div class="col col-20 numero">{{jogadorModal.estatisticas.medias.desarmes | number: 2}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-80 descricao">Jogos que fez desarmes</div>
+                        <div class="col col-20 numero">{{jogadorModal.estatisticas.jogador.jogosFazendoDesarmes}}</div>
+                    </div>
+                    <div class="row even">
+                        <div class="col col-80 descricao">Jogos como o melhor ladrão de bola</div>
+                        <div class="col col-20 numero">{{jogadorModal.estatisticas.jogador.maisDesarmes}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-grafico">
                 <h4 class="titulo-secao"> Desempenho</h4>
                 <div class="row">
                     <div class="col col-66">
-                        <canvas ng-if="jogadorModal.estatisticas" grafico-jogador-desempenho dados-jogador="jogadorModal.estatisticas.jogador" dados-time="jogadorModal.estatisticas.time"></canvas>
+                        <canvas grafico-jogador-desempenho dados-jogador="jogadorModal.estatisticas.jogador" dados-time="jogadorModal.estatisticas.time"></canvas>
                     </div>
                     <div class="col col-33">
                         <div class="legenda-nome">
