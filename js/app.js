@@ -153,7 +153,7 @@ var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.contro
     }
   });
 
-  $locationProvider.html5Mode({ enabled: true, requireBase: false});
+  $locationProvider.html5Mode(true);
 
   $provide.decorator("$exceptionHandler", function($delegate) {
     return function(exception, cause) {
