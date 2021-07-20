@@ -4,42 +4,62 @@
           Cancelar
         </button>
     </ion-nav-buttons>
-      <ion-content>
-  <style type="text/css">
-      /*.preenchido .input-label,
-      .preenchido .placeholder-icon,*/
-  /*    .preenchido input
-      {
-          color: #387ef5;
-      }*/
-  </style>
-          <form class="list padding">
-              <label class="item item-input" ng-class="jogo.timeAdversario.nome?'preenchido': ''">
-                  <span class="input-label"><!-- <i class="icon ion-social-angular-outline placeholder-icon"></i> --> Contra quem?</span>
-                  <input ng-model="jogo.timeAdversario.nome" ng-focus="modalTime.show()" type="text" placeholder="Time adversário" jog-blur>
-              </label>
-              <label class="item item-input" ng-class="jogo.data?'preenchido': ''">
-                  <span class="input-label"><!-- <i class="icon ion-ios-calendar-outline placeholder-icon"></i> -->Quando?</span>
-                  <input ng-model="jogo.data" type="date" placeholder="Data">
-              </label>
-              <label class="item item-input" ng-class="jogo.hora?'preenchido': ''">
-                  <span class="input-label"><!-- <i class="icon ion-ios-time-outline placeholder-icon"></i> -->Que horas?</span>
-                  <input ng-model="jogo.hora" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short">
-  <!--                 <input ng-if="!compativelComInputTime()" ng-model="jogo.hhmm" type="text" placeholder="HH:MM" ui-time-mask="short"> -->
-              </label>
-              <label ng-if="!jogo.esporte.efootball" class="item item-input" ng-class="jogo.local.nome?'preenchido': ''">
-                  <span class="input-label"><!-- <i class="icon ion-ios-location-outline placeholder-icon"></i> -->Onde?</span>
-                  <input ng-model="jogo.local.nome" type="text" ng-focus="modalLocal.show()" placeholder="Local do jogo" jog-blur>
-              </label>
-              <label class="item item-input" ng-class="jogo.timeAdversario.nome?'preenchido': ''">
-                  <span class="input-label">Competição</span>
-                  <input ng-model="jogo.competicao.nome" ng-focus="modalCompeticao.show()" type="text" placeholder="Nome da competição" jog-blur>
-              </label>
-              <label ng-if="jogo.esporte.efootball" class="item item-input">
-                  <span class="input-label">Modo</span>
-                  <input ng-model="jogo.efootball.modo" ng-focus="modalModo.show()" type="text" placeholder="Informe um modo de jogo" jog-blur>
-              </label>
-              <button ng-disabled="!podeSalvar()" ng-click="salvarJogo()" class="button button-positive button-block">{{labelBotao}}</button>
-          </form>
-      </ion-content>
-  </ion-view>
+    <ion-content style="background-color: #f5f5f5;">
+        <style>
+            .jogo-preview{
+                min-height: 125px;
+            }
+            .jogo-preview .item{
+                box-shadow: 0px 1px 5px #ccc;
+            }
+        </style>
+        <div class="jogo-preview">
+            <jog-partida jogo="jogo" mostrar-detalhes="true" read-only="true" ao-clicar-time="clicouEscudoTime(tipo)"></jog-partida>
+        </div>
+        <form>
+            <div class="list padding">
+                <label class="item item-input" ng-class="jogo.visitante.nome?'preenchido': ''">
+                    <span class="input-label"><!-- <i class="icon ion-social-angular-outline placeholder-icon"></i> --> Contra quem?</span>
+                    <input ng-model="jogo.visitante.nome" ng-focus="modalTime.show()" type="text" placeholder="Time adversário" jog-blur>
+                </label>
+                <label class="item item-input" ng-class="jogo.data?'preenchido': ''">
+                    <span class="input-label"><!-- <i class="icon ion-ios-calendar-outline placeholder-icon"></i> -->Quando?</span>
+                    <input ng-model="jogo.data" type="date" placeholder="Data" ng-change="atualizarDatahora()" />
+                </label>
+                <label class="item item-input" ng-class="jogo.hora?'preenchido': ''">
+                    <span class="input-label"><!-- <i class="icon ion-ios-time-outline placeholder-icon"></i> -->Que horas?</span>
+                    <input ng-model="jogo.hora" type="text" placeholder="Hora" input-time-compativel ui-time-mask="short" ng-change="atualizarDatahora()" />
+        <!--                 <input ng-if="!compativelComInputTime()" ng-model="jogo.hhmm" type="text" placeholder="HH:MM" ui-time-mask="short"> -->
+                </label>
+                <label ng-if="!jogo.esporte.efootball" class="item item-input" ng-class="jogo.local.nome?'preenchido': ''">
+                    <span class="input-label"><!-- <i class="icon ion-ios-location-outline placeholder-icon"></i> -->Onde?</span>
+                    <input ng-model="jogo.local.nome" type="text" ng-focus="modalLocal.show()" placeholder="Local do jogo" jog-blur>
+                </label>
+                <label class="item item-input" ng-class="jogo.visitante.nome?'preenchido': ''">
+                    <span class="input-label">Competição</span>
+                    <input ng-model="jogo.competicao.nome" ng-focus="modalCompeticao.show()" type="text" placeholder="Nome da competição" jog-blur>
+                </label>
+                <label ng-if="jogo.esporte.efootball" class="item item-input">
+                    <span class="input-label">Modo</span>
+                    <input ng-model="jogo.efootball.modo" ng-focus="modalModo.show()" type="text" placeholder="Informe um modo de jogo" jog-blur>
+                </label>
+                <ul class="list">
+                    <li class="item item-toggle">
+                       Jogo em casa
+                       <p style="color: #9E9E9E;">Caso seu time seja o mandante</p>
+                       <label class="toggle toggle-positive">
+                         <input type="checkbox" ng-model="jogo.mandanteNaEsquerda">
+                         <div class="track">
+                           <div class="handle"></div>
+                         </div>
+                       </label>
+                    </li>
+                  </ul>
+            </div>
+
+            <div class=" padding">
+                <button ng-disabled="!podeSalvar()" ng-click="salvarJogo()" class="button button-positive button-block">{{labelBotao}}</button>
+            </div>
+        </form>
+    </ion-content>
+</ion-view>

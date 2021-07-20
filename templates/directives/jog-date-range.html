@@ -1,0 +1,92 @@
+<ion-modal-view class="modal-minimo">
+    <!-- <ion-header-bar align-title="center" class="bar bar-header bar-positive">
+        <button class="button button-clear button-primary" ng-click="modal.hide()">Cancelar</button>
+        <h1 class="title">Selecione o mês</h1>
+    </ion-header-bar> -->
+    <ion-content padding="true">
+        <style>
+             .row.meses{
+                flex-wrap: wrap;
+            }
+
+            .meses .nome-mes{
+                font-size: 1em;
+                text-align: center;
+                margin: 0;
+                color: inherit;
+            }
+
+            .meses .mes.active,
+            .meses .mes:active,
+            .meses .mes:active:hover
+            {
+                background-color: #387ef5;
+                color: #fff;
+            }
+
+            .meses .mes.disabled{
+                color: #ccc;
+            }
+
+            .meses .mes.disabled:active,
+            .meses .mes:hover{
+                background-color: #f5f5f5;
+            }
+
+            .row.dias{
+                flex-wrap: wrap;
+                font-size: 0.5em;
+            }
+
+            .col.dia{
+                flex: 0 0 14.28%;
+                max-width: 14.28%;
+                padding: 0;
+                text-align: center;
+                min-width: 8px;
+                line-height: 10px;
+            }
+        </style>
+        <div class="padding">
+            <!-- <div>
+                <jog-options-horizontal options="rangeOptions" on-selecionado="selecionado(item.chave)" pre-selecionado="{chave: 'mes', nome: 'Mês'}" key="chave" value="nome" />
+            </div> -->
+            
+
+            <div class="tabs tabs-striped tabs-top tabs-stable tab-temporadas">
+                <a class="tab-item" scroll-into-view="temporadaLoop.ano == temporada" ng-class="{active: (temporadaLoop.ano == temporada)}" ng-click="setTemporada(temporadaLoop.ano)" ng-repeat="temporadaLoop in temporadas | orderBy:'-'">
+                  {{temporadaLoop.ano}}
+                </a>
+                <a class="tab-item" ng-click="selecionar()">
+                  Todas
+                </a>
+            </div>
+            <div style="padding-top: 50px;"></div>
+
+            <div class="row meses">
+                <div class="col col-33 mes" ng-class="{active: ($index == mes), disabled: mesFuturo($index)}" ng-repeat="mesLoop in meses" ng-click="selecionar(temporada, $index+1)">
+                    <h5 class="nome-mes"> {{mesLoop}} </h5>
+                    <div class="row dias" style="flex-wrap: wrap;">
+                        <div class="col dia"  ng-repeat="dia in diasMes($index) track by $index">
+                            {{dia}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="padding">
+                <button ng-click="selecionar(temporada)" class="button button-outline button-block" ng-class="{'button-positive': !mes}">Todos os meses de {{temporada}}</button>
+            </div>
+
+            <!-- <div ng-if="tipoFiltro === 'temporada'">
+                <ion-list>
+                    <ion-item ng-repeat="temporada in temporadas | orderBy:'-'" ng-click="selecionarTemporada(temporada.ano)">
+                        {{temporada.ano}}
+                    </ion-item>
+                </ion-list>
+            </div> -->
+
+        </div>
+        
+    </ion-content>
+</ion-modal-view>

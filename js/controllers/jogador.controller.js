@@ -4,10 +4,11 @@ angular
   function ($rootScope, $scope, $state, $stateParams, DataService, $ionicModal, AuthService, $ionicActionSheet, $jgModalAssinatura, $ionicHistory
 ) {
       
-    $scope.verJogador = function(jogador, temporada){
+    $scope.verJogador = function(jogador, temporada, mes){
         $scope.jogadorModal = jogador;
         temporada = temporada || moment().year();
         $scope.temporadaModal = temporada;
+        $scope.mesModal = mes;
         moment.locale('pt-BR');
   
   
@@ -18,11 +19,15 @@ angular
         }
         $scope.jogadorModal.numerosTemporada = numerosTemporada;
   
-        DataService.jogadorEstatisticas(jogador._id, jogador.time, temporada).then(function(estatisticas){
+        DataService.jogadorEstatisticas(jogador._id, jogador.time, temporada, mes).then(function(estatisticas){
           $scope.jogadorModal.pro = estatisticas.pro;
           $scope.jogadorModal.estatisticas = estatisticas;
           $scope.jogadorModal.jogosPorMes = estatisticas.jogosPorMes;
         });
+    }
+
+    $scope.alterarPeriodo = function (temporada, mes){
+      $scope.verJogador($scope.jogadorModal, temporada || 'todas', mes)
     }
   
     $scope.verJogadorPorId = function(jogadorId, temporada){

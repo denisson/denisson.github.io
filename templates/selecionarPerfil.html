@@ -19,7 +19,7 @@
       <div ng-if="perfis">
         <div class="mensagem-destacada">
             <h2 class="dark">Bem-vindo!</h2>
-            <p class="dark"> Selecione uma dos perfis abaixo para continuar.</p>
+            <p class="dark"> Selecione um dos perfis abaixo para continuar:</p>
         </div>
         <ion-item ng-click="selecionarPerfil(perfil)" ng-class="{desativado: perfil.tipo == 'Time' && !perfil.perfil.ativo}" class="item-transparente item-avatar item-button-right" ng-repeat="perfil in perfis">
             <img ng-if="perfil.tipo == 'Arbitro' || perfil.tipo == 'Jogador'" jog-jogador="perfil.perfil.foto" jog-size="small">

@@ -27,6 +27,10 @@ angular
         return;
       }
 
+      // if(nextState.name == 'abasInicio.meuTime' && getTime()){
+      //   redirectClean('abasInicio.time', event, { id: getTime() });
+      // }
+
       if(nextState.name == 'novoJogo' && !getTime()){
         redirectClean('abasInicio.novoJogoSemTime', event);
       } else if(nextState.name == 'abasInicio.novoJogoSemTime' && getTime()){
@@ -253,6 +257,8 @@ angular
     }
 
     function atualizarPerfilCompleto(perfilCompleto){
+      perfilCompleto.nome = perfilCompleto.perfil.nome;
+      perfilCompleto.escudo = perfilCompleto.perfil.escudo;
       perfilCompleto.cidade = perfilCompleto.perfil.cidade;
       perfilCompleto.esporte = perfilCompleto.perfil.esporte;
       perfilCompleto.efootball = perfilCompleto.perfil.efootball;

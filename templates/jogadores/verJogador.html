@@ -11,40 +11,65 @@
         </button>
     </ion-nav-buttons>
     <ion-content class="image-background img-jogador perfil-destacado">
+        <style>
+            .button-filtro-data{
+                font-size: 1em;
+                min-height: 44px;
+                border: 0;
+            }
 
+            .button.button-filtro-data .icon:before{
+                font-size: 1em;
+            }
+        </style>
         <div class="captura-foto-redonda">
             <img class="captura-foto-img" jog-jogador="jogadorModal.foto" jog-size="large"></img>
         </div>
-        <h1 class="nome">{{jogadorModal.nome}}</h1>
-        <p class="posicao">
+        <p class="posicao" style="margin-bottom: 0;">
             {{jogadorModal.posicao}} {{jogadorModal.camisa && jogadorModal.posicao ? ' • ' : ''}} {{jogadorModal.camisa ? ('Camisa ' + jogadorModal.camisa ) : '' }}
         </p>
+        <h1 class="nome" style="margin: 0;">{{jogadorModal.nome}}</h1>
+        <p class="posicao">
+            <button 
+            class="button button-outline button-dark button-filtro-data"
+            jog-date-range
+            temporadas="jogadorModal.temporadas"
+            temporada="{{temporadaModal}}"
+            on-selecionado="alterarPeriodo(temporada, mes)"
+            >
+                <i class="icon ion-calendar"></i>
+                <span ng-if="!mesModal">Temporada: {{temporadaModal == 'todas' ? 'Todas' : temporadaModal}}</span>
+                <span ng-if="mesModal">Mês: {{mesModal}}/{{temporadaModal}}</span>
+                <i class="icon ion-arrow-down-b"></i>
+            </button>
+        </p>
+
 
         <ion-item class="row numeros item-transparente">
             <div class="col">
-                <h5 class="valor">{{jogadorModal.numerosTemporada.jogos || 0}}</h5>
+                <h5 class="valor">{{jogadorModal.estatisticas.jogador.jogos || 0}}</h5>
                 <p class="campo">Jogos</p>
             </div>
             <div class="col">
-                <h5 class="valor">{{jogadorModal.numerosTemporada.assistencias || 0}}</h5>
+                <h5 class="valor">{{jogadorModal.estatisticas.jogador.assistencias || 0}}</h5>
                 <p class="campo">Assistências</p>
             </div>
             <div class="col">
-                <h5 class="valor">{{jogadorModal.numerosTemporada.gols || 0}}</h5>
+                <h5 class="valor">{{jogadorModal.estatisticas.jogador.gols || 0}}</h5>
                 <p class="campo">Gols</p>
             </div>
         </ion-item>
         <ion-item class="row numeros item-transparente">
             <div class="col col-33">
-                <h5 class="valor">{{jogadorModal.numerosTemporada.cartoes.amarelo || 0}}</h5>
+                <h5 class="valor">{{jogadorModal.estatisticas.jogador.cartoes.amarelo || 0}}</h5>
                 <p class="campo">Amarelos</p>
             </div>
             <div class="col col-33">
-                <h5 class="valor">{{jogadorModal.numerosTemporada.cartoes.vermelho || 0}}</h5>
+                <h5 class="valor">{{jogadorModal.estatisticas.jogador.cartoes.vermelho || 0}}</h5>
                 <p class="campo">Vermelhos</p>
             </div>
             <div ng-if="jogadorModal.ehGoleiro" class="col col-33">
-                <h5 class="valor">{{jogadorModal.numerosTemporada.golsSofridos || 0}}</h5>
+                <h5 class="valor">{{jogadorModal.estatisticas.jogador.golsSofridos || 0}}</h5>
                 <p class="campo">Gols sofridos</p>
             </div>
             <div ng-if="!jogadorModal.ehGoleiro" class="col col-33">
@@ -53,24 +78,16 @@
             </div>
         </ion-item>
 
-        <ion-item class="row numeros item-transparente">
-            <div class="col col-33">
-                <h5 class="valor">{{jogadorModal.estatisticas.jogador.destaque || 0}}</h5>
-                <p class="campo">Destaque</p>
-            </div>
-
-        </ion-item>
-
         <div ng-if="jogadorModal.saiuDoTime" class="padding" style="background-color: #fff;">
             <button ng-click="reativarJogador()" class="button button-positive button-outline button-block icon ion-reply" href="#"> Reativar jogador </button>
         </div>
 
         <div class="jogos-temporada">
-            <h4 class="titulo-secao">{{ temporadaModal != "todas" ? ('Jogos na temporada ' + temporadaModal) : 'Jogos em todas as temporadas' }}</h4>
-            <div class="mapa-jogador-ano">
+            <h4 class="titulo-secao">{{ 'Quadro de jogos ' }}</h4>
+            <div class="mapa-jogador-ano" ng-class="{'somente-um-mes': mesModal}">
                 <div    class="mapa-jogador-mes" 
                         ng-click="verDetalhesMes(jogosMes.mes, jogosMes.jogos)" 
-                        ng-if="jogadorModal.jogosPorMes" 
+                        ng-if="jogadorModal.jogosPorMes && (!mesModal || mesModal == $index+1)" 
                         ng-repeat="jogosMes in jogadorModal.jogosPorMes">
 
                     <h3 class="mes" ng-class="{mesFuturo: jogosMes.mesFuturo}">{{jogosMes.mes}}</h3>
@@ -91,6 +108,14 @@
                     </a>
                 </div>
                 <p ng-if="!jogadorModal.jogosPorMes" style="color: #666">Nenhum jogo cadastrado</p>
+                <p ng-if="jogadorModal.jogosPorMes" style="color: #666">
+                    <span class="mapa-jogador-ano-jogo destaque presente gols assistencias clicado" style="margin: 0">
+                        <i class="icon ion-ios-star"></i>
+                    </span>
+                    <span style="line-height: 16px; vertical-align: top;">
+                        Destaque em {{jogadorModal.estatisticas.jogador.destaque || 0}} jogos
+                    </span>
+                </p>
             </div>
         </div>
 
@@ -111,7 +136,7 @@
             <div ng-if="jogadorModal.ehGoleiro" class="card card-grafico">
                 <h4 class="titulo-secao"> Gols sofridos</h4>
                 <div class="padding">
-                    <canvas grafico-jogador-numeros dados="jogadorModal.estatisticas.numerosPorJogo" atributo="golsSofridos" atributo-time="golsContra"></canvas>
+                    <canvas grafico-jogador-numeros" dados="jogadorModal.estatisticas.numerosPorJogo" atributo="golsSofridos" atributo-time="golsContra"></canvas>
                 </div>
                 <h6 class="descricao-grafico">Cada barra representa uma partida que este jogador esteve presente. A altura da barra mostra a quantidade de <b>gols sofridos pelo time</b> e a parte azul mostra os <b>gols sofridos</b> por esse goleiro. Toque em um ponto do gráfico para saber mais informações.</h6>
                 <div class="tabela-numeros padding">
@@ -225,7 +250,7 @@
                 <h4 class="titulo-secao"> Desempenho</h4>
                 <div class="row">
                     <div class="col col-66">
-                        <canvas grafico-jogador-desempenho dados-jogador="jogadorModal.estatisticas.jogador" dados-time="jogadorModal.estatisticas.time"></canvas>
+                        <canvas grafico-jogador-desempenho dados="{ jogador: jogadorModal.estatisticas.jogador, time: jogadorModal.estatisticas.time }" ></canvas>
                     </div>
                     <div class="col col-33">
                         <div class="legenda-nome">
@@ -268,7 +293,7 @@
                         <p ng-if="jogadorModal.estatisticas.medias.cartoes.amarelo >= 1" class="media">Em média {{jogadorModal.estatisticas.medias.cartoes.amarelo | number: 0 }} por jogo</p>
                     </div>
                     <div class="col col-50" style="display: flex; align-items: center;">
-                        <canvas style="width:100%" ng-if="jogadorModal.estatisticas.jogador.cartoes" grafico-jogador-cartoes dados-jogador="jogadorModal.estatisticas.jogador.cartoes" dados-time="jogadorModal.estatisticas.time.cartoes"  ></canvas>
+                        <canvas style="width:100%" ng-if="jogadorModal.estatisticas.jogador.cartoes" grafico-jogador-cartoes dados="{ jogador: jogadorModal.estatisticas.jogador.cartoes, time: jogadorModal.estatisticas.time.cartoes }"  ></canvas>
                     </div>
                     <div class="col col-25">
                         <div class="legenda-nome">

@@ -7,6 +7,7 @@ angular
     $rootScope.$emit('loading.init');
     $scope.temporada = $stateParams.temporada;
     $scope.mostrarTodosRankings = true;  
+    $scope.renders = 0;
 
     $scope.usuarioPro = function(){
       return AuthService.isUsuarioPro();
@@ -77,7 +78,7 @@ angular
     }
 
     $scope.compartilharLink = function(time){
-      var url = config.URL_SITE + '#/time/'+time._id + '/';
+      var url = config.URL_SITE + 'time/'+time._id + '/';
       if (window.plugins) {
         window.plugins.socialsharing.share(time.nome + ' está no Jogueiros FC! Você pode acompanhar tudo pelo site ou pelo aplicativo! \n' + url);
       } else {
@@ -155,9 +156,11 @@ angular
     }
 
     $scope.$on('$ionicView.enter', function(){
-      DataService.blockPopup();
+      if($scope.renders > 1) DataService.blockPopup();
       $scope.atualizar();
+      $scope.renders++;
     });
+
 // $scope.atualizar();
 
     $scope.editavel = function(){

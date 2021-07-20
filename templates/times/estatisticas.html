@@ -66,12 +66,35 @@
                 float: right;
                 font-size: 0.9em;
             }
+            .button-filtro-data{
+                font-size: 1em;
+                min-height: 44px;
+                border: 0;
+            }
+
+            .button.button-filtro-data .icon:before{
+                font-size: 1em;
+            }
         </style>
         <div ng-if="estatisticas" class="image-background img-jogador perfil-destacado">
             <img class="imagem-destacada" jog-escudo="time.escudo" jog-size="mid">
             <h1 class="nome">{{time.nome}}</h1>
-            <p class="posicao">
-                Temporada {{temporada}}
+            <p ng-if="!competicao" class="posicao">
+                <button 
+                    class="button button-outline button-dark button-filtro-data"
+                    jog-date-range
+                    temporadas="time.temporadas"
+                    temporada="{{temporada}}"
+                    on-selecionado="alterarPeriodo(temporada, mes)"
+                >
+                    <i class="icon ion-calendar"></i>
+                    <span ng-if="!mes">Temporada: {{temporada == 'todas' ? 'Todas' : temporada}}</span>
+                    <span ng-if="mes">Mês: {{mes}}/{{temporada}}</span>
+                    <i class="icon ion-arrow-down-b"></i>
+                </button>
+            </p>
+            <p ng-if="competicao" class="posicao">
+                <span class="jg-badge jg-badge-competicao" style="font-size: 1em;">{{estatisticas.competicoes[0].nome}}</span>
             </p>
 
             <ion-item class="row numeros item-transparente">
@@ -140,9 +163,9 @@
         <div class="card card-grafico">
             <h4 class="titulo-secao"> Gols</h4>
             <div class="padding">
-                <canvas ng-if="saldoGolsDados" grafico-time-saldo-gols dados="saldoGolsDados" show-zero="true" ></canvas>
+                <canvas ng-if="saldoGolsDados" grafico-time-saldo-gols dados="saldoGolsDados" show-zero="true" label-info="Saldo de gols" ></canvas>
             </div>
-            <h6 class="descricao-grafico">Cada barra representa um jogo e a altura da barra mostra o <b>saldo de gols</b> naquela partida. Toque em um ponto do  gráfico para saber a data.</h6>
+            <h6 class="descricao-grafico">Cada barra representa um jogo e a altura da barra mostra o <b>saldo de gols</b> naquela partida. Toque em um ponto do  gráfico para saber mais detalhes.</h6>
 
             <div class="tabela-numeros padding">
                 <div class="row">
@@ -203,9 +226,9 @@
         <div class="card card-grafico">
             <h4 class="titulo-secao"> Jogadores</h4>
             <div class="padding">
-                <canvas ng-if="jogadoresDados" grafico-time-saldo-gols dados="jogadoresDados" positive-color="#4285f4" ></canvas>
+                <canvas ng-if="jogadoresDados" grafico-time-saldo-gols dados="jogadoresDados" positive-color="#4285f4" label-info="Jogadores"></canvas>
             </div>
-            <h6 class="descricao-grafico">Cada barra representa um jogo e a altura da barra mostra o <b>número de jogadores</b> naquela partida. Toque em um ponto do  gráfico para saber a data.</h6>
+            <h6 class="descricao-grafico">Cada barra representa um jogo e a altura da barra mostra o <b>número de jogadores</b> naquela partida. Toque em um ponto do  gráfico para saber mais detalhes.</h6>
             <div class="tabela-numeros padding">
                 <div class="row">
                     <div class="col col-80 descricao" >Média de jogadores por partida</div>
@@ -279,6 +302,19 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div ng-if="!competicao" class="card card-grafico">
+            <h4 class="titulo-secao"> Competições</h4>
+
+            <ion-list>
+                <ion-item ng-click="verCompeticao(competicao)" ng-repeat="competicao in estatisticas.competicoes">
+                    {{competicao.nome}}
+                    <span class="item-note">
+                        {{competicao.jogos}} jogos
+                    </span>
+                </ion-item>
+            </ion-list>
         </div>
 
         <div class="card card-grafico cartoes">

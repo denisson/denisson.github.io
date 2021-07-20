@@ -19,7 +19,7 @@ angular
     }
 
     $scope.compartilharLink = function(liga){
-      var url = config.URL_SITE + '#/liga/'+liga._id + '/';
+      var url = config.URL_SITE + 'liga/'+liga._id + '/';
       if (window.plugins) {
         window.plugins.socialsharing.share(liga.nome + ' está no Jogueiros FC! Você pode acompanhar tudo pelo site ou pelo aplicativo! \n' + url);
       } else {
@@ -207,7 +207,7 @@ angular
 
     $scope.linkConviteArbitro = function(token){
       if(token){
-        return config.URL_SITE + "#/liga/" + $scope.liga._id + "/convite/" + token;
+        return config.URL_SITE + "liga/" + $scope.liga._id + "/convite/" + token;
       } else {
         return "Carregando..."
       }

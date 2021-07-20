@@ -72,6 +72,10 @@ angular.module('app.directives')
 
               $scope.ordenarPor($scope.jogadoresOrdem);
 
+              $scope.$watch('jogadores', function(dados){
+                $scope.ordenarPor($scope.jogadoresOrdem);
+            });
+
               $scope.verExJogadores = function(){
                 DataService.timeExJogadores($scope.timeId).then(function(exJogadores){
                     $scope.exJogadores = exJogadores;

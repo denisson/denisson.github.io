@@ -44,10 +44,6 @@ angular
       return $scope.jogo.temSolicitacaoArbitragem;
     }
 
-    $scope.jogoValido = function(){
-      return ($scope.jogo.situacao == 'jogoConfirmado' || $scope.jogo.situacao == 'placarConfirmado') && $scope.jogo.visitante['_id'];
-    }
-
     $scope.timeDoUsuario = function(){
       if($scope.editavel('mandante')){
         return 'mandante';
@@ -156,12 +152,35 @@ angular
             mostrarAlerta('Esse jogo não foi encontrado');
             return;
         }
-        $scope.jogo = jogo;
+        $scope.jogo = adicionarInfoAoJogo(jogo);
         $scope.jogo.jogadores.mandante = SumulaService.ordenarJogadores($scope.jogo.jogadores.mandante);
         $scope.jogo.jogadores.visitante = SumulaService.ordenarJogadores($scope.jogo.jogadores.visitante);
-        $scope.carregarHistoricoConfrontos();
+        if(AuthService.isAuthenticated()) $scope.carregarHistoricoConfrontos();
       });
     });
+
+    function adicionarInfoAoJogo(jogo) {
+      jogo.verificado = (jogo.situacao == 'jogoConfirmado' || jogo.situacao == 'placarConfirmado') && jogo.visitante._id;
+      return jogo;
+    }
+
+    $scope.tituloJogo = function(){
+      if ($scope.jogo) {
+        return $scope.jogo.mandanteNaEsquerda
+        ? $scope.jogo.mandante.nome + ' x ' + $scope.jogo.visitante.nome
+        : $scope.jogo.visitante.nome + ' x ' + $scope.jogo.mandante.nome
+      } else {
+        return '';
+      }
+    }
+
+    $scope.timeDaEsquerda = function(){
+      return $scope.jogo.mandanteNaEsquerda ? 'mandante' : 'visitante';
+    }
+
+    $scope.timeDaDireita = function(){
+      return $scope.jogo.mandanteNaEsquerda ? 'visitante' : 'mandante';
+    }
 
     $scope.carregarHistoricoConfrontos = function(){
       DataService.jogoHistoricoConfrontos($scope.jogo.mandante._id, $scope.jogo.visitante._id || $scope.jogo.visitante.nome).then(function(result){
@@ -309,27 +328,18 @@ angular
       return moment(jogo.dataHora).year();
     }
 
-
-    $scope.jogadorModal = {};
-    $ionicModal.fromTemplateUrl('templates/jogos/verScoutJogador.html', {
-      scope: $scope,
-      animation: 'fade-in'
-    }).then(function(modal){
-      $scope.modalJogador = modal;
-    });
-
-    $scope.verScoutJogador = function(jogador){
-      $scope.jogadorModal = jogador;
-      $scope.modalJogador.show();
-    }
-
-    $scope.verPerfilCompleto = function(jogador){
-      $state.go('jogador', {id: jogador._id, jogador: jogador});
-      $scope.modalJogador.hide();
-    }
-
-    $scope.temNumerosNoJogo = function(jogador) {
-      return SumulaService.temInformacaoParaMostrar(jogador);
+    $scope.mensagemSobreJogo = function(){
+      if(!$scope.editavel('visitante') && $scope.jogo.situacao == 'confirmarJogo') {
+        return 'aguardandoConfirmar'
+        // style="text-align: right;"
+      }
+      if($scope.jogo.situacao == 'jogoRejeitado') {
+        return 'rejeitado'
+        // style="text-align: right;"
+      }
+      if($scope.editavel('visitante') && $scope.jogo.aguardandoPlacar && !$scope.temArbitragem()) {
+        return 'aguardandoPlacar';
+      }
     }
 
 }]);

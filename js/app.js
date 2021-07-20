@@ -7,8 +7,6 @@
 // 'starter.controllers' is found in controllers.js
 var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.controllers', 'app.routes', 'app.directives', 'app.components', 'app.services', 'ui.utils.masks'])
 .constant('config', {
-  // URL_S3:  'http://jogueiros-fc-uploads.s3-website-sa-east-1.amazonaws.com/',
-  // URL_IMAGEBOSS:  'https://img.imageboss.me/',
   URL_S3:  'https://s3-sa-east-1.amazonaws.com/jogueiros-fc-uploads/',
   URL_AWS_CLOUDFRONT: 'https://d1zz32ev1utzz6.cloudfront.net/',
   URL_API: 'https://jogueiros-fc-api.herokuapp.com/',
@@ -103,7 +101,10 @@ var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.contro
             // $state.go();
         }
         ,function(nomatch) {
-          console.warn('No match', nomatch);
+          // console.warn('No match', nomatch);
+          $timeout(function(){
+            $location.url(nomatch.$link.path);
+          });
         }
       );
     } 
@@ -153,7 +154,7 @@ var app = angular.module('app', ['ionic', 'ngCordova', 'satellizer', 'app.contro
     }
   });
 
-  $locationProvider.html5Mode(true);
+  if(window.location.port != '8100') $locationProvider.html5Mode(true);
 
   $provide.decorator("$exceptionHandler", function($delegate) {
     return function(exception, cause) {

@@ -30,10 +30,10 @@
         <a class="tab-item" ng-click="setTemporada('todas')" style="color: #222222;">
           Temporadas:
         </a>
-        <a class="tab-item" ng-class="{active: temporadaAtiva(temporada.ano)}" ng-click="setTemporada(temporada.ano)" ng-repeat="temporada in time.temporadas">
+        <a class="tab-item" scroll-into-view="renders <= 1 && temporadaAtiva(temporada.ano)" ng-class="{active: temporadaAtiva(temporada.ano)}" ng-click="setTemporada(temporada.ano)" ng-repeat="temporada in time.temporadas">
           {{temporada.ano}}
         </a>
-        <a class="tab-item" ng-class="{active: temporadaAtiva('todas')}" ng-click="setTemporada('todas')">
+        <a class="tab-item" scroll-into-view="renders <= 1 && temporadaAtiva('todas')" ng-class="{active: temporadaAtiva('todas')}" ng-click="setTemporada('todas')">
           Todas
         </a>
       </div>

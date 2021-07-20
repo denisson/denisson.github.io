@@ -340,7 +340,8 @@ angular.module('app.routes', [])
     },
     'time_estatisticas': {
       url: '/time/:id/:temporada/estatisticas',
-      templateUrl: 'templates/times/estatisticas.html'
+      templateUrl: 'templates/times/estatisticas.html',
+      params: { competicao: null },
     },
     'time_adversarios': {
       url: '/time/:id/:temporada/adversarios/:ordem',

@@ -7,12 +7,12 @@
         <form class="list" ng-submit="enviar()">
         <div class="captura-foto">
             <!-- <input type="file" id="input-file-foto" class="hidden" accept="image/*" /> -->
-            <img class="captura-foto-img" ng-click="capturarFoto()" id="logotipo" jog-escudo="jogo.timeAdversario.escudo" ></img>
+            <img class="captura-foto-img" ng-click="capturarFoto()" id="logotipo" jog-escudo="jogo.visitante.escudo" ></img>
             <i ng-click="capturarFoto()" class="icon ion-image captura-foto-icon"></i>
         </div>
             <label class="item item-input" id="cadastrarTime-input6">
                 <span class="input-label">Nome</span>
-                <input ng-model="jogo.timeAdversario.nome" type="text" placeholder="Nome do time" required>
+                <input ng-model="jogo.visitante.nome" type="text" placeholder="Nome do time" required>
             </label>
             <button type="submit" class="button button-positive button-block">Cadastrar</button>
 

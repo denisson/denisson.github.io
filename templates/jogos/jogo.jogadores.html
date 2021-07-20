@@ -1,0 +1,26 @@
+<div ng-if="naoInformouGols()" class="padding">
+    <p ng-if="mensagemSobrePlacar()" style="font-size: 0.9em; color: #999;">
+        <span ng-if="mensagemSobrePlacar() == 'sumulaVazia' ">Acho que não quiseram revelar os craques do time ;)</span>
+        <span ng-if="mensagemSobrePlacar() == 'aguardandoConfirmarPlacar' ">Placar ainda <b>não confirmado</b> pelo {{jogo.visitante.nome}}</span>
+        <span ng-if="mensagemSobrePlacar() == 'placarRejeitado' ">Placar <b>não confirmado</b> pelo {{jogo.visitante.nome}}</span>
+        <span ng-if="mensagemSobrePlacar() == 'timeNaoCadastrado' ">{{jogo.visitante.nome}} não está cadastrado no Jogueiros FC</span>
+    </p>
+    <button ng-if="exibirBotaoSumula()" ng-click="informarSumulaCallback()" class="button button-positive button-block  button-small" href="#">Cadastrar Súmula</button>
+</div>
+<ion-list>
+    <ion-item class="item-avatar"
+    ng-class="{'jogador-destaque': jogadorGol.destaque}"
+    ng-click="verScoutJogador(jogadorGol)"
+    ng-repeat="jogadorGol in jogo.jogadores[tipoTime]">
+        <img class="foto-jogador"
+        jog-jogador="jogadorGol.jogador.foto" 
+        jog-size="small" />
+        <div class="jogador-destaque-icon">
+        <i class="icon ion-ios-star"></i>
+        </div>
+        {{jogadorGol.jogador.nome}}
+        <span class="jogo-jogador-gols">
+        <jog-jogador-gols jogador="jogadorGol"></jog-jogador-gols>
+        </span>
+    </ion-item>
+</ion-list>

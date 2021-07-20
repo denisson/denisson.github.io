@@ -16,8 +16,11 @@ angular
       var modo = modos.length == 1 ? modos[0] : undefined;
       $scope.jogo = {
         mandante: {
-          _id: AuthService.getTime()
+          _id: AuthService.getTime(),
+          nome: AuthService.getPerfilAtivo().nome,
+          escudo: AuthService.getPerfilAtivo().escudo,
         },
+        mandanteNaEsquerda: true,
         esporte: perfil.esporte,
         efootball: {plataforma: perfil.plataforma, modo: modo}
       };
@@ -27,7 +30,7 @@ angular
     function exibirDadosJogo(jogo){
       // jogo.visitante.escudo = ''; //limpa o escudo para, na hora de salvar, não mandar o escudo novamente.
       $scope.jogo = jogo;
-      $scope.jogo.timeAdversario = _.clone(jogo.visitante);
+      // $scope.jogo.timeAdversario = _.clone(jogo.visitante);
       $scope.jogo.data = moment(jogo.dataHora).toDate();
       $scope.jogo.hora = moment(jogo.dataHora).format('HH:mm');
       $scope.jogo.efootball = jogo.efootball || {};
@@ -60,7 +63,7 @@ angular
     }
     
     $scope.podeSalvar = function(){
-        return  _.get($scope.jogo, 'timeAdversario.nome') &&
+        return  _.get($scope.jogo, 'visitante.nome') &&
                 _.get($scope.jogo, 'data') &&
                 (_.get($scope.jogo, 'hora') != undefined) && 
                 (_.get($scope.jogo, 'local.nome') || _.get($scope.jogo, 'efootball.modo'));
@@ -110,12 +113,13 @@ angular
 
 
     $scope.timeSelecionado = function(time){
-      $scope.jogo.timeAdversario = time;
+      $scope.jogo.visitante = time;
+      $scope.jogo = _.clone($scope.jogo);
       $scope.modalTime.hide();
     }
 
     $scope.cadastrarTime = function(nomeTime){
-      $scope.jogo.timeAdversario = {nome: nomeTime};
+      $scope.jogo.visitante = {nome: nomeTime};
       $scope.modalCadastrarTime.show();
       // $scope.timeSelecionado({nome:nomeTime});
     }
@@ -140,7 +144,8 @@ angular
 
     $scope.capturarFoto = function(){
       CameraService.getPicture().then(function(imagePath){
-        $scope.jogo.timeAdversario.escudo = imagePath;
+        $scope.jogo.visitante.escudo = imagePath;
+        $scope.escudoAlterado = true;
         $scope.$apply();
       });
     };
@@ -182,6 +187,15 @@ angular
       }
     }
 
+    $scope.atualizarDatahora = function(){
+      if (!$scope.jogo.data || !$scope.jogo.hora) return;
+      var dataHora = moment($scope.jogo.data);
+      dataHora.hour($scope.getHoraJogo()).minutes($scope.getMinutosJogo());
+      
+      var timezone = _.get($scope.jogo, 'local.cidade.timezone', 'America/Fortaleza');
+      $scope.jogo.dataHora =  moment.tz(dataHora.format('YYYY-MM-DD HH:mm'), timezone);
+    }
+
     $scope.salvarJogo = function(){
       var dataHora = moment($scope.jogo.data);
       dataHora.hour($scope.getHoraJogo()).minutes($scope.getMinutosJogo());
@@ -193,13 +207,14 @@ angular
         local: $scope.jogo.local,
         competicao: $scope.jogo.competicao,
         dataHora: moment.tz(dataHora.format('YYYY-MM-DD HH:mm'), timezone),
-        visitante: $scope.jogo.timeAdversario,
+        visitante: $scope.jogo.visitante,
         mandante: $scope.jogo.mandante,
+        mandanteNaEsquerda: $scope.jogo.mandanteNaEsquerda,
         encerrado: $scope.jogo.encerrado ? true : false
       }
       var agora = moment.tz(timezone);
       if(!validarDataHora(jogo, agora)) return;
-      var escudoVisitante = jogo.visitante.id || $scope.jogo.timeAdversario.escudo == _.get($scope.jogo, 'visitante.escudo') ? null : jogo.visitante.escudo; //só envia o escudo se for de um visitante sem cadastro e não estiver editando. Para não enviar novamente o mesmo escudo
+      var escudoVisitante = jogo.visitante.id || !$scope.escudoAlterado ? null : jogo.visitante.escudo; //só envia o escudo se for de um visitante sem cadastro e não estiver editando. Para não enviar novamente o mesmo escudo
       DataService.salvarJogo(jogo, escudoVisitante).then(function(retorno){
         jogo._id = retorno.id;
         $ionicHistory.nextViewOptions({
@@ -250,6 +265,12 @@ angular
 
     $scope.fifa = function(){
       return _.get($scope.jogo, 'esporte.chave') == 'FIFA';
+    }
+
+    $scope.clicouEscudoTime =function(tipoTime) {
+      if (tipoTime === 'visitante') {
+        $scope.modalTime.show();
+      }
     }
     
 }])

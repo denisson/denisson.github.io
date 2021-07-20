@@ -188,13 +188,16 @@ angular
     function mensagemSumulaIncompativelComPlacar(){
       var golsTime = $scope.jogo.placar[time];
       var golsOutroTime = $scope.jogo.placar[timeOposto(time)];
+      var placar = $scope.jogo.mandanteNaEsquerda
+        ? $scope.jogo.placar.mandante + ' x ' + $scope.jogo.placar.visitante
+        : $scope.jogo.placar.visitante + ' x ' + $scope.jogo.placar.mandante;
 
       if ($scope.restantes.gols < 0) {
-        return 'Foram informados ' + (golsTime - $scope.restantes.gols) + 'gols, mas o placar do jogo foi ' + $scope.jogo.placar.mandante + ' x ' + $scope.jogo.placar.visitante;
+        return 'Foram informados ' + (golsTime - $scope.restantes.gols) + 'gols, mas o placar do jogo foi ' + placar;
       } else if($scope.restantes.assistencias < 0) {
-        return 'Foram informados ' + (golsTime - $scope.restantes.assistencias) + 'assistências, mas o placar do jogo foi ' + $scope.jogo.placar.mandante + ' x ' + $scope.jogo.placar.visitante;
+        return 'Foram informados ' + (golsTime - $scope.restantes.assistencias) + 'assistências, mas o placar do jogo foi ' + placar;
       } else if($scope.restantes.golsSofridos < 0) {
-        return 'Foram informados ' + (golsOutroTime - $scope.restantes.golsSofridos) + 'gols sofridos pelos goleiros, mas o placar do jogo foi ' + $scope.jogo.placar.mandante + ' x ' + $scope.jogo.placar.visitante;
+        return 'Foram informados ' + (golsOutroTime - $scope.restantes.golsSofridos) + 'gols sofridos pelos goleiros, mas o placar do jogo foi ' + placar;
       }
     }
     

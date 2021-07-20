@@ -3,23 +3,54 @@ angular.module('app.directives', [])
 .directive('jogPartida', ['$ionicModal','AuthService', function($ionicModal, AuthService){
   return {
   	restrict: 'E',
-  	scope: {jogo: '=', informarPlacar: '@', mostrarDetalhes: '@', aoClicarJogo: '&'},
+  	scope: {jogo: '=', informarPlacar: '@', mostrarDetalhes: '@', readOnly: '=', aoClicarJogo: '&', aoClicarTime: '&'},
     templateUrl: 'templates/directives/jog-partida.html',
     controller: function($scope, $state){
-    	$scope.irParaTime = function(time){
-        if(time._id){
-    		  $state.go('time', {id: time._id});
+      // $scope.jogo.timeEsquerda = $scope.jogo.mandanteNaEsquerda ? $scope.jogo.mandante : $scope.jogo.visitante;
+      // $scope.jogo.timeDireita = $scope.jogo.mandanteNaEsquerda ? $scope.jogo.visitante : $scope.jogo.mandante;
+
+      $scope.timeEsqueda = function(){
+        return $scope.jogo.mandanteNaEsquerda ? $scope.jogo.mandante : $scope.jogo.visitante;
+      }
+      $scope.timeDireita = function(){
+        return $scope.jogo.mandanteNaEsquerda ? $scope.jogo.visitante : $scope.jogo.mandante;
+      }
+
+      $scope.placarEsquerda = function(){
+        return $scope.jogo.mandanteNaEsquerda ? _.get($scope.jogo, 'placar.mandante') : _.get($scope.jogo, 'placar.visitante');
+      }
+
+      $scope.placarDireita = function(){
+        return $scope.jogo.mandanteNaEsquerda ? _.get($scope.jogo, 'placar.visitante') : _.get($scope.jogo, 'placar.mandante');
+      }
+
+      $scope.tipoTime = function(lado){
+        return (lado === 'esquerda' && $scope.jogo.mandanteNaEsquerda) || (lado === 'direita' && !$scope.jogo.mandanteNaEsquerda)
+          ? 'mandante'
+          : 'visitante'
+        ;
+      }
+
+    	$scope.irParaTime = function(time, tipoTime){
+        if($scope.readOnly){
+          $scope.aoClicarTime({time: time, tipo: tipoTime });
         } else {
-          $scope.verTimeSemCadastro(time);
+          if(time._id){
+            $state.go('time', {id: time._id});
+          } else {
+            $scope.verTimeSemCadastro(time);
+          }
         }
     	};
 
       $scope.formatarData = function(jogo){
+        if(!jogo.dataHora) return '';
         var timezone = _.get(jogo, 'local.cidade.timezone', 'America/Fortaleza'); //caso não tenha no cadastro do jogo, utilizar o timezone compatível com Maceió
          return moment(jogo.dataHora).tz(timezone).format('ddd DD/MM/YYYY');
       }
 
       $scope.formatarHora = function(jogo){
+        if(!jogo.dataHora) return '';
         var timezone = _.get(jogo, 'local.cidade.timezone', 'America/Fortaleza'); //caso não tenha no cadastro do jogo, utilizar o timezone compatível com Maceió
         return moment(jogo.dataHora).tz(timezone).format('HH:mm');
       }      
@@ -29,13 +60,10 @@ angular.module('app.directives', [])
       }
 
     	$scope.acaoJogo = function(jogo){
-        // ui-sref="abasInicio.jogo({id: })"
-        // if ($scope.informarPlacar) {
-        //   $state.go('informarPlacar', {id: jogo._id, jogo: jogo});
-        // } else {
-          $state.go('jogo', {id: jogo._id});
+          if(!$scope.readOnly){
+            $state.go('jogo', {id: jogo._id});
+          }
           $scope.aoClicarJogo();
-        // }
       }
 
       $scope.verTimeSemCadastro = function(time){
@@ -516,6 +544,13 @@ angular.module('app.directives', [])
     }
   };
 }])
+.directive('focusOn', function() {
+  return function(scope, elem, attr) {
+     scope.$on(attr.focusOn, function(e) {
+         elem[0].focus();
+     });
+  };
+});
 
 // .directive('jogStepper', [function(){
 //   return {

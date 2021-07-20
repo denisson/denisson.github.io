@@ -135,9 +135,14 @@ angular.module('app.services')
 			temporada = temporada || moment().year();
 			return request('time/' + id + '?jogadores=true&jogos=true&temporada=' + temporada);
 		},
-		timeEstatisticas: function(id, temporada){
-			temporada = temporada || moment().year();
-			return request('time/' + id + '/estatisticas?temporada=' + temporada);
+		timeEstatisticas: function(id, temporada, mes, competicao){
+			var params = {
+				temporada: temporada || moment().year(),
+				mes: mes || '',
+				competicao: competicao || '',
+			};
+			
+			return request('time/' + id + '/estatisticas', params);
 		},
 		timeAdversarios: function(id, temporada, ordem){
 			temporada = temporada || moment().year();
@@ -222,9 +227,13 @@ angular.module('app.services')
 		jogadorPosicoes: function(){
 			return request('jogador/posicoes', null, true);
 		},
-		jogadorEstatisticas: function(id, timeId, temporada){
-			temporada = temporada || moment().year();
-			return request('jogador/' + id + '/' + timeId + '/estatisticas?temporada=' + temporada);
+		jogadorEstatisticas: function(id, timeId, temporada, mes){
+			var params = {
+				temporada: temporada || moment().year(),
+				mes: mes,
+			};
+			
+			return request('jogador/' + id + '/' + timeId + '/estatisticas', params);
 		},
 		salvarJogo: function(jogo, escudoVisitante){
 			var endpoint = jogo._id ? 'jogo/' + jogo._id : 'jogo';
